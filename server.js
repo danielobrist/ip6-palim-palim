@@ -41,9 +41,6 @@ let iceServers = [
 // an object where we will store innformation about active clients
 let clients = {};
 
-// room store
-let rooms = {};
-
 function main() {
   setupSocketServer();
 

@@ -45,23 +45,20 @@ let mediaConstraints = {
 // Start-Up Sequence:
 ////////////////////////////////////////////////////////////////////////////////
 
-function start() {
-  console.log("hallo")
-  window.onload = async () => {
-    console.log("Window loaded.");
+window.onload = async () => {
+  console.log("Window loaded.");
 
-    // first get user media
-    localMediaStream = await getMedia(mediaConstraints);
+  // first get user media
+  localMediaStream = await getMedia(mediaConstraints);
 
-    createLocalVideoElement();
+  createLocalVideoElement();
 
-    // then initialize socket connection
-    initSocketConnection();
+  // then initialize socket connection
+  initSocketConnection();
 
-    // finally create the threejs scene
-    console.log("Creating three.js scene...");
-    glScene = new Scene(onPlayerMove);
-  }
+  // finally create the threejs scene
+  console.log("Creating three.js scene...");
+  glScene = new Scene(onPlayerMove);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
