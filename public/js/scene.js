@@ -268,6 +268,7 @@ class Scene {
 function makeVideoMaterial(_id) {
   let videoElement = document.getElementById(_id + "_video");
   let videoTexture = new THREE.VideoTexture(videoElement);
+  videoTexture.needsUpdate = true;
 
   let videoMaterial = new THREE.MeshBasicMaterial({
     map: videoTexture,
