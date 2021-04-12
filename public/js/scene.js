@@ -41,8 +41,9 @@ class Scene {
     //THREE WebGL renderer
     this.renderer = new THREE.WebGLRenderer({
       antialiasing: true,
+      alpha: true,
     });
-    this.renderer.setClearColor(new THREE.Color("lightblue"));
+    // this.renderer. setClearColor(new THREE.Color("lightblue"));
     this.renderer.setSize(this.width, this.height);
 
     // add controls:
@@ -62,7 +63,7 @@ class Scene {
     this.scene.add(new THREE.AxesHelper(10));
 
     this.addLights();
-    createEnvironment(this.scene);
+    //createEnvironment(this.scene);
 
     // Start the loop
     this.frameCount = 0;
@@ -221,7 +222,7 @@ class Scene {
     requestAnimationFrame(() => this.update());
     this.frameCount++;
 
-    updateEnvironment();
+    //updateEnvironment();
 
     if (this.frameCount % 25 === 0) {
       this.updateClientVolumes();
