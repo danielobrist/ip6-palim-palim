@@ -11,20 +11,22 @@
 
 <body>
 
-  <h1>Palim-Palim</h1>
-
-  <div id="videos">
+  <div id="localVideoContainer">
     <video id="localVideo" autoplay muted></video>
+  </div>
+
+  <div id="remoteVideoContainer">
     <video id="remoteVideo" autoplay></video>
   </div>
 
 	<!-- WebGL context -->
-  <h1>Here goes three.js stuff</h1>
-	<div id="canvas-container"></div>
+	<div id="canvasContainer"></div>
 
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="https://threejs.org/build/three.js"></script>
+  <script src="js/three.js" type="module"></script>
   <script src="js/main.js"></script>
   
 </body>
