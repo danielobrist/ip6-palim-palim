@@ -1,36 +1,38 @@
-This [three.js](threejs.org) template allows multiplayer three.js scenes with integrated audio/video capabilities.  It uses a node server running socket.io to provide multiplayer functionality as well as WebRTC signaling. 
+A fun video chat application with integrated 3D multiplayer capabilities. 
+//TODO project description
 
-![image of multiplayer 3D scene](/docs/images/threejs-webrtc.gif)
 
 ## Quickstart:
 
 1. Download the repository to your computer: 
     ```bash
-    $ git clone https://github.com/AidanNelson/threejs-webrtc.git
+    $ git clone https://github.com/severin0038/ip6-palim-palim.git
     ```
 2. Navigate into the local folder and install Node dependencies:
     ```bash
-    $ cd threejs-webrtc
+    $ cd ip6-palim-palim
     $ npm install
     ```
 3. Start the server:
     ```bash
     $ npm start
     ```
-4. Navigate to `http://localhost:1989` on your browser.
+4. Navigate to `http://localhost:8080` on your browser.
 
 ## Technology:
 
-This space is built using a number of technologies, including:
+This application is built using a number of technologies, including:
 
-* [three.js](https://threejs.org/) provides rendering / 3D environment interaction
-* [socket.io](https://socket.io/) provides the three.js multiplayer functionality, and acts as a WebRTC signaling server
-* [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) provides video / audio chat functionality
+* [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) provides the video and audio chat
+* [socket.io](https://socket.io/) acts as a WebRTC signaling server and provides the multiplayer functionality 
+* [three.js](https://threejs.org/) for rendering the 3D environment
+* [tensorflow.js](https://www.tensorflow.org/js) for image segmentation and face filters
+
 
 ## Credits:
 
-This template uses code from a number of sources, including: 
+This project uses code from a number of sources, including: 
 
-* Or Fleisher - [THREE.Multiplayer](https://github.com/juniorxsound/THREE.Multiplayer) server and client setup using socket.io with three.js
-* Mikołaj Wargowski - [Simple Chat App](https://github.com/Miczeq22/simple-chat-app) using [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) with three.js
-* Zachary Stenger - [Three.js Video Chat](https://github.com/zacharystenger/three-js-video-chat) using [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API)
+//TODO
+* Name - [Project Name](https://link.to.repository) description of project
+

@@ -1,147 +1,72 @@
-/*
- *
- * This uses code from a THREE.js Multiplayer boilerplate made by Or Fleisher:
- * https://github.com/juniorxsound/THREE.Multiplayer
- * And a WEBRTC chat app made by Mikołaj Wargowski:
- * https://github.com/Miczeq22/simple-chat-app
- *
- * Aidan Nelson, April 2020
- *
- *
- */
+'use strict';
 
-// express will run our server
-const express = require("express");
-const app = express();
-app.use(express.static("public"));
-
-// HTTP will expose our server to the web
-const http = require("http").createServer(app);
+const os = require('os');
+const nodeStatic = require('node-static');
+const http = require('http');
+const socketIO = require('socket.io');
 
 // decide on which port we will use
 const port = process.env.PORT || 8080;
 
-//Server
-const server = app.listen(port);
+const fileServer = new(nodeStatic.Server)();
+const app = http.createServer(function(req, res) {
+  fileServer.serve(req, res);
+}).listen(port);
 console.log("Server is running on http://localhost:" + port);
 
-/////SOCKET.IO///////
-const io = require("socket.io")().listen(server);
+const io = socketIO.listen(app);
 
-// Network Traversal
-// Could also use network traversal service here (Twilio, for example):
-let iceServers = [
-  { url: "stun:stun.l.google.com:19302" },
-  { url: "stun:stun1.l.google.com:19302" },
-  { url: "stun:stun2.l.google.com:19302" },
-  { url: "stun:stun3.l.google.com:19302" },
-  { url: "stun:stun4.l.google.com:19302" },
-];
+io.sockets.on('connection', function(socket) {
 
-// an object where we will store innformation about active clients
-let clients = {};
+  // convenience function to log server messages on the client
+  function log() {
+    var array = ['Message from server:'];
+    array.push.apply(array, arguments);
+    socket.emit('log', array);
+  }
 
-function main() {
-  setupSocketServer();
-
-  setInterval(function() {
-    // update all clients of positions
-    io.sockets.emit("userPositions", clients);
-  }, 10);
-}
-
-main();
-
-function setupSocketServer() {
-  // Set up each socket connection
-  io.on("connection", (client) => {
-    console.log(
-      "User " +
-        client.id +
-        " connected, there are " +
-        io.engine.clientsCount +
-        " clients connected"
-    );
-
-    //Add a new client indexed by their socket id
-    clients[client.id] = {
-      position: [0, 0.5, 0],
-      rotation: [0, 0, 0, 1], // stored as XYZW values of Quaternion
-    };
-
-    // Make sure to send the client their ID and a list of ICE servers for WebRTC network traversal
-    client.emit(
-      "introduction",
-      client.id,
-      '1234',
-      io.engine.clientsCount,
-      Object.keys(clients),
-      iceServers
-    );
-
-    // also give the client all existing clients positions:
-    client.emit("userPositions", clients);
-
-    //Update everyone that the number of users has changed
-    io.sockets.emit(
-      "newUserConnected",
-      io.engine.clientsCount,
-      client.id,
-      Object.keys(clients)
-    );
-
-    // whenever the client moves, update their movements in the clients object
-    client.on("move", (data) => {
-      if (clients[client.id]) {
-        clients[client.id].position = data[0];
-        clients[client.id].rotation = data[1];
-      }
-    });
-
-    //Handle the disconnection
-    client.on("disconnect", () => {
-      //Delete this client from the object
-      delete clients[client.id];
-      io.sockets.emit(
-        "userDisconnected",
-        io.engine.clientsCount,
-        client.id,
-        Object.keys(clients)
-      );
-      console.log(
-        "User " +
-          client.id +
-          " diconnected, there are " +
-          io.engine.clientsCount +
-          " clients connected"
-      );
-    });
-
-    // from simple chat app:
-    // WEBRTC Communications
-    client.on("call-user", (data) => {
-      console.log(
-        "Server forwarding call from " + client.id + " to " + data.to
-      );
-      client.to(data.to).emit("call-made", {
-        offer: data.offer,
-        socket: client.id,
-      });
-    });
-
-    client.on("make-answer", (data) => {
-      client.to(data.to).emit("answer-made", {
-        socket: client.id,
-        answer: data.answer,
-      });
-    });
-
-    // ICE Setup
-    client.on("addIceCandidate", (data) => {
-      client.to(data.to).emit("iceCandidateFound", {
-        socket: client.id,
-        candidate: data.candidate,
-      });
-    });
+  socket.on('message', function(message) {
+    log('Client said: ', message);
+    // for a real app, would be room-only (not broadcast)
+    socket.broadcast.emit('message', message);
   });
-}
+
+  socket.on('create or join', function(room) {
+    log('Received request to create or join room ' + room);
+
+    var clientsInRoom = io.sockets.adapter.rooms[room];
+    var numClients = clientsInRoom ? Object.keys(clientsInRoom.sockets).length : 0;
+    log('Room ' + room + ' now has ' + numClients + ' client(s)');
+
+    if (numClients === 0) {
+      socket.join(room);
+      log('Client ID ' + socket.id + ' created room ' + room);
+      socket.emit('created', room, socket.id);
+
+    } else if (numClients === 1) {
+      log('Client ID ' + socket.id + ' joined room ' + room);
+      io.sockets.in(room).emit('join', room);
+      socket.join(room);
+      socket.emit('joined', room, socket.id);
+      io.sockets.in(room).emit('ready');
+    } else { // max two clients
+      socket.emit('full', room);
+    }
+  });
+
+  socket.on('ipaddr', function() {
+    var ifaces = os.networkInterfaces();
+    for (var dev in ifaces) {
+      ifaces[dev].forEach(function(details) {
+        if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
+          socket.emit('ipaddr', details.address);
+        }
+      });
+    }
+  });
+
+  socket.on('bye', function(){
+    console.log('received bye');
+  });
+
+});
