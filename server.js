@@ -73,6 +73,7 @@ function setupSocketServer() {
     client.emit(
       "introduction",
       client.id,
+      '1234',
       io.engine.clientsCount,
       Object.keys(clients),
       iceServers

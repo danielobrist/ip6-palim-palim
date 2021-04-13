@@ -12,6 +12,7 @@
 // socket.io
 let socket;
 let id;
+let roomId;
 
 // array of connected clients
 let clients = {};
@@ -101,14 +102,16 @@ function initSocketConnection() {
   socket.on("connect", () => {});
 
   //On connection server sends the client his ID and a list of all keys
-  socket.on("introduction", (_id, _clientNum, _ids, _iceServers) => {
+  socket.on("introduction", (_id, _roomId, _clientNum, _ids, _iceServers) => {
     // keep local copy of ice servers:
     console.log("Received ICE server credentials from server.");
     iceServerList = _iceServers;
 
     // keep a local copy of my ID:
     console.log("My socket ID is: " + _id);
+    console.log("My room ID is: " + _roomId);
     id = _id;
+    roomId = _roomId;
 
     // for each existing user, add them as a client and add tracks to their peer connection
     for (let i = 0; i < _ids.length; i++) {
