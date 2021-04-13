@@ -1,20 +1,23 @@
 'use strict';
 
 const os = require('os');
-const nodeStatic = require('node-static');
-const http = require('http');
-const socketIO = require('socket.io');
+
+// express will run our server
+const express = require("express");
+const app = express();
+app.use(express.static("public"));
+
+// HTTP will expose our server to the web
+const http = require('http').createServer(app);
 
 // decide on which port we will use
 const port = process.env.PORT || 8080;
 
-const fileServer = new(nodeStatic.Server)();
-const app = http.createServer(function(req, res) {
-  fileServer.serve(req, res);
-}).listen(port);
+//Server
+const server = app.listen(port);
 console.log("Server is running on http://localhost:" + port);
 
-const io = socketIO.listen(app);
+const io = require("socket.io")().listen(server);
 
 io.sockets.on('connection', function(socket) {
 
