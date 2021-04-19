@@ -5,6 +5,7 @@ var express = require('express');
 
 var app = express();
 app.use(express.static('public'));
+// app.use("/node_modules", express.static(__dirname + "/node_modules"));
 
 var port = process.env.PORT || 8080;
 const server = app.listen(port);

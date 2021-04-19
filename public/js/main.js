@@ -1,4 +1,4 @@
-'use strict';
+export {isInitiator};
 
 var isChannelReady = false;
 var isInitiator = false;

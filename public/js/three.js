@@ -1,3 +1,8 @@
+import  * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
+// import * as THREE from './../../node_modules/three/build/three.module.js';
+import {isInitiator} from './main.js';
+
+
 const renderer = new THREE.WebGLRenderer({
     alpha: true
 });
@@ -7,7 +12,7 @@ document.getElementById("canvasContainer").appendChild( renderer.domElement );
 
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
 camera.position.set(0,1,5);
-if(Math.random() >= 0.5) { camera.position.z = -5 }
+if(isInitiator) { camera.position.z = -5 }
 camera.lookAt( 0, 0, 0 );
 
 const scene = new THREE.Scene();
