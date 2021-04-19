@@ -1,8 +1,7 @@
 import  * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 import {GLTFLoader} from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/GLTFLoader.js';
 // import * as THREE from './../../node_modules/three/build/three.module.js';
-import {isInitiator} from './main.js';
-
+export {changeCameraPosition};
 
 const renderer = new THREE.WebGLRenderer({
     alpha: true
@@ -13,10 +12,6 @@ document.getElementById("canvasContainer").appendChild( renderer.domElement );
 
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
 camera.position.set(0,1,5);
-if(!isInitiator) { 
-    console.log('isInitiator is false, changing camera.position.z');
-    camera.position.z = -5;
-}
 camera.lookAt( 0, 0, 0 );
 
 const scene = new THREE.Scene();
@@ -52,6 +47,12 @@ function animate() {
     requestAnimationFrame( animate );
     cube.rotation.y += 0.01;
     renderer.render( scene, camera );
+}
+
+function changeCameraPosition() {
+    console.log('changing camera position!');
+    camera.position.z = -5;
+    camera.lookAt( 0, 0, 0 );
 }
 
 animate();
