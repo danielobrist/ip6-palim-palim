@@ -1,7 +1,21 @@
 {
-  "name": "webrtc-codelab",
+  "name": "ip6-palim-palim",
   "version": "0.0.1",
-  "description": "WebRTC codelab",
+  "description": "A WebRTC and Three.js based video call game",
+  "keywords": [
+    "WebRTC",
+    "Three.js",
+    "Game"
+  ],
+  "author": "",
+  "contributors": [
+    "Severin Peyer",
+    "Daniel Obrist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/severin0038/ip6-palim-palim.git"
+  },
   "scripts": {
     "start": "node server.js"
   },
