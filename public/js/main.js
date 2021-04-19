@@ -1,4 +1,4 @@
-export {isInitiator};
+import {changeCameraPosition} from './three.js';
 
 var isChannelReady = false;
 var isInitiator = false;
@@ -48,6 +48,7 @@ if (room !== '') {
 socket.on('created', function(room) {
   console.log('Created room ' + room);
   isInitiator = true;
+  changeCameraPosition();
 });
 
 socket.on('full', function(room) {
