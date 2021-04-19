@@ -12,7 +12,10 @@ document.getElementById("canvasContainer").appendChild( renderer.domElement );
 
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
 camera.position.set(0,1,5);
-if(isInitiator) { camera.position.z = -5 }
+if(!isInitiator) { 
+    console.log('isInitiator is false, changing camera.position.z');
+    camera.position.z = -5;
+}
 camera.lookAt( 0, 0, 0 );
 
 const scene = new THREE.Scene();
