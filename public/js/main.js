@@ -1,5 +1,10 @@
 import {changeCameraPosition} from './three.js';
 
+export {sendChannel as dataChannel};
+
+let sendChannel;
+let receiveChannel;
+
 var isChannelReady = false;
 var isInitiator = false;
 var isStarted = false;
@@ -74,7 +79,7 @@ socket.on('log', function(array) {
 
 function sendMessage(message) {
   console.log('Client sending message: ', message);
-  socket.emit('message', message);
+  socket.emit('message', message); //TODO only send to room
 }
 
 // This client receives a message
@@ -144,11 +149,16 @@ function maybeStart() {
     console.log('>>>>>> creating peer connection');
     createPeerConnection();
     pc.addStream(localStream);
+
+    initDataChannel();
+    console.log('Created RTCDataChannel');
+
     isStarted = true;
     console.log('isInitiator', isInitiator);
     if (isInitiator) {
       doCall();
     }
+    startGameSync();
   }
 }
 
@@ -165,16 +175,28 @@ function createPeerConnection() {
     } else {
       pc = new RTCPeerConnection(null);
     } 
-    // pc = new RTCPeerConnection(null);
+
     pc.onicecandidate = handleIceCandidate;
     pc.onaddstream = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
+    pc.ondatachannel = receiveChannelCallback;
     console.log('Created RTCPeerConnnection');
+
   } catch (e) {
     console.log('Failed to create PeerConnection, exception: ' + e.message);
     alert('Cannot create RTCPeerConnection object.');
     return;
   }
+}
+
+function startGameSync() {
+  //TODO set interval
+  let interval = setInterval(sendGameobjectPositions, 1000);
+}
+
+function sendGameobjectPositions() {
+  //TODO send JSON Strings of gameobject and positions
+  sendChannel.send("Hello!");
 }
 
 function handleIceCandidate(event) {
@@ -215,7 +237,7 @@ function setLocalAndSendMessage(sessionDescription) {
 }
 
 function onCreateSessionDescriptionError(error) {
-  trace('Failed to create session description: ' + error.toString());
+  console.log('Failed to create session description: ' + error.toString());
 }
 
 function requestTurn(turnURL) {
@@ -271,6 +293,61 @@ function handleRemoteHangup() {
 
 function stop() {
   isStarted = false;
+  sendChannel.close();
+  receiveChannel.close();
   pc.close();
   pc = null;
+}
+
+/////////////////////////////////////
+
+function initDataChannel() {
+console.log('CREATING DATACHANNEL gameUpdates')
+sendChannel = pc.createDataChannel('gameUpdates', {
+  ordered: false,
+  id: room
+  });
+sendChannel.onmessage = function (event) {
+    console.log("Got Data Channel Message:", event.data);
+  };
+sendChannel.onerror = function (error) {
+    console.log("Data Channel Error:", error);
+  };
+sendChannel.onopen = handleDataChannelStatusChange;
+sendChannel.onclose = handleDataChannelStatusChange;
+
+console.log('CREATED DATACHANNEL gameUpdates')
+}
+
+
+function receiveChannelCallback(event) {
+  console.log('Receive Channel Callback');
+  receiveChannel = event.channel;
+  receiveChannel.onmessage = handleReceiveMessage;
+  receiveChannel.onopen = handleReceiveChannelStatusChange;
+  receiveChannel.onclose = handleReceiveChannelStatusChange;
+}
+
+function handleReceiveMessage(event) {
+  //TODO if gameUpdates channel, update positions and render again
+  console.log("Received Message data: " + event.data);
+}
+
+function handleDataChannelStatusChange(event) {
+  if (sendChannel) {
+    var state = sendChannel.readyState;
+
+    if (state === "open") {
+      console.log("DATA CHANNEL STATE: open")
+    } else {
+      console.log("DATA CHANNEL STATE: closed")
+    }
+  }
+}
+
+function handleReceiveChannelStatusChange() {
+  if (receiveChannel) {
+    console.log("Receive channel's status has changed to " +
+                receiveChannel.readyState);
+  }
 }
