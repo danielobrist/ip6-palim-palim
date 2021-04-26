@@ -8,59 +8,80 @@ export {changeCameraPosition};
 
 let draggableObjects = [];
 let control;
-
+const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({
     alpha: true
 });
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.getElementById("canvasContainer").appendChild( renderer.domElement );
+let camera;
+let cube, cube2;
 
+init();
+init3DObjects();
+activateDragControls();
+animate();
 
-const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
-camera.position.set(0,1,5);
-camera.lookAt( 0, 0, 0 );
+function init() {
+    
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.getElementById("canvasContainer").appendChild( renderer.domElement );
 
-const scene = new THREE.Scene();
+    initCamera();
+    initLight();
+}
 
-const geometry = new THREE.BoxGeometry(1, 0.5, 2);
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const material2 = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+function initCamera() {
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
+    camera.position.set(0,1,5);
+    camera.lookAt( 0, 0, 0 );    
+}
 
-const cube = new THREE.Mesh( geometry, material );
-cube.position.set(0,0,1);
-scene.add( cube );
-const cube2 = new THREE.Mesh( geometry, material2 );
-cube2.position.set(0,0,-1);
-scene.add( cube2 );
-draggableObjects.push(cube2);
+function initLight() {
+    const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    scene.add( directionalLight );
+}
 
-const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
-scene.add( directionalLight );
+function init3DObjects() {
 
+    const geometry = new THREE.BoxGeometry(1, 0.5, 2);
+    const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    const material2 = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
 
-const loader = new GLTFLoader();
-renderer.outputEncoding = THREE.sRGBEncoding;
+    cube = new THREE.Mesh( geometry, material );
+    cube.position.set(0,0,1);
+    scene.add( cube );
+    draggableObjects.push(cube);
+    cube2 = new THREE.Mesh( geometry, material2 );
+    cube2.position.set(0,0,-1);
+    scene.add( cube2 );
+    draggableObjects.push(cube2);
 
-loader.load( '../assets/banana.glb', function ( gltf ) {
-    gltf.scene.scale.set(0.2,0.2,0.2);
-    gltf.scene.position.y = 1;
-    scene.add( gltf.scene );
-}, undefined, function ( error ) {
-	console.error( error );
-});
+    const loader = new GLTFLoader();
+    renderer.outputEncoding = THREE.sRGBEncoding;
 
-scene.add( new THREE.GridHelper( 1000, 10, 0x888888, 0x444444 ) );
+    loader.load( '../assets/banana.glb', function ( gltf ) {
+        gltf.scene.scale.set(0.2,0.2,0.2);
+        gltf.scene.position.y = 1;
+        scene.add( gltf.scene );
+    }, undefined, function ( error ) {
+        console.error( error );
+    });
 
+    scene.add( new THREE.GridHelper( 1000, 10, 0x888888, 0x444444 ) );
+}
 
-const mouse = new THREE.Vector2(), raycaster = new THREE.Raycaster();
-// const controls = new DragControls( [ ...draggableObjects ], camera, renderer.domElement );
-// controls.addEventListener( 'drag', render );
-control = new TransformControls( camera, renderer.domElement );
-control.showY = false;
-control.addEventListener( 'change', render );
+function activateDragControls() {
+    const controls = new DragControls( [ ...draggableObjects ], camera, renderer.domElement );
+    controls.addEventListener( 'drag', render );    
+}
 
-control.attach(cube2);
-scene.add(control);
+function activateTransformControls() {
+    control = new TransformControls( camera, renderer.domElement );
+    control.showY = false;
+    control.addEventListener( 'change', render );
+
+    control.attach(cube2);
+    scene.add(control);
+}
 
 function animate() {
     requestAnimationFrame( animate );
@@ -75,9 +96,5 @@ function changeCameraPosition() {
 }
 
 function render() {
-
     renderer.render( scene, camera );
-
 }
-
-animate();
