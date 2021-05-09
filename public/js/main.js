@@ -1,4 +1,4 @@
-import {changeCameraPosition} from './three.js';
+import {changeCameraPosition, getSceneJSON, updateRemoteObjects} from './three.js';
 
 export {sendChannel as dataChannel};
 
@@ -191,12 +191,14 @@ function createPeerConnection() {
 
 function startGameSync() {
   //TODO set interval
-  let interval = setInterval(sendGameobjectPositions, 1000);
+  let interval = setInterval(sendGameobjectPositions, 30);
 }
 
 function sendGameobjectPositions() {
   //TODO send JSON Strings of gameobject and positions
-  sendChannel.send("Hello!");
+  if (sendChannel.readyState === "open") {
+    sendChannel.send(getSceneJSON());
+  }
 }
 
 function handleIceCandidate(event) {
@@ -330,7 +332,8 @@ function receiveChannelCallback(event) {
 
 function handleReceiveMessage(event) {
   //TODO if gameUpdates channel, update positions and render again
-  console.log("Received Message data: " + event.data);
+  // console.log("Received Message data: " + event.data);
+  updateRemoteObjects(event.data);
 }
 
 function handleDataChannelStatusChange(event) {
