@@ -47,7 +47,7 @@ var socket = io.connect();
 
 if (room !== '') {
   socket.emit('create or join', room);
-  console.log('Attempted to create or  join room', room);
+  console.log('Attempted to create or join room', room);
 }
 
 socket.on('created', function(room) {
@@ -79,7 +79,7 @@ socket.on('log', function(array) {
 
 function sendMessage(message) {
   console.log('Client sending message: ', message);
-  socket.emit('message', message); //TODO only send to room
+  socket.emit('message',room, message); 
 }
 
 // This client receives a message
@@ -274,6 +274,7 @@ function requestTurn(turnURL) {
 function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.');
   remoteStream = event.stream;
+  remoteVideo.autoplay = true;
   remoteVideo.srcObject = remoteStream;
 }
 
@@ -290,7 +291,7 @@ function hangup() {
 function handleRemoteHangup() {
   console.log('Session terminated.');
   stop();
-  isInitiator = false;
+  isInitiator = true; //when remote leaves, this client will be the new initiator
 }
 
 function stop() {
@@ -299,6 +300,10 @@ function stop() {
   receiveChannel.close();
   pc.close();
   pc = null;
+  remoteVideo.pause();
+  remoteVideo.removeAttribute('src'); // empty source
+  remoteVideo.removeAttribute('autoplay');
+  remoteVideo.load();
 }
 
 /////////////////////////////////////
