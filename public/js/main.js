@@ -91,8 +91,10 @@ socket.on('message', function(message) {
     if (!isInitiator && !isStarted) {
       maybeStart();
     }
-    pc.setRemoteDescription(new RTCSessionDescription(message));
-    doAnswer();
+    pc.setRemoteDescription(message)
+    .then(function () {
+      return doAnswer();
+    })
   } else if (message.type === 'answer' && isStarted) {
     pc.setRemoteDescription(new RTCSessionDescription(message));
   } else if (message.type === 'candidate' && isStarted) {
@@ -112,8 +114,8 @@ var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
 
 navigator.mediaDevices.getUserMedia({
-  audio: true,
-  video: true
+  video: true,
+  audio: true
 })
 .then(gotStream)
 .catch(function(e) {
@@ -129,6 +131,8 @@ function gotStream(stream) {
     maybeStart();
   }
 }
+
+
 
 var constraints = {
     audio: true,
@@ -148,7 +152,10 @@ function maybeStart() {
   if (!isStarted && typeof localStream !== 'undefined' && isChannelReady) {
     console.log('>>>>>> creating peer connection');
     createPeerConnection();
-    pc.addStream(localStream);
+    
+    for (const track of localStream.getTracks()) {
+      pc.addTrack(track);
+    }
 
     initDataChannel();
     console.log('Created RTCDataChannel');
@@ -162,8 +169,12 @@ function maybeStart() {
   }
 }
 
+window.onpagehide = function() {
+  sendMessage('bye');
+};
+
 // handle tabs closing(almost all browsers) or pagehide(needed for iPad/iPhone)
-var isOnIOS = navigator.userAgent.match(/iPad/i)|| navigator.userAgent.match(/iPhone/i);
+var isOnIOS = navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2; // must be iOS...
 var eventName = isOnIOS ? "pagehide" : "beforeunload";
 
 window.addEventListener(eventName, function (event) { 
@@ -181,9 +192,25 @@ function createPeerConnection() {
     } 
 
     pc.onicecandidate = handleIceCandidate;
-    pc.onaddstream = handleRemoteStreamAdded;
-    pc.onremovestream = handleRemoteStreamRemoved;
+    pc.ontrack = ev => {
+      if (ev.streams && ev.streams[0]) {
+        console.log("ev streams detected")
+        remoteVideo.srcObject = ev.streams[0];
+      } else {
+        if (!remoteStream) {
+          console.log("Creating new MediaStream")
+          remoteStream = new MediaStream();
+        }
+        console.log("adding track to remote stream")
+        remoteStream.addTrack(ev.track);
+        remoteVideo.setAttribute('src', remoteStream);
+        remoteVideo.srcObject = remoteStream;
+      }
+      remoteVideo.autoplay = true;
+      
+    }
     pc.ondatachannel = receiveChannelCallback;
+
     console.log('Created RTCPeerConnnection');
 
   } catch (e) {
@@ -277,7 +304,7 @@ function requestTurn(turnURL) {
 
 function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.');
-  remoteStream = event.stream;
+  remoteStream = event.streams[0];
   remoteVideo.autoplay = true;
   remoteVideo.srcObject = remoteStream;
 }
