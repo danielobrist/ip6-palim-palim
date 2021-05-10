@@ -4,7 +4,7 @@ import {DragControls} from 'https://unpkg.com/three@0.127.0/examples/jsm/control
 import { TransformControls } from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/TransformControls.js';
 
 // import * as THREE from './../../node_modules/three/build/three.module.js';
-export {changeCameraPosition};
+export {changeCameraPosition, getSceneJSON, updateRemoteObjects};
 
 let draggableObjects = [];
 let control;
@@ -166,6 +166,27 @@ function changeCameraPosition() {
     console.log('changing camera position!');
     camera.position.z = -5;
     camera.lookAt( 0, 0, 0 );
+}
+
+function getSceneJSON() {
+    // TODO build and return a JSON from all localObjects, not only cube
+    let cubeObj = {id: cube.id, position: cube.position, rotation: cube.rotation};
+    let json = JSON.stringify(cubeObj);
+    // console.log('JSON:' + json)
+    return json;
+}
+
+function updateRemoteObjects(data) {
+    let obj = JSON.parse(data);
+    // console.log('Parsed JSON id: ' + obj.id + ', positionx: ' + obj.position.x + ', rotationx: ' + obj.rotation._x);
+
+    //TOOD tween/interpolate between positions
+    cube.position.x = obj.position.x;
+    cube.position.y = obj.position.y;
+    cube.position.z = obj.position.z;
+    cube.rotation.x = obj.rotation._x;
+    cube.rotation.y = obj.rotation._y;
+    cube.rotation.z = obj.rotation._z;
 }
 
 function render() {

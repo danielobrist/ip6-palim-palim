@@ -1,4 +1,4 @@
-import {changeCameraPosition} from './three.js';
+import {changeCameraPosition, getSceneJSON, updateRemoteObjects} from './three.js';
 
 export {sendChannel as dataChannel};
 
@@ -47,7 +47,7 @@ var socket = io.connect();
 
 if (room !== '') {
   socket.emit('create or join', room);
-  console.log('Attempted to create or  join room', room);
+  console.log('Attempted to create or join room', room);
 }
 
 socket.on('created', function(room) {
@@ -79,7 +79,7 @@ socket.on('log', function(array) {
 
 function sendMessage(message) {
   console.log('Client sending message: ', message);
-  socket.emit('message', message); //TODO only send to room
+  socket.emit('message',room, message); 
 }
 
 // This client receives a message
@@ -162,9 +162,13 @@ function maybeStart() {
   }
 }
 
-window.onbeforeunload = function() {
-  sendMessage('bye');
-};
+// handle tabs closing(almost all browsers) or pagehide(needed for iPad/iPhone)
+var isOnIOS = navigator.userAgent.match(/iPad/i)|| navigator.userAgent.match(/iPhone/i);
+var eventName = isOnIOS ? "pagehide" : "beforeunload";
+
+window.addEventListener(eventName, function (event) { 
+    sendMessage('bye');
+} );
 
 /////////////////////////////////////////////////////////
 
@@ -191,12 +195,14 @@ function createPeerConnection() {
 
 function startGameSync() {
   //TODO set interval
-  let interval = setInterval(sendGameobjectPositions, 1000);
+  let interval = setInterval(sendGameobjectPositions, 30);
 }
 
 function sendGameobjectPositions() {
   //TODO send JSON Strings of gameobject and positions
-  sendChannel.send("Hello!");
+  if (sendChannel.readyState === "open") {
+    sendChannel.send(getSceneJSON());
+  }
 }
 
 function handleIceCandidate(event) {
@@ -272,6 +278,7 @@ function requestTurn(turnURL) {
 function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.');
   remoteStream = event.stream;
+  remoteVideo.autoplay = true;
   remoteVideo.srcObject = remoteStream;
 }
 
@@ -288,7 +295,7 @@ function hangup() {
 function handleRemoteHangup() {
   console.log('Session terminated.');
   stop();
-  isInitiator = false;
+  isInitiator = true; //when remote leaves, this client will be the new initiator
 }
 
 function stop() {
@@ -297,6 +304,10 @@ function stop() {
   receiveChannel.close();
   pc.close();
   pc = null;
+  remoteVideo.pause();
+  remoteVideo.removeAttribute('src'); // empty source
+  remoteVideo.removeAttribute('autoplay');
+  remoteVideo.load();
 }
 
 /////////////////////////////////////
@@ -330,7 +341,8 @@ function receiveChannelCallback(event) {
 
 function handleReceiveMessage(event) {
   //TODO if gameUpdates channel, update positions and render again
-  console.log("Received Message data: " + event.data);
+  // console.log("Received Message data: " + event.data);
+  updateRemoteObjects(event.data);
 }
 
 function handleDataChannelStatusChange(event) {
