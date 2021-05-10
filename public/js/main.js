@@ -162,8 +162,12 @@ function maybeStart() {
   }
 }
 
+window.onpagehide = function() {
+  sendMessage('bye');
+};
+
 // handle tabs closing(almost all browsers) or pagehide(needed for iPad/iPhone)
-var isOnIOS = navigator.userAgent.match(/iPad/i)|| navigator.userAgent.match(/iPhone/i);
+var isOnIOS = navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2; // must be iOS...
 var eventName = isOnIOS ? "pagehide" : "beforeunload";
 
 window.addEventListener(eventName, function (event) { 
