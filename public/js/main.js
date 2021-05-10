@@ -114,8 +114,8 @@ var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
 
 navigator.mediaDevices.getUserMedia({
-  audio: true,
-  video: true
+  video: true,
+  audio: true
 })
 .then(gotStream)
 .catch(function(e) {
@@ -131,6 +131,8 @@ function gotStream(stream) {
     maybeStart();
   }
 }
+
+
 
 var constraints = {
     audio: true,
@@ -150,7 +152,10 @@ function maybeStart() {
   if (!isStarted && typeof localStream !== 'undefined' && isChannelReady) {
     console.log('>>>>>> creating peer connection');
     createPeerConnection();
-    pc.addStream(localStream);
+    
+    for (const track of localStream.getTracks()) {
+      pc.addTrack(track);
+    }
 
     initDataChannel();
     console.log('Created RTCDataChannel');
@@ -187,9 +192,25 @@ function createPeerConnection() {
     } 
 
     pc.onicecandidate = handleIceCandidate;
-    pc.onaddstream = handleRemoteStreamAdded;
-    pc.onremovestream = handleRemoteStreamRemoved;
+    pc.ontrack = ev => {
+      if (ev.streams && ev.streams[0]) {
+        console.log("ev streams detected")
+        remoteVideo.srcObject = ev.streams[0];
+      } else {
+        if (!remoteStream) {
+          console.log("Creating new MediaStream")
+          remoteStream = new MediaStream();
+        }
+        console.log("adding track to remote stream")
+        remoteStream.addTrack(ev.track);
+        remoteVideo.setAttribute('src', remoteStream);
+        remoteVideo.srcObject = remoteStream;
+      }
+      remoteVideo.autoplay = true;
+      
+    }
     pc.ondatachannel = receiveChannelCallback;
+
     console.log('Created RTCPeerConnnection');
 
   } catch (e) {
@@ -283,7 +304,7 @@ function requestTurn(turnURL) {
 
 function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.');
-  remoteStream = event.stream;
+  remoteStream = event.streams[0];
   remoteVideo.autoplay = true;
   remoteVideo.srcObject = remoteStream;
 }
