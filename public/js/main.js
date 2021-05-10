@@ -162,9 +162,13 @@ function maybeStart() {
   }
 }
 
-window.onbeforeunload = function() {
-  sendMessage('bye');
-};
+// handle tabs closing(almost all browsers) or pagehide(needed for iPad/iPhone)
+var isOnIOS = navigator.userAgent.match(/iPad/i)|| navigator.userAgent.match(/iPhone/i);
+var eventName = isOnIOS ? "pagehide" : "beforeunload";
+
+window.addEventListener(eventName, function (event) { 
+    sendMessage('bye');
+} );
 
 /////////////////////////////////////////////////////////
 
