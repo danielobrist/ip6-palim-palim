@@ -161,7 +161,8 @@ function maybeStart() {
     for (const track of localStream.getTracks()) {
       pc.addTrack(track);
     }
-
+    
+    initDataChannel();
     console.log('Created RTCDataChannel');
 
     isStarted = true;
@@ -169,7 +170,7 @@ function maybeStart() {
     if (isInitiator) {
       doCall();
     }
-    initDataChannel();
+
     startGameSync();
   }
 }
