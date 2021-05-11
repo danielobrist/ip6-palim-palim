@@ -157,7 +157,6 @@ function maybeStart() {
       pc.addTrack(track);
     }
 
-    initDataChannel();
     console.log('Created RTCDataChannel');
 
     isStarted = true;
@@ -165,12 +164,13 @@ function maybeStart() {
     if (isInitiator) {
       doCall();
     }
+    initDataChannel();
     startGameSync();
   }
 }
 
 window.onpagehide = function() {
-  sendMessage('bye');
+  hangup();
 };
 
 // handle tabs closing(almost all browsers) or pagehide(needed for iPad/iPhone)
