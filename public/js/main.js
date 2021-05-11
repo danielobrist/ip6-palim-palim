@@ -19,6 +19,11 @@ var pcConfig = {
       'urls': 'stun:stun.l.google.com:19302'
     },
     {
+      'urls': 'turn:numb.viagenie.ca',
+      'credential': 'muazkh',
+      'username': 'webrtc@live.com'
+    },
+    {
       'urls': 'turn:192.158.29.39:3478?transport=udp',
       'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
       'username': '28224511:1379330808'
@@ -157,7 +162,6 @@ function maybeStart() {
       pc.addTrack(track);
     }
 
-    initDataChannel();
     console.log('Created RTCDataChannel');
 
     isStarted = true;
@@ -165,12 +169,13 @@ function maybeStart() {
     if (isInitiator) {
       doCall();
     }
-    startGameSync();
+    // initDataChannel();
+    // startGameSync();
   }
 }
 
 window.onpagehide = function() {
-  sendMessage('bye');
+  hangup();
 };
 
 // handle tabs closing(almost all browsers) or pagehide(needed for iPad/iPhone)
@@ -209,7 +214,7 @@ function createPeerConnection() {
       remoteVideo.autoplay = true;
       
     }
-    pc.ondatachannel = receiveChannelCallback;
+    // pc.ondatachannel = receiveChannelCallback;
 
     console.log('Created RTCPeerConnnection');
 
@@ -222,7 +227,7 @@ function createPeerConnection() {
 
 function startGameSync() {
   //TODO set interval
-  let interval = setInterval(sendGameobjectPositions, 30);
+  // let interval = setInterval(sendGameobjectPositions, 30);
 }
 
 function sendGameobjectPositions() {
