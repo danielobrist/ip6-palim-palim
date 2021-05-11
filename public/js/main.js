@@ -169,8 +169,8 @@ function maybeStart() {
     if (isInitiator) {
       doCall();
     }
-    // initDataChannel();
-    // startGameSync();
+    initDataChannel();
+    startGameSync();
   }
 }
 
@@ -214,7 +214,7 @@ function createPeerConnection() {
       remoteVideo.autoplay = true;
       
     }
-    // pc.ondatachannel = receiveChannelCallback;
+    pc.ondatachannel = receiveChannelCallback;
 
     console.log('Created RTCPeerConnnection');
 
@@ -226,8 +226,7 @@ function createPeerConnection() {
 }
 
 function startGameSync() {
-  //TODO set interval
-  // let interval = setInterval(sendGameobjectPositions, 30);
+  let interval = setInterval(sendGameobjectPositions, 30);
 }
 
 function sendGameobjectPositions() {
