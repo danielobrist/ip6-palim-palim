@@ -165,7 +165,7 @@ function maybeStart() {
       doCall();
     }
     // initDataChannel();
-    startGameSync();
+    // startGameSync();
   }
 }
 
@@ -222,7 +222,7 @@ function createPeerConnection() {
 
 function startGameSync() {
   //TODO set interval
-  let interval = setInterval(sendGameobjectPositions, 30);
+  // let interval = setInterval(sendGameobjectPositions, 30);
 }
 
 function sendGameobjectPositions() {
