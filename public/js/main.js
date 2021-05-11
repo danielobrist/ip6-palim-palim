@@ -164,7 +164,7 @@ function maybeStart() {
     if (isInitiator) {
       doCall();
     }
-    initDataChannel();
+    // initDataChannel();
     startGameSync();
   }
 }
