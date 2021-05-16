@@ -1,9 +1,8 @@
 import {changeCameraPosition, getSceneJSON, updateRemoteObjects} from './three.js';
 
-export {sendChannel as dataChannel};
+export {dataChannel};
 
-let sendChannel;
-let receiveChannel;
+let dataChannel;
 
 var isChannelReady = false;
 var isInitiator = false;
@@ -162,12 +161,13 @@ function maybeStart() {
       pc.addTrack(track);
     }
     
-    initDataChannel();
-    console.log('Created RTCDataChannel');
+    
 
     isStarted = true;
     console.log('isInitiator', isInitiator);
     if (isInitiator) {
+      initDataChannel();
+      console.log('Created RTCDataChannel');
       doCall();
     }
 
@@ -232,8 +232,8 @@ function startGameSync() {
 
 function sendGameobjectPositions() {
   //TODO send JSON Strings of gameobject and positions
-  if (sendChannel.readyState === "open") {
-    sendChannel.send(getSceneJSON());
+  if (dataChannel && dataChannel.readyState === "open") {
+    dataChannel.send(getSceneJSON());
   }
 }
 
@@ -332,13 +332,13 @@ function handleRemoteHangup() {
 
 function stop() {
   isStarted = false;
-  sendChannel.close();
-  receiveChannel.close();
+  dataChannel.close();
   pc.close();
   pc = null;
   remoteVideo.pause();
   remoteVideo.removeAttribute('src'); // empty source
   remoteVideo.removeAttribute('autoplay');
+  remoteStream = null;
   remoteVideo.load();
 }
 
@@ -346,29 +346,31 @@ function stop() {
 
 function initDataChannel() {
 console.log('CREATING DATACHANNEL gameUpdates')
-sendChannel = pc.createDataChannel('gameUpdates', {
+dataChannel = pc.createDataChannel('gameUpdates', {
   ordered: false,
   id: room
   });
-sendChannel.onmessage = function (event) {
-    console.log("Got Data Channel Message:", event.data);
-  };
-sendChannel.onerror = function (error) {
+dataChannel.onmessage = handleReceiveMessage;
+dataChannel.onerror = function (error) {
     console.log("Data Channel Error:", error);
   };
-sendChannel.onopen = handleDataChannelStatusChange;
-sendChannel.onclose = handleDataChannelStatusChange;
+dataChannel.onopen = handleDataChannelStatusChange;
+dataChannel.onclose = handleDataChannelStatusChange;
 
 console.log('CREATED DATACHANNEL gameUpdates')
 }
 
 
 function receiveChannelCallback(event) {
-  console.log('Receive Channel Callback');
-  receiveChannel = event.channel;
-  receiveChannel.onmessage = handleReceiveMessage;
-  receiveChannel.onopen = handleReceiveChannelStatusChange;
-  receiveChannel.onclose = handleReceiveChannelStatusChange;
+  console.log('Received Channel Callback');
+  dataChannel = event.channel;
+  dataChannel.onmessage = handleReceiveMessage;
+  dataChannel.onerror = function (error) {
+    console.log("Data Channel Error:", error);
+  };
+  dataChannel.onopen = handleReceiveChannelStatusChange;
+  dataChannel.onclose = handleReceiveChannelStatusChange;
+  console.log('CREATED DATACHANNEL gameUpdates');
 }
 
 function handleReceiveMessage(event) {
@@ -378,8 +380,8 @@ function handleReceiveMessage(event) {
 }
 
 function handleDataChannelStatusChange(event) {
-  if (sendChannel) {
-    var state = sendChannel.readyState;
+  if (dataChannel) {
+    var state = dataChannel.readyState;
 
     if (state === "open") {
       console.log("DATA CHANNEL STATE: open")
@@ -390,8 +392,8 @@ function handleDataChannelStatusChange(event) {
 }
 
 function handleReceiveChannelStatusChange() {
-  if (receiveChannel) {
+  if (dataChannel) {
     console.log("Receive channel's status has changed to " +
-                receiveChannel.readyState);
+                dataChannel.readyState);
   }
 }
