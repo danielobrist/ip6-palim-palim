@@ -6,8 +6,8 @@ let scene;
 
 function initSharedScene() {
     scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x000000, 1500, 2100);
-
+    scene.background = null;
+    
     initLight();
 
     return scene;
@@ -15,7 +15,7 @@ function initSharedScene() {
 
 function initSharedCamera() {
     const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
-    camera.position.set(0,1,5);
+    camera.position.set(0,0,10);
     camera.lookAt( 0, 0, 0 );
 
     return camera;

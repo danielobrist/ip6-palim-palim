@@ -6,7 +6,6 @@ import {DragControls} from 'https://unpkg.com/three@0.127.0/examples/jsm/control
 import {initCube, load3dAsset} from './objects3d.js';
 import {initSharedScene, initSharedCamera} from './sceneShared.js';
 import {initSellerScene, initSellerCamera} from './sceneSeller.js';
-// import {salesObject} from './salesObject.js';
 import * as DEFAULT_VALUES from './default_values.js';
 
 export {changeCameraPosition, getSceneJSON, updateRemoteObjects};
@@ -17,11 +16,14 @@ const renderer = new THREE.WebGLRenderer({
 
 const scene =       initSharedScene();
 let camera =        initSharedCamera();
+let draggableObjects = [];
+
 const sceneSeller = initSellerScene();
 let cameraSeller =  initSellerCamera();
+let draggableObjectsSeller = [];
 
 let cube, cube2, cube3;
-let draggableObjects = [];
+
 
 init();
 init3DObjects();
@@ -40,9 +42,9 @@ function init() {
 
 function init3DObjects() {
 
-    cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorGreen, new THREE.Vector3(0, 0, 5), true, draggableObjects, scene);
-    cube2 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorBlue, new THREE.Vector3(0, 0, 2), true, draggableObjects, scene);
-    cube3 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(0, 0, 6), true, draggableObjects, sceneSeller);
+    cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorGreen, new THREE.Vector3(0, -2, 0), true, draggableObjects, scene);
+    cube2 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorBlue, new THREE.Vector3(1, -3.5, 0), true, draggableObjectsSeller, sceneSeller);
+    cube3 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(-1, -3.5, 0), true, draggableObjectsSeller, sceneSeller);
     
     const loader = new GLTFLoader();
     renderer.outputEncoding = THREE.sRGBEncoding;
@@ -55,35 +57,34 @@ function init3DObjects() {
 
 function activateDragControls() {
     const controls = new DragControls( [ ...draggableObjects ], camera, renderer.domElement );
-    const controlsSeller = new DragControls( [ ...draggableObjects ], cameraSeller, renderer.domElement );
+    const controlsSeller = new DragControls( [ ...draggableObjectsSeller ], cameraSeller, renderer.domElement );
 
     
     controls.addEventListener( 'drag', render );
     controlsSeller.addEventListener( 'drag', render );
    
-    controls.addEventListener('dragend', function(event) {
-        if(event.object.position.y > 1.1) {
+    controlsSeller.addEventListener('dragend', function(event) {
+        if(event.object.position.y > -1.5) {
 
             let temp = event.object.clone();
             temp.position.set(event.object.position.x, event.object.position.y, event.object.position.z);
-            scene.add(temp);
-
-            scene.getObjectById(event.object.id).position.set(event.object.startPosition.x, event.object.startPosition.y, event.object.startPosition.z);
-
+            draggableObjects.push(temp);
+            sceneSeller.add(temp);
         }
+        event.object.position.set(event.object.startPosition.x, event.object.startPosition.y, event.object.startPosition.z);
     });
 }
 
 function animate() {
     requestAnimationFrame( animate );
-    cube.rotation.y += 0.01;
+    //cube.rotation.y += 0.01;
     renderer.render( scene, camera );
     renderer.render( sceneSeller, cameraSeller );
 }
 
 function changeCameraPosition() {
     console.log('changing camera position!');
-    camera.position.z = -5;
+    camera.position.z = -10;
     camera.lookAt( 0, 0, 0 );
 }
 
