@@ -68,7 +68,7 @@ function activateDragControls() {
             temp.position.set(event.object.position.x, event.object.position.y, event.object.position.z);
             scene.add(temp);
 
-            scene.getObjectById(event.object.id).position.set(startPosition);
+            scene.getObjectById(event.object.id).position.set(event.object.startPosition.x, event.object.startPosition.y, event.object.startPosition.z);
 
         }
     });

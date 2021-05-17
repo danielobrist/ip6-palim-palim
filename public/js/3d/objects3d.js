@@ -6,6 +6,7 @@ export {initCube, load3dAsset}
 function initCube(geometry, material, position, draggable, draggableObjects, scene) {
     let cube = new salesObject( geometry, material );
     cube.position.set(position.x, position.y, position.z);
+    cube.startPosition = position;
     scene.add(cube);
     if(draggable) { draggableObjects.push(cube); }
     return cube;
