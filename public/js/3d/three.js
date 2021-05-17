@@ -16,7 +16,6 @@ const renderer = new THREE.WebGLRenderer({
 
 const scene =       initSharedScene();
 let camera =        initSharedCamera();
-let draggableObjects = [];
 
 const sceneSeller = initSellerScene();
 let cameraSeller =  initSellerCamera();
@@ -42,7 +41,7 @@ function init() {
 
 function init3DObjects() {
 
-    cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorGreen, new THREE.Vector3(0, -2, 0), true, draggableObjects, scene);
+    cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorGreen, new THREE.Vector3(0, -3.5, 0), true, draggableObjectsSeller, sceneSeller);
     cube2 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorBlue, new THREE.Vector3(1, -3.5, 0), true, draggableObjectsSeller, sceneSeller);
     cube3 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(-1, -3.5, 0), true, draggableObjectsSeller, sceneSeller);
     
@@ -56,11 +55,8 @@ function init3DObjects() {
 
 
 function activateDragControls() {
-    const controls = new DragControls( [ ...draggableObjects ], camera, renderer.domElement );
-    const controlsSeller = new DragControls( [ ...draggableObjectsSeller ], cameraSeller, renderer.domElement );
-
     
-    controls.addEventListener( 'drag', render );
+    const controlsSeller = new DragControls( [ ...draggableObjectsSeller ], cameraSeller, renderer.domElement );
     controlsSeller.addEventListener( 'drag', render );
    
     controlsSeller.addEventListener('dragend', function(event) {
@@ -68,8 +64,9 @@ function activateDragControls() {
 
             let temp = event.object.clone();
             temp.position.set(event.object.position.x, event.object.position.y, event.object.position.z);
-            draggableObjects.push(temp);
             sceneSeller.add(temp);
+            
+            new DragControls([temp], camera, renderer.domElement).addEventListener('drag', render);
         }
         event.object.position.set(event.object.startPosition.x, event.object.startPosition.y, event.object.startPosition.z);
     });
