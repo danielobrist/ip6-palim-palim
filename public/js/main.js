@@ -1,4 +1,4 @@
-import {changeCameraPosition, getSceneJSON, updateRemoteObjects} from './three.js';
+import {changeCameraPosition, getSceneJSON, updateRemoteObjects} from './3d/three.js';
 
 export {dataChannel};
 
