@@ -1,6 +1,9 @@
-import {changeCameraPosition, getSceneJSON, updateRemoteObjects} from './3d/three.js';
+import {startGame, updateRemoteObjects} from './3d/three.js';
+import {GameController} from './game/gameController.js';
 
 export {dataChannel};
+
+const gameController = GameController();
 
 let dataChannel;
 
@@ -29,7 +32,8 @@ if (room !== '') {
 socket.on('created', function(room) {
   console.log('Created room ' + room);
   isInitiator = true;
-  changeCameraPosition();
+  startGame(isInitiator);
+  console.log("Started game with isInitiator: " + isInitiator);
 });
 
 socket.on('full', function(room) {
@@ -46,6 +50,8 @@ socket.on('join', function (room){
 socket.on('joined', function(room) {
   console.log('joined: ' + room);
   isChannelReady = true;
+  startGame(isInitiator);
+  console.log("started game with isInitiator: " + isInitiator);
 });
 
 socket.on('log', function(array) {
@@ -118,8 +124,6 @@ function maybeStart() {
     for (const track of localStream.getTracks()) {
       peerConnection.addTrack(track);
     }
-    
-    
 
     isStarted = true;
     console.log('isInitiator', isInitiator);
@@ -129,7 +133,7 @@ function maybeStart() {
       doCall();
     }
 
-    startGameSync();
+    gameController.startSharedSceneSync();
   }
 }
 
@@ -274,6 +278,7 @@ function stop() {
   remoteVideo.removeAttribute('autoplay');
   remoteStream = null;
   remoteVideo.load();
+  gameController.stopSharedSceneSync();
 }
 
 /////////////////////////////////////////////
@@ -335,13 +340,13 @@ function handleReceiveChannelStatusChange() {
 /////   synchronization of gameobjects    /////
 ///////////////////////////////////////////////
 
-function startGameSync() {
-  let interval = setInterval(sendGameobjectPositions, 30);
-}
+// function startGameSync() {
+//   let interval = setInterval(sendGameobjectPositions, 30);
+// }
 
-function sendGameobjectPositions() {
-  //TODO send JSON Strings of gameobject and positions
-  if (dataChannel && dataChannel.readyState === "open") {
-    dataChannel.send(getSceneJSON());
-  }
-}
+// function sendGameobjectPositions(sceneJson) {
+//   //TODO send JSON Strings of gameobject and positions
+//   if (dataChannel && dataChannel.readyState === "open") {
+//     dataChannel.send(sceneJson);
+//   }
+// }
