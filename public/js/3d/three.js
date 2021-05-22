@@ -3,10 +3,8 @@ import {GLTFLoader} from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/G
 import {DragControls} from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/DragControls.js';
 import {GameController} from '../game/gameController.js';
 
-// import * as THREE from '../lib/three/build/three.module.js';
 import {initCube, load3dAsset} from './objects3d.js';
-import {initSharedScene, initSharedCamera} from './sceneShared.js';
-import {initSellerScene, initSellerCamera} from './sceneSeller.js';
+import {initScene, initCamera} from './scene.js';
 import * as DEFAULT_VALUES from './default_values.js';
 
 export {startGame, getSceneJSON, updateRemoteObjects};
@@ -15,19 +13,16 @@ const gameController = GameController();
 
 // an array of objects to sync
 const objectsToSync = new Map();
-const sharedSpace = new THREE.Object3D();
 const personalSpace = new THREE.Object3D();
 
 const renderer = new THREE.WebGLRenderer({
     alpha: true
 });
 
-let sharedScene;
-let sharedCamera;
-
 let localScene;
 let localCamera;
 
+let dragControl;
 let draggableObjectsSeller = [];
 
 let cube, cube2, cube3;
@@ -46,21 +41,13 @@ function startGame(isInitiator) {
 
 function init() {
 
-
-
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.autoClear = false;
     document.getElementById("canvasContainer").appendChild( renderer.domElement );
 
-    sharedScene = initSharedScene();
-    sharedCamera = initSharedCamera();
-
-    sharedScene.add(sharedSpace);
-    // objectsToSync.push(sharedSpace);
-
-    localScene = initSellerScene();
-    localCamera =  initSellerCamera();
+    localScene = initScene();
+    localCamera =  initCamera();
 
     localScene.add(personalSpace);
 
@@ -74,8 +61,8 @@ function init3DObjects() {
 
     if (isSeller) { 
         // init seller specific items in local scene
-        cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorGreen, new THREE.Vector3(0, -3.5, 0), true, draggableObjectsSeller, sharedSpace);
-        cube2 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorBlue, new THREE.Vector3(1, -3.5, 0), true, draggableObjectsSeller, sharedSpace);
+        cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorGreen, new THREE.Vector3(0, -3.5, 0), true, draggableObjectsSeller, personalSpace);
+        cube2 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorBlue, new THREE.Vector3(1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
         cube.name = "cube0";
         cube2.name = "cube2";
         objectsToSync.set(cube.name, cube);
@@ -86,7 +73,7 @@ function init3DObjects() {
         // gameController.addLocalObject(cube2);
     } else {
         // init buyer specific items in local scene
-        cube3 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(-1, -3.5, 0), true, draggableObjectsSeller, sharedSpace);
+        cube3 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(-1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
         cube3.name = "cube3";
         objectsToSync.set(cube3.name, cube3);
         // gameController.addLocalObject(cube3);
@@ -96,40 +83,36 @@ function init3DObjects() {
     renderer.outputEncoding = THREE.sRGBEncoding;
 
     // init static stuff for both (eg. counter, etc)
-    load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', sharedScene);
-    load3dAsset(loader, '../../assets/banana.glb', new THREE.Vector3(0.2, 0.2, 0.2), 'bananaTemplate', sharedScene);
+    load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
+    load3dAsset(loader, '../../assets/banana.glb', new THREE.Vector3(0.2, 0.2, 0.2), 'bananaTemplate', personalSpace);
 }
 
 
 function activateDragControls() {
     
-    const controlsSeller = new DragControls( [ ...draggableObjectsSeller ], sharedCamera, renderer.domElement );
-    controlsSeller.addEventListener( 'drag', function(event) {
-        render();
+    dragControl = new DragControls( [ ...draggableObjectsSeller ], localCamera, renderer.domElement );
+    dragControl.addEventListener( 'drag', function(event) {
         gameController.sendGameobjectUpdate(getObjJSON(event.object));
+        render();
     } );
    
-    controlsSeller.addEventListener('dragend', function(event) {
-        if(event.object.position.y > -1.5) {
+    // dragControl.addEventListener('dragend', function(event) {
+    //     if(event.object.position.y > -1.5) {
 
-            let temp = event.object.clone();
-            temp.position.set(event.object.position.x, event.object.position.y, event.object.position.z);
-            temp.name = temp.uuid;
-            sharedScene.add(temp);
-
-            new DragControls([temp], sharedCamera, renderer.domElement).addEventListener('drag', function(event) {
-                render();
-                gameController.sendGameobjectUpdate(getObjJSON(event.object));
-            });
-        }
-        event.object.position.set(event.object.startPosition.x, event.object.startPosition.y, event.object.startPosition.z);
-    });
+    //         let temp = event.object.clone();
+    //         temp.position.set(event.object.position.x, event.object.position.y, event.object.position.z);
+    //         temp.name = temp.uuid;
+    //         personalSpace.add(temp);
+    //         objectsToSync.set(temp.name, temp);
+    //         addObjectToDragConrols(temp);
+    //     }
+    //     event.object.position.set(event.object.startPosition.x, event.object.startPosition.y, event.object.startPosition.z);
+    // });
 }
 
 function animate() {
     requestAnimationFrame( animate );
     //cube.rotation.y += 0.01;
-    renderer.render( sharedScene, sharedCamera );
     renderer.render( localScene, localCamera );
 }
 
@@ -161,9 +144,8 @@ function updateRemoteObjects(data) {
     let obj = JSON.parse(data);
     // console.log('Parsed JSON uuid: ' + obj.uuid + ', positionx: ' + obj.position.x + ', rotationx: ' + obj.rotation._x);
 
-    //TODO if element not present, then create and add to sharedScene
     if(objectsToSync.has(obj.name)) {
-        let localElement = sharedScene.getObjectByName(obj.name);
+        let localElement = localScene.getObjectByName(obj.name);
 
         localElement.position.x = obj.position.x;
         localElement.position.y = obj.position.y;
@@ -174,24 +156,27 @@ function updateRemoteObjects(data) {
     } else {
         // creates and add to objectsToSync
         // TODO makes a red clone, need to pass color along in JSON
-        let newObj = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(obj.position.x, obj.position.y, obj.position.z), true, draggableObjectsSeller, sharedSpace);
+        let newObj = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(obj.position.x, obj.position.y, obj.position.z), true, draggableObjectsSeller, personalSpace);
         newObj.name = obj.name;
         objectsToSync.set(newObj.name, newObj);
 
-        new DragControls([newObj], sharedCamera, renderer.domElement).addEventListener('drag', function(event) {
-            render();
-            gameController.sendGameobjectUpdate(getObjJSON(event.object));
-        });
+        addObjectToDragConrols(newObj);
     }
     
     //TOOD maybe tween/interpolate between positions
 
 }
 
+function addObjectToDragConrols(obj) {
+    draggableObjectsSeller.push(obj);
+    dragControl = new DragControls([...draggableObjectsSeller], localCamera, renderer.domElement).addEventListener('drag', function(event) {
+        gameController.sendGameobjectUpdate(getObjJSON(event.object));
+        render();
+    });
+}
+
 function render() {
-    renderer.clear();
-    renderer.render( sharedScene, sharedCamera );
-    renderer.clearDepth();
+
     renderer.render( localScene, localCamera );
 }
 
