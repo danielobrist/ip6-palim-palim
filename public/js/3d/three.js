@@ -121,7 +121,7 @@ async function init3DObjects() {
 
 
     const geometry2 = new THREE.BoxGeometry(1,1,1);
-    const videoMaterial = makeVideoMaterial("localVideo");
+    const videoMaterial = makeVideoMaterial("remoteVideo");
     const cube2 = new THREE.Mesh( geometry, videoMaterial );
     localScene.add( cube2 );
 }
