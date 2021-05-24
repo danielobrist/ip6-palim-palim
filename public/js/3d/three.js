@@ -112,12 +112,18 @@ async function init3DObjects() {
     // init static stuff for both (eg. counter, etc)
     // load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
     // load3dAsset(loader, '../../assets/banana.glb', new THREE.Vector3(0.2, 0.2, 0.2), 'bananaTemplate', personalSpace);
-    const geometry = new THREE.PlaneGeometry( 6, 3, 2 );
+    const geometry = new THREE.PlaneGeometry( 6, 4 );
     const material = new THREE.MeshBasicMaterial( {color: 0x8B4513, side: THREE.DoubleSide} );
     const plane = new THREE.Mesh( geometry, material );
     plane.position.y = -2;
     plane.rotation.x = Math.PI / 2;
     localScene.add( plane );
+
+
+    const geometry2 = new THREE.BoxGeometry(1,1,1);
+    const videoMaterial = makeVideoMaterial("localVideo");
+    const cube2 = new THREE.Mesh( geometry, videoMaterial );
+    localScene.add( cube2 );
 }
 
 
@@ -210,6 +216,19 @@ function addObjectToDragConrols(obj) {
         render();
     });
 }
+
+function makeVideoMaterial(id) {
+    let videoElement = document.getElementById(id);
+    let videoTexture = new THREE.VideoTexture(videoElement);
+  
+    let videoMaterial = new THREE.MeshBasicMaterial({
+      map: videoTexture,
+      overdraw: true,
+      side: THREE.DoubleSide,
+    });
+  
+    return videoMaterial;
+  }
 
 function render() {
 
