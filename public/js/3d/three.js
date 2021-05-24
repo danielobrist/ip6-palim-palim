@@ -30,6 +30,7 @@ let draggableObjectsSeller = [];
 let cube, cube2, cube3;
 let isSeller = false;
 
+let duckMesh;
 // let orbitControls;
 
 function startGame(isInitiator) {
@@ -63,38 +64,63 @@ function init() {
 
 async function init3DObjects() {
 
-    if (isSeller) { 
-        // init seller specific items in local scene
-        cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(0, -3.5, 0), true, draggableObjectsSeller, personalSpace);
-        cube2 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
-        cube.name = "cube0";
-        cube2.name = "cube2";
-        objectsToSync.set(cube.name, cube);
-        objectsToSync.set(cube2.name, cube);
-
-    } else {
-        // init buyer specific items in local scene
-        cube3 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(-1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
-        cube3.name = "cube3";
-        objectsToSync.set(cube3.name, cube3);
-    }
-
     const loader = new GLTFLoader();
-
     let loadedData = await loader.loadAsync('models/gltf/duck/duck2.gltf');
     loadedData.scene.traverse((o) => {
         if (o.isMesh) {
-            console.dir('Loaded data: ' + JSON.stringify(o));
-            let mesh = new THREE.Mesh();
+            // console.dir('Loaded data: ' + JSON.stringify(o));
+            duckMesh = new THREE.Mesh();
             o.scale.set(0.01,0.01,0.01);
 
-            mesh = o;
-            localScene.add(o);
-            // draggableObjectsSeller.push(mesh);
-            let drago = new DragControls( [o], localCamera, renderer.domElement );
-            // drago.transforGroup = true;
+            duckMesh = o;
+            let drago = new DragControls( [duckMesh], localCamera, renderer.domElement );
+            drago.addEventListener( 'drag', function(event) {
+                gameController.sendGameobjectUpdate(getObjJSON(event.object));
+                render();
+            } );
+
         };
-      });
+    });
+
+    if (isSeller) { 
+        // init seller specific items in local scene
+        // cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(0, -3.5, 0), true, draggableObjectsSeller, personalSpace);
+        // cube2 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
+        // cube.name = "cube0";
+        // cube2.name = "cube2";
+        // objectsToSync.set(cube.name, cube);
+        // objectsToSync.set(cube2.name, cube);
+
+        let duckMesh1 = duckMesh.clone();
+        duckMesh1.name = "duckMesh1";
+        localScene.add(duckMesh1);
+        duckMesh1.position.set(0, -3.5, 0);
+        objectsToSync.set(duckMesh1.name, duckMesh1);
+        addObjectToDragConrols(duckMesh1);
+
+        let duckMesh2 = duckMesh.clone();
+        duckMesh2.name = "duckMesh2";
+        duckMesh2.position.set(1, -3.5, 0);
+        localScene.add(duckMesh2);
+        objectsToSync.set(duckMesh2.name, duckMesh2);
+        addObjectToDragConrols(duckMesh2);
+
+    } else {
+        // init buyer specific items in local scene
+        // cube3 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(-1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
+        // cube3.name = "cube3";
+        // objectsToSync.set(cube3.name, cube3);
+
+        let duckMesh3 = duckMesh.clone();
+        duckMesh3.name = "duckMesh3";
+        duckMesh3.position.set(-1, -3.5, 0);
+        localScene.add(duckMesh3);
+        objectsToSync.set(duckMesh3.name, duckMesh3);
+        addObjectToDragConrols(duckMesh3);
+
+    }
+
+   
     renderer.outputEncoding = THREE.sRGBEncoding;
 
     
@@ -179,12 +205,13 @@ function updateRemoteObjects(data) {
         localElement.rotation.y = obj.rotation._y;
         localElement.rotation.z = obj.rotation._z;
     } else {
-        // creates and add to objectsToSync
-        // TODO makes a red clone, need to pass color along in JSON
-        let newObj = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(obj.position.x, obj.position.y, obj.position.z), true, draggableObjectsSeller, personalSpace);
+        // creates and add to scene and objectsToSync
+        let newObj = duckMesh.clone();
+        // let newObj = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(obj.position.x, obj.position.y, obj.position.z), true, draggableObjectsSeller, personalSpace);
         newObj.name = obj.name;
         objectsToSync.set(newObj.name, newObj);
-
+        newObj.position.set(obj.position.x, obj.position.y, obj.position.z);
+        localScene.add(newObj);
         addObjectToDragConrols(newObj);
     }
     
