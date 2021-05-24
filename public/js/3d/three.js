@@ -15,7 +15,6 @@ const gameController = GameController();
 
 // an array of objects to sync
 const objectsToSync = new Map();
-const personalSpace = new THREE.Object3D();
 
 const renderer = new THREE.WebGLRenderer({
     alpha: true
@@ -35,7 +34,7 @@ let duckMesh;
 
 function startGame(isInitiator) {
     isSeller = isInitiator;
-    
+    console.log("Started game with isInitiator = " + isInitiator);
     init();
     init3DObjects();
     activateDragControls();
@@ -50,13 +49,7 @@ function init() {
     document.getElementById("canvasContainer").appendChild( renderer.domElement );
 
     localScene = initScene();
-    localCamera =  initCamera();
-
-    localScene.add(personalSpace);
-
-    if (isSeller) {
-        changeCameraPosition();
-    }
+    localCamera =  initCamera(isSeller);
 
     // orbitControls = new OrbitControls( localCamera, renderer.domElement );
 
@@ -84,12 +77,6 @@ async function init3DObjects() {
 
     if (isSeller) { 
         // init seller specific items in local scene
-        // cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(0, -3.5, 0), true, draggableObjectsSeller, personalSpace);
-        // cube2 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
-        // cube.name = "cube0";
-        // cube2.name = "cube2";
-        // objectsToSync.set(cube.name, cube);
-        // objectsToSync.set(cube2.name, cube);
 
         let duckMesh1 = duckMesh.clone();
         duckMesh1.name = "duckMesh1";
@@ -107,9 +94,6 @@ async function init3DObjects() {
 
     } else {
         // init buyer specific items in local scene
-        // cube3 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(-1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
-        // cube3.name = "cube3";
-        // objectsToSync.set(cube3.name, cube3);
 
         let duckMesh3 = duckMesh.clone();
         duckMesh3.name = "duckMesh3";
@@ -131,6 +115,7 @@ async function init3DObjects() {
     const geometry = new THREE.PlaneGeometry( 5, 3, 5 );
     const material = new THREE.MeshBasicMaterial( {color: 0x4A4A4A, side: THREE.DoubleSide} );
     const plane = new THREE.Mesh( geometry, material );
+    plane.position.y = -1;
     plane.rotation.x = 180;
     localScene.add( plane );
 }
@@ -169,7 +154,6 @@ function animate() {
 
 function changeCameraPosition() {
     console.log('changing camera position!');
-    isSeller = true;
     localCamera.position.z = -10;
     localCamera.lookAt( 0, 0, 0 );
 }
@@ -206,11 +190,12 @@ function updateRemoteObjects(data) {
         localElement.rotation.z = obj.rotation._z;
     } else {
         // creates and add to scene and objectsToSync
+        duckMesh.name = obj.name;
+        duckMesh.position.set(obj.position.x, obj.position.y, obj.position.z);
         let newObj = duckMesh.clone();
         // let newObj = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(obj.position.x, obj.position.y, obj.position.z), true, draggableObjectsSeller, personalSpace);
-        newObj.name = obj.name;
         objectsToSync.set(newObj.name, newObj);
-        newObj.position.set(obj.position.x, obj.position.y, obj.position.z);
+        // newObj.position.set(obj.position.x, obj.position.y, obj.position.z);
         localScene.add(newObj);
         addObjectToDragConrols(newObj);
     }

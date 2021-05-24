@@ -33,7 +33,6 @@ socket.on('created', function(room) {
   console.log('Created room ' + room);
   isInitiator = true;
   startGame(isInitiator);
-  console.log("Started game with isInitiator: " + isInitiator);
 });
 
 socket.on('full', function(room) {
@@ -51,7 +50,6 @@ socket.on('joined', function(room) {
   console.log('joined: ' + room);
   isChannelReady = true;
   startGame(isInitiator);
-  console.log("started game with isInitiator: " + isInitiator);
 });
 
 socket.on('log', function(array) {
