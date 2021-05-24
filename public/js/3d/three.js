@@ -1,6 +1,8 @@
 import  * as THREE from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 import {GLTFLoader} from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/GLTFLoader.js';
+import {DRACOLoader} from 'https://unpkg.com/three@0.127.0/examples/jsm/loaders/DRACOLoader.js';
 import {DragControls} from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/DragControls.js';
+import {OrbitControls} from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/OrbitControls.js';
 import {GameController} from '../game/gameController.js';
 
 import {initCube, load3dAsset} from './objects3d.js';
@@ -28,7 +30,7 @@ let draggableObjectsSeller = [];
 let cube, cube2, cube3;
 let isSeller = false;
 
-
+// let orbitControls;
 
 function startGame(isInitiator) {
     isSeller = isInitiator;
@@ -54,9 +56,12 @@ function init() {
     if (isSeller) {
         changeCameraPosition();
     }
+
+    // orbitControls = new OrbitControls( localCamera, renderer.domElement );
+
 }
 
-function init3DObjects() {
+async function init3DObjects() {
 
     if (isSeller) { 
         // init seller specific items in local scene
@@ -75,7 +80,24 @@ function init3DObjects() {
     }
 
     const loader = new GLTFLoader();
+
+    let loadedData = await loader.loadAsync('models/gltf/duck/duck2.gltf');
+    loadedData.scene.traverse((o) => {
+        if (o.isMesh) {
+            console.dir('Loaded data: ' + JSON.stringify(o));
+            let mesh = new THREE.Mesh();
+            o.scale.set(0.01,0.01,0.01);
+
+            mesh = o;
+            localScene.add(o);
+            // draggableObjectsSeller.push(mesh);
+            let drago = new DragControls( [o], localCamera, renderer.domElement );
+            // drago.transforGroup = true;
+        };
+      });
     renderer.outputEncoding = THREE.sRGBEncoding;
+
+    
 
     // init static stuff for both (eg. counter, etc)
     // load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
@@ -89,8 +111,10 @@ function init3DObjects() {
 
 
 function activateDragControls() {
+
     
     dragControl = new DragControls( [ ...draggableObjectsSeller ], localCamera, renderer.domElement );
+    //dragControl.transforGroup = true;
     dragControl.addEventListener( 'drag', function(event) {
         gameController.sendGameobjectUpdate(getObjJSON(event.object));
         render();
@@ -113,6 +137,7 @@ function activateDragControls() {
 function animate() {
     requestAnimationFrame( animate );
     //cube.rotation.y += 0.01;
+    // orbitControls.update();
     renderer.render( localScene, localCamera );
 }
 
