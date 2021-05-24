@@ -81,13 +81,13 @@ async function init3DObjects() {
         let duckMesh1 = duckMesh.clone();
         duckMesh1.name = "duckMesh1";
         localScene.add(duckMesh1);
-        duckMesh1.position.set(0, -3.5, 0);
+        duckMesh1.position.set(0, -4, 0);
         objectsToSync.set(duckMesh1.name, duckMesh1);
         addObjectToDragConrols(duckMesh1);
 
         let duckMesh2 = duckMesh.clone();
         duckMesh2.name = "duckMesh2";
-        duckMesh2.position.set(1, -3.5, 0);
+        duckMesh2.position.set(1, -4, 0);
         localScene.add(duckMesh2);
         objectsToSync.set(duckMesh2.name, duckMesh2);
         addObjectToDragConrols(duckMesh2);
@@ -97,7 +97,7 @@ async function init3DObjects() {
 
         let duckMesh3 = duckMesh.clone();
         duckMesh3.name = "duckMesh3";
-        duckMesh3.position.set(-1, -3.5, 0);
+        duckMesh3.position.set(-1, -4, 0);
         localScene.add(duckMesh3);
         objectsToSync.set(duckMesh3.name, duckMesh3);
         addObjectToDragConrols(duckMesh3);
@@ -112,11 +112,11 @@ async function init3DObjects() {
     // init static stuff for both (eg. counter, etc)
     // load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
     // load3dAsset(loader, '../../assets/banana.glb', new THREE.Vector3(0.2, 0.2, 0.2), 'bananaTemplate', personalSpace);
-    const geometry = new THREE.PlaneGeometry( 5, 3, 5 );
-    const material = new THREE.MeshBasicMaterial( {color: 0x4A4A4A, side: THREE.DoubleSide} );
+    const geometry = new THREE.PlaneGeometry( 6, 3, 2 );
+    const material = new THREE.MeshBasicMaterial( {color: 0x8B4513, side: THREE.DoubleSide} );
     const plane = new THREE.Mesh( geometry, material );
-    plane.position.y = -1;
-    plane.rotation.x = 180;
+    plane.position.y = -2;
+    plane.rotation.x = Math.PI / 2;
     localScene.add( plane );
 }
 
