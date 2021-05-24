@@ -1,4 +1,4 @@
-import {startGame, updateRemoteObjects} from './3d/three.js';
+import {startGame, updateRemoteObjects, moveRemoteVideoToScene} from './3d/three.js';
 import {GameController} from './game/gameController.js';
 
 export {dataChannel};
@@ -122,6 +122,8 @@ function maybeStart() {
     for (const track of localStream.getTracks()) {
       peerConnection.addTrack(track);
     }
+
+    moveRemoteVideoToScene();
 
     isStarted = true;
     console.log('isInitiator', isInitiator);

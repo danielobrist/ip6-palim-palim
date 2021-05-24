@@ -9,7 +9,7 @@ import {initCube, load3dAsset} from './objects3d.js';
 import {initScene, initCamera} from './scene.js';
 import * as DEFAULT_VALUES from './default_values.js';
 
-export {startGame, getSceneJSON, updateRemoteObjects};
+export {startGame, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene};
 
 const gameController = GameController();
 
@@ -112,18 +112,29 @@ async function init3DObjects() {
     // init static stuff for both (eg. counter, etc)
     // load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
     // load3dAsset(loader, '../../assets/banana.glb', new THREE.Vector3(0.2, 0.2, 0.2), 'bananaTemplate', personalSpace);
-    const geometry = new THREE.PlaneGeometry( 6, 4 );
+    const geometry = new THREE.PlaneGeometry( 4, 8/3 );
     const material = new THREE.MeshBasicMaterial( {color: 0x8B4513, side: THREE.DoubleSide} );
     const plane = new THREE.Mesh( geometry, material );
     plane.position.y = -2;
     plane.rotation.x = Math.PI / 2;
     localScene.add( plane );
 
+}
 
-    const geometry2 = new THREE.BoxGeometry(1,1,1);
-    const videoMaterial = makeVideoMaterial("remoteVideo");
-    const cube2 = new THREE.Mesh( geometry, videoMaterial );
-    localScene.add( cube2 );
+function moveRemoteVideoToScene() {
+    setTimeout(() => {
+        console.log("------------moveRemoteVideoToScene-------------");
+        const remoteVideo = document.getElementById("remoteVideo");
+        const reomoteVideoAspectRatio = remoteVideo.offsetWidth/remoteVideo.offsetHeight;
+        console.log(remoteVideo);
+        console.log("width: " + remoteVideo.offsetWidth);
+        console.log("height: " + remoteVideo.offsetHeight);
+
+        const videoGeometry = new THREE.PlaneGeometry( 4, 4/reomoteVideoAspectRatio );
+        const videoMaterial = makeVideoMaterial("remoteVideo");
+        const cube2 = new THREE.Mesh( videoGeometry, videoMaterial );
+        localScene.add( cube2 );
+    }, 1000 );
 }
 
 
