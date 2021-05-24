@@ -54,37 +54,37 @@ function init() {
     if (isSeller) {
         changeCameraPosition();
     }
-    //scene.add( new THREE.GridHelper( 1000, 10, 0x888888, 0x444444 ) );
 }
 
 function init3DObjects() {
 
     if (isSeller) { 
         // init seller specific items in local scene
-        cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorGreen, new THREE.Vector3(0, -3.5, 0), true, draggableObjectsSeller, personalSpace);
-        cube2 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorBlue, new THREE.Vector3(1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
+        cube = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(0, -3.5, 0), true, draggableObjectsSeller, personalSpace);
+        cube2 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
         cube.name = "cube0";
         cube2.name = "cube2";
         objectsToSync.set(cube.name, cube);
         objectsToSync.set(cube2.name, cube);
 
-        // counterSpace.add(cube2);
-        // gameController.addLocalObject(cube);
-        // gameController.addLocalObject(cube2);
     } else {
         // init buyer specific items in local scene
         cube3 = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(-1, -3.5, 0), true, draggableObjectsSeller, personalSpace);
         cube3.name = "cube3";
         objectsToSync.set(cube3.name, cube3);
-        // gameController.addLocalObject(cube3);
     }
 
     const loader = new GLTFLoader();
     renderer.outputEncoding = THREE.sRGBEncoding;
 
     // init static stuff for both (eg. counter, etc)
-    load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
-    load3dAsset(loader, '../../assets/banana.glb', new THREE.Vector3(0.2, 0.2, 0.2), 'bananaTemplate', personalSpace);
+    // load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
+    // load3dAsset(loader, '../../assets/banana.glb', new THREE.Vector3(0.2, 0.2, 0.2), 'bananaTemplate', personalSpace);
+    const geometry = new THREE.PlaneGeometry( 5, 3, 5 );
+    const material = new THREE.MeshBasicMaterial( {color: 0x4A4A4A, side: THREE.DoubleSide} );
+    const plane = new THREE.Mesh( geometry, material );
+    plane.rotation.x = 180;
+    localScene.add( plane );
 }
 
 
@@ -164,7 +164,6 @@ function updateRemoteObjects(data) {
     }
     
     //TOOD maybe tween/interpolate between positions
-
 }
 
 function addObjectToDragConrols(obj) {
