@@ -81,13 +81,13 @@ async function init3DObjects() {
         let duckMesh1 = duckMesh.clone();
         duckMesh1.name = "duckMesh1";
         localScene.add(duckMesh1);
-        duckMesh1.position.set(0, -4, 0);
+        duckMesh1.position.set(0, -4, -1);
         objectsToSync.set(duckMesh1.name, duckMesh1);
         addObjectToDragConrols(duckMesh1);
 
         let duckMesh2 = duckMesh.clone();
         duckMesh2.name = "duckMesh2";
-        duckMesh2.position.set(1, -4, 0);
+        duckMesh2.position.set(1, -4, -1);
         localScene.add(duckMesh2);
         objectsToSync.set(duckMesh2.name, duckMesh2);
         addObjectToDragConrols(duckMesh2);
@@ -97,7 +97,7 @@ async function init3DObjects() {
 
         let duckMesh3 = duckMesh.clone();
         duckMesh3.name = "duckMesh3";
-        duckMesh3.position.set(-1, -4, 0);
+        duckMesh3.position.set(-1, -4, 1);
         localScene.add(duckMesh3);
         objectsToSync.set(duckMesh3.name, duckMesh3);
         addObjectToDragConrols(duckMesh3);
@@ -115,13 +115,13 @@ async function init3DObjects() {
     const geometry = new THREE.PlaneGeometry( 4, 8/3 );
     const material = new THREE.MeshBasicMaterial( {color: 0x8B4513, side: THREE.DoubleSide} );
     const plane = new THREE.Mesh( geometry, material );
-    plane.position.y = -2;
+    plane.position.y = -2   ;
     plane.rotation.x = Math.PI / 2;
     localScene.add( plane );
 
 }
 
-function moveRemoteVideoToScene() {
+function moveRemoteVideoToScene(isSeller) {
     setTimeout(() => {
         console.log("------------moveRemoteVideoToScene-------------");
         const remoteVideo = document.getElementById("remoteVideo");
@@ -132,8 +132,14 @@ function moveRemoteVideoToScene() {
 
         const videoGeometry = new THREE.PlaneGeometry( 4, 4/reomoteVideoAspectRatio );
         const videoMaterial = makeVideoMaterial("remoteVideo");
-        const cube2 = new THREE.Mesh( videoGeometry, videoMaterial );
-        localScene.add( cube2 );
+        const videoMesh = new THREE.Mesh( videoGeometry, videoMaterial );
+        if(isSeller) {
+            videoMesh.position.z = 1;
+        } else {
+            videoMesh.position.z = -1;
+        }
+        //videoMesh.rotation.x = Math.PI / 2 / 2;
+        localScene.add( videoMesh );
     }, 1000 );
 }
 

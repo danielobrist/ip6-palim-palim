@@ -123,7 +123,7 @@ function maybeStart() {
       peerConnection.addTrack(track);
     }
 
-    moveRemoteVideoToScene();
+    moveRemoteVideoToScene(isInitiator);
 
     isStarted = true;
     console.log('isInitiator', isInitiator);
