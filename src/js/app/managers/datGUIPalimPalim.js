@@ -1,5 +1,3 @@
-import Config from '../../data/config';
-
 // Manages all dat.GUI interactions
 export default class DatGUIPalimPalim {
   constructor() {
