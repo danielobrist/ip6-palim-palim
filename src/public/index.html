@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Palim Palim</title>
+  <script defer src="/js/runtime.bundle.js"></script><script defer src="/js/vendors.bundle.js"></script><script defer src="/js/main.bundle.js"></script><link href="/js/../css/main.css" rel="stylesheet"></head>
+
+  <body>
+
+    <div id="localVideoContainer">
+      <video id="localVideo" autoplay muted></video>
+    </div>
+  
+    <div id="remoteVideoContainer">
+      <video id="remoteVideo" autoplay></video>
+    </div>
+    
+    <section id="appContainer" class="main">
+      <div id="loading">Loading...</div>
+    </section>
+
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script src="js/rStats.js"></script>
+    <script src="js/rStats.extras.js"></script>
+    <script src="js/dat.gui.min.js"></script>
+    
+  </body>
+</html>

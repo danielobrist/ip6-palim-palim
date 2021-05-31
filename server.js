@@ -2,10 +2,10 @@
 
 var os = require('os');
 var express = require('express'); 
-
+// const path = require('path');
 var app = express();
-app.use(express.static('public'));
-// app.use("/node_modules", express.static(__dirname + "/node_modules"));
+app.use(express.static('build'));
+// app.use("/node_modules", express.static(path.join(__dirname, '/node_modules')));
 
 var port = process.env.PORT || 8080;
 const server = app.listen(port);
@@ -34,7 +34,7 @@ io.sockets.on('connection', function(socket) {
 
     var clientsInRoom = io.sockets.adapter.rooms[room];
     var numClients = clientsInRoom ? Object.keys(clientsInRoom.sockets).length : 0;
-    log('Room ' + room + ' now has ' + numClients + ' client(s)');
+    log('Room ' + room + ' now has ' + (numClients + 1) + ' client(s)');
 
     if (numClients === 0) {
       socket.join(room);
