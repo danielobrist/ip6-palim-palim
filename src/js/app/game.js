@@ -4,7 +4,6 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {DragControls} from 'three/examples/jsm/controls/DragControls'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {GameController} from './game/gameController.js';
-import DatGUIPalimPalim from './managers/DatGUIPalimPalim';
 
 import {initScene, initCamera} from './game/scene';
 
@@ -125,6 +124,7 @@ async function init3DObjects() {
 }
 
 function initDevThings() {
+    import DatGUIPalimPalim from './managers/DatGUIPalimPalim';
     let gui = new DatGUIPalimPalim();
     gui.load(plane, localCamera, duckMesh3);
 }
