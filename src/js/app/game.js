@@ -117,6 +117,10 @@ async function init3DObjects() {
     plane.rotation.x = Math.PI / 2;
     localScene.add( plane );
 
+    if(__ENV__ === 'dev') {
+        initDevThings();
+    }
+
 }
 
 function initDevThings() {
