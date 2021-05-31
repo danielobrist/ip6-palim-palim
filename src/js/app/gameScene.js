@@ -20,7 +20,6 @@ import Model from './model/model';
 
 // Managers
 import Interaction from './managers/interaction';
-import DatGUI from './managers/datGUI';
 
 // data
 import Config from './../data/config';
@@ -67,11 +66,6 @@ export default class GameScene {
       this.stats.setUp();
     }
 
-    // Set up dat gui
-    if (Config.isDev) {
-      this.gui = new DatGUI(this)
-    }
-
     // Instantiate texture class
     this.texture = new Texture();
 
@@ -97,8 +91,6 @@ export default class GameScene {
         if(Config.isDev) {
           this.meshHelper = new MeshHelper(this.scene, this.model.obj);
           if (Config.mesh.enableHelper) this.meshHelper.enable();
-
-          this.gui.load(this, this.model.obj);
         }
 
         // Everything is now fully loaded
