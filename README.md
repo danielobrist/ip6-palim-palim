@@ -29,27 +29,30 @@ Install dependencies:
 npm install
 ```
 
-Then run dev script:
+Then build the production files with:
 
-```
-npm run dev
-```
-
-Spins up a webpack dev server at localhost:8080 and keeps track of all js and sass changes to files. Useful for developing the Three.js-scene but does not start the node.js server, so the peer connection can not be tested (for this you have to build it and then start the node.js server locally - described next)
-
-
-## Build
 ```
 npm run build
 ```
 
-Cleans existing build folder while linting js folder and copies over the public assets folder from src. Then sets environment to production and compiles js and css into build.
+This cleans existing build folder while linting js folder and copies over the public assets folder from src. Then sets environment to production and compiles js and css into build.
 
 ```
 npm start
 ```
 
-Spins up the node.js server at localhost:8080 and uses the current prod build from the build folder.
+Spins up the node.js server at localhost:8080 and uses the current prod build from the build folder. Open a second tab to chat and play the game with yourself.
+
+
+## Running App in dev mode (wihout Server/VideoChat)
+After installing the dependencies, run:
+
+```
+npm run dev
+```
+
+This will spin up a webpack dev server at localhost:8080 and keeps track of all js and sass changes to files. Useful for developing the Three.js-scene but does not start the node.js server, so the video chat can not be tested (for this you have to build it and then start the node.js server locally - as described above)
+
 
 
 ## Other NPM Scripts
@@ -68,3 +71,12 @@ You can run any of these individually if you'd like with the `npm run` command:
 * Arrow controls will pan
 * Mouse left click will rotate/right click will pan
 * Scroll wheel zooms in and out
+
+
+## Heroku Deployment
+Normally, Heroku will recognise the app as a node.js application and use the proper buildpack for the deployment. If you encounter any problems, try folliwing steps:
+* Set up Heroku CLI [More infos](https://devcenter.heroku.com/articles/heroku-cli)
+* Ensure the Heroku application is using the `heroku/nodejs` buildpack by running the `heroku buildpacks -a <your-heroku-app-name>` command. [More infos](https://devcenter.heroku.com/articles/nodejs-support#specifying-a-node-js-version)
+* If it is not set to `heroku/nodejs`, set the buildpack with the command `heroku buildpacks:set heroku/nodejs -a <your-heroku-app-name>`. [More infos](https://devcenter.heroku.com/articles/buildpacks#setting-a-buildpack-on-an-application)
+* With the proper buildpack set up, Heroku will automatically install all dependencies and will start the server using `npm start`, when deploying the app.
+
