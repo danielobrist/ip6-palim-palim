@@ -114,7 +114,12 @@ module.exports = env => {
 
       // extensions that are used
       extensions: ['.js', '.json'],
+      fallback: {
+        fs: false,
+        path: false
+      }
     },
+    
 
     performance: {
       hints: 'warning'

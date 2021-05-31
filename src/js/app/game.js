@@ -4,10 +4,10 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {DragControls} from 'three/examples/jsm/controls/DragControls'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {GameController} from './game/gameController.js';
-
+import * as Ammo from './physics/ammo.js';
 import {initScene, initCamera} from './game/scene';
 
-export {startGame, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene};
+export {start, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene};
 
 const gameController = GameController();
 
@@ -31,6 +31,27 @@ let isSeller = false;
 
 let duckMesh;
 // let orbitControls;
+let physicsWorld;
+
+const start = (isInitiator) => {
+    Ammo().then( function( Ammo ) {
+        setupPhysicsWorld(Ammo);
+
+        startGame(isInitiator);
+    })
+}
+
+const setupPhysicsWorld = (Ammo) => {
+
+    let collisionConfiguration  = new Ammo.btDefaultCollisionConfiguration(),
+        dispatcher              = new Ammo.btCollisionDispatcher(collisionConfiguration),
+        overlappingPairCache    = new Ammo.btDbvtBroadphase(),
+        solver                  = new Ammo.btSequentialImpulseConstraintSolver();
+
+    physicsWorld           = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+    physicsWorld.setGravity(new Ammo.btVector3(0, -10, 0));
+
+}
 
 function startGame(isInitiator) {
     isSeller = isInitiator;

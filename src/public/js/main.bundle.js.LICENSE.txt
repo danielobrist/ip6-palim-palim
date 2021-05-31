@@ -44,8 +44,6 @@
 
 /*! ./helpers/stats */
 
-/*! ./managers/datGUI */
-
 /*! ./managers/interaction */
 
 /*! ./material */
@@ -56,6 +54,8 @@
 
 /*! ./peerConnection */
 
+/*! ./physics/ammo.js */
+
 /*! ./utils/detector */
 
 /*! ./vertexNormalsHelper */
@@ -64,9 +64,11 @@
 
 /*! @tweenjs/tween.js */
 
-/*! core-js/stable */
-
 /*! es6-promise */
+
+/*! fs */
+
+/*! path */
 
 /*! regenerator-runtime/runtime */
 
@@ -75,6 +77,14 @@
 /*! three/examples/jsm/controls/DragControls */
 
 /*! three/examples/jsm/loaders/GLTFLoader */
+
+/*!********************!*\
+  !*** fs (ignored) ***!
+  \********************/
+
+/*!**********************!*\
+  !*** path (ignored) ***!
+  \**********************/
 
 /*!***********************!*\
   !*** ./src/js/app.js ***!
@@ -117,6 +127,10 @@
   \***********************************/
 
 /*!************************************!*\
+  !*** ./src/js/app/physics/ammo.js ***!
+  \************************************/
+
+/*!************************************!*\
   !*** ./src/js/webrtc/videoCall.js ***!
   \************************************/
 
@@ -127,10 +141,6 @@
 /*!*************************************!*\
   !*** ./src/js/app/model/texture.js ***!
   \*************************************/
-
-/*!***************************************!*\
-  !*** ./src/js/app/managers/datGUI.js ***!
-  \***************************************/
 
 /*!***************************************!*\
   !*** ./src/js/utils/orbitControls.js ***!

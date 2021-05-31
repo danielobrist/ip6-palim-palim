@@ -5,7 +5,7 @@ import Config from './data/config';
 import Detector from './utils/detector';
 import GameScene from './app/gameScene';
 import VideoCall, {isInitiator} from './webrtc/videoCall';
-import {startGame} from './app/game';
+import {start} from './app/game';
 
 // Styles
 import './../css/app.scss';
@@ -38,6 +38,6 @@ function initGame() {
     } else {
         const container = document.getElementById('appContainer');
         // new GameScene(container);
-        startGame(isInitiator);
+        start(isInitiator);
     }
 }
