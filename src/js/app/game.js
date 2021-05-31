@@ -4,6 +4,7 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {DragControls} from 'three/examples/jsm/controls/DragControls'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {GameController} from './game/gameController.js';
+import DatGUIPalimPalim from './managers/DatGUIPalimPalim';
 
 import {initScene, initCamera} from './game/scene';
 
@@ -25,6 +26,8 @@ let dragControl;
 let draggableObjectsSeller = [];
 
 let cube, cube2, cube3;
+let duckMesh1, duckMesh2, duckMesh3;
+let plane;
 let isSeller = false;
 
 let duckMesh;
@@ -75,16 +78,16 @@ async function init3DObjects() {
     if (isSeller) { 
         // init seller specific items in local scene
 
-        let duckMesh1 = duckMesh.clone();
+        duckMesh1 = duckMesh.clone();
         duckMesh1.name = "duckMesh1";
         localScene.add(duckMesh1);
-        duckMesh1.position.set(0, -4, 0);
+        duckMesh1.position.set(-1.5, 0, -2);
         objectsToSync.set(duckMesh1.name, duckMesh1);
         addObjectToDragConrols(duckMesh1);
 
-        let duckMesh2 = duckMesh.clone();
+        duckMesh2 = duckMesh.clone();
         duckMesh2.name = "duckMesh2";
-        duckMesh2.position.set(1, -4, 0);
+        duckMesh2.position.set(0, 0, -2);
         localScene.add(duckMesh2);
         objectsToSync.set(duckMesh2.name, duckMesh2);
         addObjectToDragConrols(duckMesh2);
@@ -92,16 +95,16 @@ async function init3DObjects() {
     } else {
         // init buyer specific items in local scene
 
-        let duckMesh3 = duckMesh.clone();
+        duckMesh3 = duckMesh.clone();
         duckMesh3.name = "duckMesh3";
-        duckMesh3.position.set(-1, -4, 0);
+        duckMesh3.position.set(1.5, 0, 2);
         localScene.add(duckMesh3);
         objectsToSync.set(duckMesh3.name, duckMesh3);
         addObjectToDragConrols(duckMesh3);
 
     }
 
-   
+    
     renderer.outputEncoding = THREE.sRGBEncoding;
 
     
@@ -109,29 +112,42 @@ async function init3DObjects() {
     // init static stuff for both (eg. counter, etc)
     // load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
     // load3dAsset(loader, '../../assets/banana.glb', new THREE.Vector3(0.2, 0.2, 0.2), 'bananaTemplate', personalSpace);
-    const geometry = new THREE.PlaneGeometry( 4, 8/3 );
+    const geometry = new THREE.PlaneGeometry( 6, 4 );
     const material = new THREE.MeshBasicMaterial( {color: 0x8B4513, side: THREE.DoubleSide} );
-    const plane = new THREE.Mesh( geometry, material );
-    plane.position.y = -2;
+    plane = new THREE.Mesh( geometry, material );
     plane.rotation.x = Math.PI / 2;
     localScene.add( plane );
 
+    if(__ENV__ === 'dev') {
+        initDevThings();
+    }
+
+}
+
+function initDevThings() {
+    let gui = new DatGUIPalimPalim();
+    gui.load(plane, localCamera, duckMesh3);
 }
 
 function moveRemoteVideoToScene() {
     setTimeout(() => {
         console.log("------------moveRemoteVideoToScene-------------");
-        const remoteVideo = document.getElementById("remoteVideo");
-        const reomoteVideoAspectRatio = remoteVideo.offsetWidth/remoteVideo.offsetHeight;
-        console.log(remoteVideo);
-        console.log("width: " + remoteVideo.offsetWidth);
-        console.log("height: " + remoteVideo.offsetHeight);
 
-        const videoGeometry = new THREE.PlaneGeometry( 4, 4/reomoteVideoAspectRatio );
-        const videoMaterial = makeVideoMaterial("remoteVideo");
-        const cube2 = new THREE.Mesh( videoGeometry, videoMaterial );
-        localScene.add( cube2 );
-    }, 1000 );
+        const webcamRemoteVideo = document.getElementById("remoteVideo");
+        const webcamReomoteVideoAspectRatio = webcamRemoteVideo.offsetWidth/webcamRemoteVideo.offsetHeight;
+        const remoteVideoWidth = 6;
+        const remoteVideoHeight = remoteVideoWidth/webcamReomoteVideoAspectRatio;
+
+        console.log(webcamRemoteVideo);
+        console.log("width: " + webcamRemoteVideo.offsetWidth);
+        console.log("height: " + webcamRemoteVideo.offsetHeight);
+
+        const remoteVideoGeometry = new THREE.PlaneGeometry( remoteVideoWidth, remoteVideoHeight );
+        const remoteVideoMaterial = makeVideoMaterial("remoteVideo");
+        const remoteVideoMesh = new THREE.Mesh( remoteVideoGeometry, remoteVideoMaterial );
+        remoteVideoMesh.position.set(0, remoteVideoHeight/2, -2);
+        localScene.add( remoteVideoMesh );
+    }, 2000 );
 }
 
 
