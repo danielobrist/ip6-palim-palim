@@ -57,6 +57,7 @@ This will spin up a webpack dev server at localhost:8080 and keeps track of all 
 
 ## Other NPM Scripts
 You can run any of these individually if you'd like with the `npm run` command:
+* `test` - Runs the Mocha tests defined in test/test.js
 * `prebuild` - Cleans up build folder and lints `src/js`
 * `clean` - Cleans build folder
 * `lint` - Runs lint on the `src/js` folder and uses the `.eslintrc` file in root for linting rules

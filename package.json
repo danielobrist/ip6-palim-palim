@@ -18,7 +18,8 @@
     "dev:js": "webpack --env NODE_ENV=dev",
     "build:dir": "copyfiles -a -u 2 src/public/assets/**/*.* build/",
     "build:js": "webpack --env NODE_ENV=prod --progress --color",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "mocha --reporter list"
   },
   "dependencies": {
     "@tweenjs/tween.js": "^18.6.4",
@@ -26,7 +27,6 @@
     "es6-promise": "^4.2.8",
     "express": "^4.17.1",
     "os": "0.1.1",
-    "regenerator-runtime": "^0.13.7",
     "socket.io": "^2.0.4",
     "three": "^0.129.0"
   },
@@ -41,10 +41,12 @@
     "html-webpack-plugin": "^5.3.1",
     "is-svg": ">=4.2.2",
     "mini-css-extract-plugin": "^1.3.9",
+    "mocha": "^8.4.0",
     "node-sass": "^5.0.0",
     "npm-run-all": "^4.1.5",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "postcss-loader": "^5.2.0",
+    "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.2",
     "sass-loader": "^11.0.1",
     "style-loader": "^2.0.0",

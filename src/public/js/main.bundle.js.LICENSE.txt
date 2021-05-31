@@ -64,6 +64,8 @@
 
 /*! @tweenjs/tween.js */
 
+/*! core-js/stable */
+
 /*! es6-promise */
 
 /*! fs */
@@ -75,6 +77,8 @@
 /*! three */
 
 /*! three/examples/jsm/controls/DragControls */
+
+/*! three/examples/jsm/controls/OrbitControls */
 
 /*! three/examples/jsm/loaders/GLTFLoader */
 
