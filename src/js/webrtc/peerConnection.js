@@ -7,7 +7,7 @@ export default class PeerConnection {
                 },
                 {
                   'urls': 'turn:86.119.43.130:3478',
-                  'credential': 'ZV78Nz75/3sk<:d.[.#m\3;dch4v(2+RdvS9',
+                  'credential': 'ZV78Nz75/3sk<:d.[.#m3;dch4v(2+RdvS9',
                   'username': 'palimpalim'
                 }
             ]
