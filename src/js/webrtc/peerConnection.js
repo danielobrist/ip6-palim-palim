@@ -6,19 +6,9 @@ export default class PeerConnection {
                   'urls': 'stun:stun.l.google.com:19302'
                 },
                 {
-                  'urls': 'turn:numb.viagenie.ca',
-                  'credential': 'muazkh',
-                  'username': 'webrtc@live.com'
-                },
-                {
-                  'urls': 'turn:192.158.29.39:3478?transport=udp',
-                  'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                  'username': '28224511:1379330808'
-                },
-                {
-                  'urls': 'turn:192.158.29.39:3478?transport=tcp',
-                  'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                  'username': '28224511:1379330808'
+                  'urls': 'turn:86.119.43.130:3478',
+                  'credential': 'ZV78Nz75/3sk<:d.[.#m\3;dch4v(2+RdvS9',
+                  'username': 'palimpalim'
                 }
             ]
         };
