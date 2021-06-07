@@ -6,6 +6,7 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {GameController} from './game/gameController.js';
 import * as Ammo from './physics/ammo.js';
 import {initScene, initCamera} from './game/scene';
+import GameState from './../data/gameState';
 
 export {start, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene};
 
@@ -30,8 +31,10 @@ let plane;
 let isSeller = false;
 
 let duckMesh;
+let apricotMesh, apricotMesh1;
 // let orbitControls;
 let physicsWorld;
+let salesObjects = new Map();
 
 const start = (isInitiator) => {
     Ammo().then( function( Ammo ) {
@@ -77,23 +80,27 @@ function init() {
 }
 
 async function init3DObjects() {
-    const loader = new GLTFLoader();
-    let loadedData = await loader.loadAsync('assets/models/duck.gltf');
-    loadedData.scene.traverse((o) => {
-        if (o.isMesh) {
-            // console.dir('Loaded data: ' + JSON.stringify(o));
-            duckMesh = new THREE.Mesh();
-            o.scale.set(0.01,0.01,0.01);
+    
+    for (let i = 0; i < GameState.models.length; i++) {
+        const loader = new GLTFLoader();
+        let loadedData = await loader.loadAsync(GameState.models[i].path);
+        loadedData.scene.traverse((o) => {
+            if (o.isMesh) {
+                let m = new THREE.Mesh();
+                o.scale.set(GameState.models[i].scale, GameState.models[i].scale, GameState.models[i].scale);
 
-            duckMesh = o;
-            let drago = new DragControls( [duckMesh], localCamera, renderer.domElement );
-            drago.addEventListener( 'drag', function(event) {
-                gameController.sendGameobjectUpdate(getObjJSON(event.object));
-                render();
-            } );
+                m = o;
+                let drago = new DragControls( [m], localCamera, renderer.domElement );
+                drago.addEventListener( 'drag', function(event) {
+                    gameController.sendGameobjectUpdate(getObjJSON(event.object));
+                    render();
+                } );
+                
+                salesObjects.set(GameState.models[i].id, m);
 
-        };
-    });
+            };
+        });
+    }
 
     if (isSeller) { 
         // init seller specific items in local scene
@@ -115,12 +122,14 @@ async function init3DObjects() {
     } else {
         // init buyer specific items in local scene
 
-        duckMesh3 = duckMesh.clone();
-        duckMesh3.name = "duckMesh3";
-        duckMesh3.position.set(1.5, 0, 2);
-        localScene.add(duckMesh3);
-        objectsToSync.set(duckMesh3.name, duckMesh3);
-        addObjectToDragConrols(duckMesh3);
+        for (var m of salesObjects.values()) {
+            let newMesh = m.clone();
+            newMesh.name = "duckMesh3";
+            newMesh.position.set(1.5, 0, 2);
+            localScene.add(newMesh);
+            objectsToSync.set(newMesh.name, newMesh);
+            addObjectToDragConrols(newMesh);
+        }
 
     }
 
