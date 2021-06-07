@@ -7,6 +7,7 @@ import {GameController} from './game/gameController.js';
 import * as Ammo from './physics/ammo.js';
 import {initScene, initCamera} from './game/scene';
 import GameState from './../data/gameState';
+import { Mesh } from 'three';
 
 export {start, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene};
 
@@ -104,39 +105,13 @@ async function init3DObjects() {
 
     if (isSeller) { 
         // init seller specific items in local scene
-
-        duckMesh1 = duckMesh.clone();
-        duckMesh1.name = "duckMesh1";
-        localScene.add(duckMesh1);
-        duckMesh1.position.set(-1.5, 0, -2);
-        objectsToSync.set(duckMesh1.name, duckMesh1);
-        addObjectToDragConrols(duckMesh1);
-
-        duckMesh2 = duckMesh.clone();
-        duckMesh2.name = "duckMesh2";
-        duckMesh2.position.set(0, 0, -2);
-        localScene.add(duckMesh2);
-        objectsToSync.set(duckMesh2.name, duckMesh2);
-        addObjectToDragConrols(duckMesh2);
-
+        instantiateSellerObjectsFromJsonArray(GameState.sellerModelsStart);
     } else {
         // init buyer specific items in local scene
-
-        for (var m of salesObjects.values()) {
-            let newMesh = m.clone();
-            newMesh.name = "duckMesh3";
-            newMesh.position.set(1.5, 0, 2);
-            localScene.add(newMesh);
-            objectsToSync.set(newMesh.name, newMesh);
-            addObjectToDragConrols(newMesh);
-        }
-
+        instantiateSellerObjectsFromJsonArray(GameState.buyerModelsStart);
     }
-
     
     renderer.outputEncoding = THREE.sRGBEncoding;
-
-    
 
     // init static stuff for both (eg. counter, etc)
     // load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
@@ -151,6 +126,17 @@ async function init3DObjects() {
         initDevThings();
     }
 
+}
+
+function instantiateSellerObjectsFromJsonArray(jsonArray) {
+    for(let i = 0; i < jsonArray.length; i++) {
+        let newMesh = salesObjects.get(jsonArray[i].id);
+        newMesh.name = jsonArray[i].name;
+        newMesh.position.set(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z);
+        localScene.add(newMesh);
+        objectsToSync.set(newMesh.name, newMesh);
+        addObjectToDragConrols(newMesh);
+    }
 }
 
 function initDevThings() {
