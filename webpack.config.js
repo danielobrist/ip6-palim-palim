@@ -122,7 +122,9 @@ module.exports = env => {
     
 
     performance: {
-      hints: 'warning'
+      hints: false,
+      maxEntrypointSize: 512000,
+      maxAssetSize: 512000
     },
 
     // lets you precisely control what bundle information gets displayed
