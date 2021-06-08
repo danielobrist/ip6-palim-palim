@@ -46,7 +46,9 @@ function startGame(isInitiator) {
     isSeller = isInitiator;
     console.log("Started game with isInitiator = " + isInitiator);
     init();
-    initDevThings();
+    if(__ENV__ === 'dev') {
+        initDevThings();
+    }
     init3DObjects();
     activateDragControls();
     animate();
