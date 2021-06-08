@@ -4,3 +4,6 @@ node_modules
 .idea
 Iconr
 build
+src/public/js
+src/public/css
+src/public/index.html
