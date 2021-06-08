@@ -1,5 +1,5 @@
 import PeerConnection from "./peerConnection";
-import {updateRemoteObjects, moveRemoteVideoToScene} from '../app/game';
+import {updateRemoteObjects, moveRemoteVideoToScene, switchView} from '../app/game';
 
 export let dataChannel;
 export let isInitiator;
@@ -33,6 +33,7 @@ export default class VideoCall{
         socket.on('created', function(room) {
             console.log('Created room ' + room);
             isInitiator = true;
+            switchView(isInitiator);
         });
 
         socket.on('full', function(room) {
@@ -123,7 +124,7 @@ export default class VideoCall{
                     peerConnection.addTrack(track);
                 }
 
-                moveRemoteVideoToScene();
+                moveRemoteVideoToScene(isInitiator);
 
                 isStarted = true;
                 console.log('isInitiator', isInitiator);

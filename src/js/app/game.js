@@ -9,7 +9,7 @@ import GameState from './../data/gameState';
 import { Mesh } from 'three';
 import DatGUIPalimPalim from './managers/datGUIPalimPalim';
 
-export {start, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene};
+export {start, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene, switchView};
 
 const gameController = GameController();
 
@@ -66,6 +66,21 @@ function init() {
 
     // orbitControls = new OrbitControls( localCamera, renderer.domElement );
 
+}
+
+const switchView = (isSeller) => {
+    if (isSeller) {
+        console.log('changing camera position!');
+        localCamera.position.x = 0;
+        localCamera.position.y = 6;
+        localCamera.position.z = -10;
+        localCamera.lookAt( 0, 2, 0 );
+    } else {
+        localCamera.position.x = 0;
+        localCamera.position.y = 6;
+        localCamera.position.z = 10;
+        localCamera.lookAt( 0, 2, 0 );
+    }
 }
 
 async function init3DObjects() {
@@ -170,7 +185,7 @@ function initDevThings() {
     // gui.load();
 }
 
-function moveRemoteVideoToScene() {
+function moveRemoteVideoToScene(isInitiator) {
     setTimeout(() => {
         console.log("------------moveRemoteVideoToScene-------------");
 
@@ -186,7 +201,11 @@ function moveRemoteVideoToScene() {
         const remoteVideoGeometry = new THREE.PlaneGeometry( remoteVideoWidth, remoteVideoHeight );
         const remoteVideoMaterial = makeVideoMaterial("remoteVideo");
         const remoteVideoMesh = new THREE.Mesh( remoteVideoGeometry, remoteVideoMaterial );
-        remoteVideoMesh.position.set(0, remoteVideoHeight/2, -2);
+        if (isInitiator) {
+            remoteVideoMesh.position.set(0, remoteVideoHeight / 2, 2);
+        } else {
+            remoteVideoMesh.position.set(0, remoteVideoHeight/2, -2);
+        }
         localScene.add( remoteVideoMesh );
     }, 2000 );
 }
