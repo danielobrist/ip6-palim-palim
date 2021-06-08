@@ -7,6 +7,7 @@ import {GameController} from './game/gameController.js';
 import {initScene, initCamera} from './game/scene';
 import GameState from './../data/gameState';
 import { Mesh } from 'three';
+import DatGUIPalimPalim from './managers/datGUIPalimPalim';
 
 export {start, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene};
 
@@ -35,6 +36,7 @@ let apricotMesh, apricotMesh1;
 // let orbitControls;
 let physicsWorld;
 let salesObjects = new Map();
+let gui;
 
 const start = (isInitiator) => {
         startGame(isInitiator);
@@ -44,6 +46,7 @@ function startGame(isInitiator) {
     isSeller = isInitiator;
     console.log("Started game with isInitiator = " + isInitiator);
     init();
+    initDevThings();
     init3DObjects();
     activateDragControls();
     animate();
@@ -86,6 +89,40 @@ async function init3DObjects() {
         });
     }
 
+
+    // for (let i = 0; i < GameState.models.length; i++) {
+    //     const loader = new GLTFLoader();
+    //     let ob = new THREE.Object3D();    
+    //     let loadedData = await loader.loadAsync(GameState.models[i].path);
+        
+        
+    //     console.log('------sellsObject: '+GameState.models[i].id+'-------');
+        
+    //     loadedData.scene.traverse((o) => { 
+    //         if (o.isMesh) {
+    //             console.log('mesh:');
+    //             console.log(o);
+    //             ob.add(o);
+    //         }
+    //     });
+
+    //     console.log('obj:');
+    //     console.log(ob);
+
+    //     let m = new THREE.Mesh();
+    //     ob.scale.set(GameState.models[i].scale, GameState.models[i].scale, GameState.models[i].scale);
+
+    //     m = ob;
+    //     let drago = new DragControls( [m], localCamera, renderer.domElement );
+    //     drago.addEventListener( 'drag', function(event) {
+    //         gameController.sendGameobjectUpdate(getObjJSON(event.object));
+    //         render();
+    //     } );
+        
+    //     salesObjects.set(GameState.models[i].id, m);
+
+    // }
+
     if (isSeller) { 
         // init seller specific items in local scene
         instantiateSellerObjectsFromJsonArray(GameState.sellerModelsStart);
@@ -113,18 +150,22 @@ async function init3DObjects() {
 
 function instantiateSellerObjectsFromJsonArray(jsonArray) {
     for(let i = 0; i < jsonArray.length; i++) {
-        let newMesh = salesObjects.get(jsonArray[i].id);
+        let newMesh = salesObjects.get(jsonArray[i].id).clone();
         newMesh.name = jsonArray[i].name;
         newMesh.position.set(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z);
         localScene.add(newMesh);
         objectsToSync.set(newMesh.name, newMesh);
         addObjectToDragConrols(newMesh);
+
+        if(__ENV__ === 'dev') {
+            gui.addFolderWithPositions(newMesh, newMesh.name, -5, 5, 0.05);
+        }
     }
 }
 
 function initDevThings() {
-    let gui = new DatGUIPalimPalim();
-    gui.load(plane, localCamera, duckMesh3);
+    gui = new DatGUIPalimPalim();
+    // gui.load();
 }
 
 function moveRemoteVideoToScene() {
