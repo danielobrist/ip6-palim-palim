@@ -41,3 +41,53 @@ video {
   bottom: 2rem;
   z-index: 999;
 }
+
+#shoppingListContainer {
+  position: fixed;
+  right: -115px;
+  bottom: -130px;
+  z-index: 20;
+}
+
+#shoppingListContainer .thumb {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#shoppingList {
+  width: 200px;
+  height: 300px;
+  background: green;
+  position: absolute;
+  left: -76px;
+  top: -195px;
+  transform: rotate(-10.2deg);
+  padding: 21px 22px;
+  box-sizing: border-box;
+}
+
+#shoppingList h2 {
+  font-size: 24px;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+h2::before {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: white;
+}
+
+#shoppingList h2, #shoppingList p {
+  color: white;
+}
+
+#shoppingList p {
+  font-size: 18px;
+  line-height: 1.3;
+}

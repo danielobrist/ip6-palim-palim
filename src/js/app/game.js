@@ -7,7 +7,8 @@ import {GameController} from './game/gameController.js';
 import {initScene, initCamera} from './game/scene';
 import GameState from './../data/gameState';
 import { Mesh } from 'three';
-import DatGUIPalimPalim from './managers/datGUIPalimPalim';
+// import DatGUIPalimPalim from './managers/datGUIPalimPalim';
+import {writeShoppingList} from './components/shoppingList';
 
 export {start, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene, switchView};
 
@@ -46,11 +47,12 @@ function startGame(isInitiator) {
     isSeller = isInitiator;
     console.log("Started game with isInitiator = " + isInitiator);
     init();
-    if(__ENV__ === 'dev') {
-        initDevThings();
-    }
+    // if(__ENV__ === 'dev') {
+    //     initDevThings();
+    // }
     init3DObjects();
     activateDragControls();
+    writeShoppingList();
     animate();
 }
 
@@ -159,9 +161,9 @@ async function init3DObjects() {
     plane.rotation.x = Math.PI / 2;
     localScene.add( plane );
 
-    if(__ENV__ === 'dev') {
-        initDevThings();
-    }
+    // if(__ENV__ === 'dev') {
+    //     initDevThings();
+    // }
 
 }
 
@@ -174,9 +176,9 @@ function instantiateSellerObjectsFromJsonArray(jsonArray) {
         objectsToSync.set(newMesh.name, newMesh);
         addObjectToDragConrols(newMesh);
 
-        if(__ENV__ === 'dev') {
-            gui.addFolderWithPositions(newMesh, newMesh.name, -5, 5, 0.05);
-        }
+        // if(__ENV__ === 'dev') {
+        //     gui.addFolderWithPositions(newMesh, newMesh.name, -5, 5, 0.05);
+        // }
     }
 }
 
