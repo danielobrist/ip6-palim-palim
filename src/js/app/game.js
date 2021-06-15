@@ -8,7 +8,6 @@ import {initScene, initCamera} from './game/scene';
 import GameState from './../data/gameState';
 import { Mesh } from 'three';
 // import DatGUIPalimPalim from './managers/datGUIPalimPalim';
-import {writeShoppingList} from './components/shoppingList';
 
 export {start, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene, switchView};
 
@@ -52,7 +51,6 @@ function startGame(isInitiator) {
     // }
     init3DObjects();
     activateDragControls();
-    writeShoppingList();
     animate();
 }
 

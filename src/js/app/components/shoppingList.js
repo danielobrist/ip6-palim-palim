@@ -5,15 +5,19 @@ export { writeShoppingList }
 const visualShoppingList = document.getElementById('shoppingList');
 const visualShoppingListContainer = document.getElementById('shoppingListContainer');
 
-function writeShoppingList() {
+const writeShoppingList = (isSeller) => {
 
-    let targetShoppingItems = GameState.buyerModelsTarget;
-    
-    targetShoppingItems.forEach(function(element) {
-        let singleShoppingItem = document.createElement("p");
-        singleShoppingItem.innerHTML = getNameOfShoppingItem(element);
-        visualShoppingList.append(singleShoppingItem);
-    });   
+    if(isSeller) {
+        visualShoppingListContainer.style.display = "block";
+
+        let targetShoppingItems = GameState.buyerModelsTarget;
+        
+        targetShoppingItems.forEach(function(element) {
+            let singleShoppingItem = document.createElement("p");
+            singleShoppingItem.innerHTML = getNameOfShoppingItem(element);
+            visualShoppingList.append(singleShoppingItem);
+        });   
+    }
 }
 
 function getNameOfShoppingItem(id) {

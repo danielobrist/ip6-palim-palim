@@ -1,5 +1,6 @@
 import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, moveRemoteVideoToScene, switchView} from '../app/game';
+import {writeShoppingList} from '../app/components/shoppingList';
 
 export let dataChannel;
 export let isInitiator;
@@ -34,6 +35,7 @@ export default class VideoCall{
             console.log('Created room ' + room);
             isInitiator = true;
             switchView(isInitiator);
+            writeShoppingList(isInitiator);
         });
 
         socket.on('full', function(room) {
