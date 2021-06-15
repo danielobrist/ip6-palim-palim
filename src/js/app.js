@@ -18,13 +18,13 @@ if(__ENV__ === 'dev') {
     Config.isDev = true;
 }
 
-initVideoChat()
+//initVideoChat()
 initGame();
 
 
-function initVideoChat() {
+function initVideoChat(roomName) {
     if(__ENV__ !== 'dev') {
-        videoCall = new VideoCall();
+        videoCall = new VideoCall(roomName);
         // TODO get isInitiator from VideoCall somehow...
     }
 }
@@ -41,3 +41,19 @@ function initGame() {
         start(isInitiator);
     }
 }
+
+
+const welcomeScreen = document.getElementById('welcomeScreen');
+const roomNameSection = document.getElementById('roomNameSection');
+const roomName = document.getElementById('roomName');
+const roomNameButton = document.getElementById('roomNameButton');
+
+roomNameButton.addEventListener('click', () => {
+    initVideoChat(roomName.value);
+
+    roomNameSection.style.display = 'none';
+
+    let waitingToOtherRoomMates = document.createElement("p");
+    waitingToOtherRoomMates.innerHTML = 'Auf andere Raum-Teilnehmer warten...';
+    welcomeScreen.append(waitingToOtherRoomMates);
+});

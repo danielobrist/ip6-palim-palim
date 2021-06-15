@@ -57,7 +57,7 @@ io.sockets.on('connection', function(socket) {
     for (var dev in ifaces) {
       ifaces[dev].forEach(function(details) {
         if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
-          socket.emit('ipaddr', details.address);
+          socket.emit('ipaddr', details.address); 
         }
       });
     }
@@ -65,6 +65,11 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('bye', function(){
     console.log('received bye');
+  });
+
+  socket.on('gameStart', function (room) {
+    log("jetzt sind wir auf dem Server");
+    io.sockets.in(room).emit('gameStart');
   });
 
 });

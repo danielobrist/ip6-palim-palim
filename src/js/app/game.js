@@ -62,7 +62,7 @@ function init() {
     document.getElementById("appContainer").appendChild( renderer.domElement );
 
     localScene = initScene();
-    localCamera =  initCamera(isSeller);
+    localCamera = initCamera(isSeller);
 
     // orbitControls = new OrbitControls( localCamera, renderer.domElement );
 

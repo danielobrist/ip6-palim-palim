@@ -7,14 +7,6 @@
 
   <body>
 
-    <div id="localVideoContainer">
-      <video id="localVideo" autoplay muted></video>
-    </div>
-  
-    <div id="remoteVideoContainer">
-      <video id="remoteVideo" autoplay></video>
-    </div>
-    
     <section id="appContainer" class="main">
       <div id="loading">Loading...</div>
     </section>
@@ -36,6 +28,24 @@
         <path fill-rule="evenodd" clip-rule="evenodd" d="M125.001 241.197L132.302 238.993L161.082 117.717L123.715 67.1787L106.278 24.8558C101.994 14.4559 90.4041 9.12955 79.7217 12.6513L78.8685 12.9334C67.5775 16.6559 61.4656 28.8512 65.2412 40.1245L86.5486 103.747L91.9348 151.78C93.5818 166.471 97.5387 180.81 103.659 194.267L125.001 241.197Z" fill="#F5A47E"/>
         <path d="M79.1834 46.6088L100.471 39.486C102.151 38.924 103.056 37.1078 102.494 35.4281L100.487 29.43C98.1843 22.5481 90.7395 18.8362 83.8575 21.1389L81.4093 21.9583C74.5273 24.261 70.8155 31.7058 73.1182 38.5878L75.1255 44.5858C75.6878 46.2643 77.5037 47.1709 79.1834 46.6088Z" fill="#F7C5AE"/>
       </svg>
+    </div>
+
+    <section id="welcomeScreen">
+      <h1>Palim-Palim Welcome Screen</h1>
+      <p>Beschreibung, Begrüssung, bla bla</p>
+      <div id="roomNameSection">
+        <input type="text" name="roomName" id="roomName" />
+        <button id="roomNameButton">Raum beitreten</button>
+      </div>
+    </section>
+
+
+    <div id="localVideoContainer">
+      <video id="localVideo" autoplay muted></video>
+    </div>
+  
+    <div id="remoteVideoContainer">
+      <video id="remoteVideo" autoplay></video>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>

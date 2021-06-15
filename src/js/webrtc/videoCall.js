@@ -6,7 +6,7 @@ export let dataChannel;
 export let isInitiator;
 
 export default class VideoCall{
-    constructor() {
+    constructor(roomName) {
         isInitiator = false;
         let isChannelReady = false;
         let isStarted = false;
@@ -22,11 +22,12 @@ export default class VideoCall{
         ///////////////////////////////////////
 
         // let room = '123';
-        let roomName = prompt('Enter room name:');
+        //let roomName = prompt('Enter room name:');
 
         const socket = io.connect();
 
         if (roomName !== '') {
+            
             socket.emit('create or join', roomName);
             console.log('Attempted to create or join room', roomName);
         }
@@ -47,11 +48,37 @@ export default class VideoCall{
             console.log('Another peer made a request to join room ' + room);
             console.log('This peer is the initiator of room ' + room + '!');
             isChannelReady = true;
+
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            welcomeScreen.innerHTML = '';
+            const startGameButton = document.createElement("button");
+            startGameButton.innerHTML = 'Spiel starten';
+            startGameButton.id = 'startGameButton';
+            startGameButton.addEventListener('click', () => {
+                socket.emit('gameStart', room);
+            });    
+            welcomeScreen.append(startGameButton);
         });
+
+        socket.on('gameStart',  function() {
+            gameStart();
+        });
+
+        function gameStart() {
+            removeWelcomeScreen();
+        }
+
+        function removeWelcomeScreen() {
+            if(document.getElementById('welcomeScreen') !== null) {
+                document.getElementById('welcomeScreen').remove();
+            }
+            document.getElementById('remoteVideo').style.visibility = 'hidden';
+        }
 
         socket.on('joined', function(room) {
             console.log('joined: ' + room);
             isChannelReady = true;
+            document.getElementById('welcomeScreen').innerHTML = '';
         });
 
         socket.on('log', function(array) {
