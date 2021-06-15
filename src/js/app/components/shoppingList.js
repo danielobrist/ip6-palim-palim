@@ -2,8 +2,10 @@ import GameState from './../../data/gameState';
 
 export { writeShoppingList }
 
+const visualShoppingList = document.getElementById('shoppingList');
+const visualShoppingListContainer = document.getElementById('shoppingListContainer');
+
 function writeShoppingList() {
-    let visualShoppingList = document.getElementById('shoppingList');
 
     let targetShoppingItems = GameState.buyerModelsTarget;
     
@@ -23,3 +25,19 @@ function getNameOfShoppingItem(id) {
 
     return null;
 }
+
+let hideShoppingList;
+
+visualShoppingListContainer.addEventListener("click", function() {
+    
+    if(visualShoppingListContainer.classList.contains("visible")) {
+        clearTimeout(hideShoppingList);
+        visualShoppingListContainer.classList.remove("visible");
+    } else {
+        visualShoppingListContainer.classList.toggle("visible");
+
+        hideShoppingList = window.setTimeout(() => {
+            visualShoppingListContainer.classList.remove("visible");
+        }, 10000);
+    }
+});

@@ -44,15 +44,23 @@ video {
 
 #shoppingListContainer {
   position: fixed;
-  right: -115px;
-  bottom: -130px;
+  right: -250px;
+  bottom: -550px;
   z-index: 20;
+  padding: 195px 0 0 76px;
+  transition: all 0.8s ease-in-out;
+  cursor: pointer;
 }
 
-#shoppingListContainer .thumb {
+#shoppingListContainer.visible {
+  right: -115px;
+  bottom: -130px;
+}
+
+#shoppingListContainer svg.thumb {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 76px;
+  top: 195px;
 }
 
 #shoppingList {
@@ -60,8 +68,8 @@ video {
   height: 300px;
   background: green;
   position: absolute;
-  left: -76px;
-  top: -195px;
+  left: 0;
+  top: 0;
   transform: rotate(-10.2deg);
   padding: 21px 22px;
   box-sizing: border-box;
