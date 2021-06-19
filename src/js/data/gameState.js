@@ -2,14 +2,14 @@ export default {
     models: [
         {
             id:     518168,
-            path:   './assets/models/duck.gltf',
+            path:   './assets/models/duck.glb',
             scale:  0.005,
             type:   'gltf',
             name:   'Entchen'
         },
         {
             id:     889985,
-            path:   './assets/models/apricot.gltf',
+            path:   './assets/models/apricot.glb',
             scale:  0.009,
             type:   'gltf',
             name:   'Aprikose'
@@ -77,16 +77,16 @@ export default {
         {
             id:     889985,
             startPosition: {
-                x:  -1.2,
+                x:  -1.5,
                 y:  -0.5,
-                z:  2.2
+                z:  2.3
             },
             name:   'Apricot1'
         },
         {
             id:     515156,
             startPosition: {
-                x:  0.3,
+                x:  0.5,
                 y:  -0.5,
                 z:  2.5
             },
@@ -95,16 +95,16 @@ export default {
         {
             id:     515157,
             startPosition: {
-                x:  0.5,
-                y:  -0.8,
-                z:  2.5
+                x:  -0.5,
+                y:  -0.5,
+                z:  2.3
             },
             name:   'Apple1'
         },
         {
             id:     515158,
             startPosition: {
-                x:  2.2,
+                x:  1.5,
                 y:  -0.5,
                 z:  2.2
             },
@@ -113,7 +113,7 @@ export default {
         {
             id:     515159,
             startPosition: {
-                x:  2.3,
+                x:  2.5,
                 y:  -0.5,
                 z:  2.5
             },
