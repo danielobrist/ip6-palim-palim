@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
-import {DragControls} from 'three/examples/jsm/controls/DragControls'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {GameController} from './game/gameController.js';
 import {initScene, initCamera} from './game/scene';
 import GameState from './../data/gameState';
+import InteractionManager from './components/interactionManager.js';
 import { Mesh } from 'three';
 // import DatGUIPalimPalim from './managers/datGUIPalimPalim';
 
@@ -23,7 +23,6 @@ const renderer = new THREE.WebGLRenderer({
 let localScene;
 let localCamera;
 
-let dragControl;
 let draggableObjectsSeller = [];
 
 let cube, cube2, cube3;
@@ -38,6 +37,11 @@ let physicsWorld;
 let salesObjects = new Map();
 let gui;
 
+let interactionManager;
+let selectedObject;
+let isMouseDown = false;
+let mouse = {x: 0, y: 0};
+
 const start = (isInitiator) => {
         startGame(isInitiator);
 }
@@ -50,7 +54,7 @@ function startGame(isInitiator) {
     //     initDevThings();
     // }
     init3DObjects();
-    activateDragControls();
+    initControls();
     animate();
 }
 
@@ -94,11 +98,6 @@ async function init3DObjects() {
                 o.scale.set(GameState.models[i].scale, GameState.models[i].scale, GameState.models[i].scale);
 
                 m = o;
-                let drago = new DragControls( [m], localCamera, renderer.domElement );
-                drago.addEventListener( 'drag', function(event) {
-                    gameController.sendGameobjectUpdate(getObjJSON(event.object));
-                    render();
-                } );
                 
                 salesObjects.set(GameState.models[i].id, m);
 
@@ -153,10 +152,10 @@ async function init3DObjects() {
     // init static stuff for both (eg. counter, etc)
     // load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
     // load3dAsset(loader, '../../assets/banana.glb', new THREE.Vector3(0.2, 0.2, 0.2), 'bananaTemplate', personalSpace);
-    const geometry = new THREE.PlaneGeometry( 6, 4 );
-    const material = new THREE.MeshBasicMaterial( {color: 0x8B4513, side: THREE.DoubleSide} );
+    const geometry = new THREE.BoxGeometry( 6, 1, 4 );
+    const material = new THREE.MeshStandardMaterial( {color: 0x8B4513} );
     plane = new THREE.Mesh( geometry, material );
-    plane.rotation.x = Math.PI / 2;
+    plane.receiveShadow = true;
     localScene.add( plane );
 
     // if(__ENV__ === 'dev') {
@@ -172,12 +171,34 @@ function instantiateSellerObjectsFromJsonArray(jsonArray) {
         newMesh.position.set(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z);
         localScene.add(newMesh);
         objectsToSync.set(newMesh.name, newMesh);
-        addObjectToDragConrols(newMesh);
+        interactionManager.addDraggableObject(newMesh);
 
         // if(__ENV__ === 'dev') {
         //     gui.addFolderWithPositions(newMesh, newMesh.name, -5, 5, 0.05);
         // }
     }
+}
+
+const initControls = () => {
+    // dragControls(renderer.domElement, dragAction, object)
+
+    // document.addEventListener('mousemove', onMouseMove, false);
+
+    // const dragoCont = new DragControls(renderer.domElement);
+
+    interactionManager = new InteractionManager(
+        renderer,
+        localCamera,
+        renderer.domElement,
+        isSeller
+    );
+
+    if(__ENV__ === 'dev') {
+        // visualize the interaction plane
+        const helper = new THREE.PlaneHelper( interactionManager.interactionPlane, 5, 0xffff00 );
+        localScene.add(helper);
+    }
+    
 }
 
 function initDevThings() {
@@ -280,7 +301,7 @@ function updateRemoteObjects(data) {
         objectsToSync.set(newObj.name, newObj);
         // newObj.position.set(obj.position.x, obj.position.y, obj.position.z);
         localScene.add(newObj);
-        addObjectToDragConrols(newObj);
+        // addObjectToDragConrols(newObj);
     }
     
     //TOOD maybe tween/interpolate between positions

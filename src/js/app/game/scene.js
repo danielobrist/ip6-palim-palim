@@ -6,7 +6,7 @@ let scene;
 
 function initScene() {
     scene = new THREE.Scene();
-    scene.background = null;
+    scene.background = new THREE.Color( 'skyblue' );
 
     initLight();
 
@@ -37,9 +37,21 @@ function initLight() {
 
     const directionalLight2 = new THREE.DirectionalLight( 0xffffff, 1 );
     directionalLight2.position.set(2, 2, -20);
-    scene.add(directionalLight2);
+    directionalLight2.castShadow = true;
+    // scene.add(directionalLight2);
 
     const directionalLight3 = new THREE.DirectionalLight( 0xffffff, 1 );
     directionalLight3.position.set(2, 2, 20);
-    scene.add(directionalLight3);
+    // scene.add(directionalLight3);
+
+    // TODO show only in dev
+    if(__ENV__ === 'dev') {
+        const helper = new THREE.DirectionalLightHelper( directionalLight1, 5 );
+        scene.add( helper );
+        const helper1 = new THREE.DirectionalLightHelper( directionalLight2, 5 );
+        scene.add( helper );
+        const helper2 = new THREE.DirectionalLightHelper( directionalLight3, 5 );
+        scene.add( helper );
+    }
+  
 }

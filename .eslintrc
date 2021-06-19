@@ -51,12 +51,13 @@
     "prefer-spread": 1
   },
   "env": {
-    "es6": true,
+    "es2021": true,
     "browser": true
   },
+  "parser": "@babel/eslint-parser",
   "extends": "eslint:recommended",
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 8
+    "ecmaVersion": 12
   }
 }

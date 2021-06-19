@@ -37,9 +37,9 @@ const GameController = () => {
     }
 
     // sends a single object right now, used when dragging
-    function sendGameobjectUpdate(objectJson) {
-        if (dataChannel && typeof objectJson !== 'undefined' && dataChannel.readyState === "open") {
-            dataChannel.send(objectJson);
+    function sendGameobjectUpdate(obj) {
+        if (dataChannel && typeof obj !== 'undefined' && dataChannel.readyState === "open") {
+            dataChannel.send(getObjJSON(obj));
         }
     }
 
@@ -70,12 +70,20 @@ const GameController = () => {
     
     }
 
+    const getObjJSON = (object) => {
+        let obj = {name: object.name, position: object.position, rotation: object.rotation};
+        let json = JSON.stringify(obj);
+        console.log('JSON:' + json)
+        return json;
+    }
+
     return {
         addLocalObject,
         startSharedSceneSync,
         stopSharedSceneSync,
         sendGameobjectUpdate,
-        updateRemoteObjects
+        updateRemoteObjects,
+        getObjJSON
     }
 
 }
