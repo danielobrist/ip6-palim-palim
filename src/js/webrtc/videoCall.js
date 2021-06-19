@@ -73,6 +73,7 @@ export default class VideoCall{
                 document.getElementById('welcomeScreen').remove();
             }
             document.getElementById('remoteVideo').style.visibility = 'hidden';
+            document.getElementById("remoteVideoContainer").style.zIndex = "-999";
         }
 
         socket.on('joined', function(room) {
