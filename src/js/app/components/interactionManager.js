@@ -21,18 +21,20 @@ export default class InteractionManager {
 
         this.interactionPlane = new THREE.Plane();
 
-        // TODO isSeller is always false when called...
         if (isSeller){
             this.interactionPlane.setFromNormalAndCoplanarPoint(this.camera.getWorldDirection(this.interactionPlane.normal), new THREE.Vector3(0,0,-3));
         } else {
             this.interactionPlane.setFromNormalAndCoplanarPoint(this.camera.getWorldDirection(this.interactionPlane.normal), new THREE.Vector3(0,0,3));
         }
-
     }
 
 
     addDraggableObject(obj) {
         this.draggableObjects.push(obj);
+    }
+
+    setDraggableObjects(objs) {
+        this.draggableObjects = objs;
     }
 
     select(obj) {

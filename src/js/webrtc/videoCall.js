@@ -35,7 +35,7 @@ export default class VideoCall{
         socket.on('created', function(room) {
             console.log('Created room ' + room);
             isInitiator = true;
-            switchView(isInitiator);
+            
             writeShoppingList(isInitiator);
         });
 
@@ -66,6 +66,7 @@ export default class VideoCall{
 
         function gameStart() {
             removeWelcomeScreen();
+            switchView(isInitiator);
         }
 
         function removeWelcomeScreen() {

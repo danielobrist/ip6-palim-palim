@@ -24,6 +24,7 @@ let localScene;
 let localCamera;
 
 let draggableObjectsSeller = [];
+const interactionObjects = [];
 
 let cube, cube2, cube3;
 let duckMesh1, duckMesh2, duckMesh3;
@@ -53,8 +54,10 @@ function startGame(isInitiator) {
     // if(__ENV__ === 'dev') {
     //     initDevThings();
     // }
+    if (__ENV__ === 'dev') {
+        initControls(isSeller);
+    }
     init3DObjects();
-    initControls();
     animate();
 }
 
@@ -85,6 +88,7 @@ const switchView = (isSeller) => {
         localCamera.position.z = 10;
         localCamera.lookAt( 0, 2, 0 );
     }
+    initControls(isSeller);
 }
 
 async function init3DObjects() {
@@ -150,8 +154,6 @@ async function init3DObjects() {
     renderer.outputEncoding = THREE.sRGBEncoding;
 
     // init static stuff for both (eg. counter, etc)
-    // load3dAsset(loader, '../../assets/abricot.gltf', new THREE.Vector3(0.2, 0.2, 0.2), 'apricotTemplate', personalSpace);
-    // load3dAsset(loader, '../../assets/banana.glb', new THREE.Vector3(0.2, 0.2, 0.2), 'bananaTemplate', personalSpace);
     const geometry = new THREE.BoxGeometry( 6, 1, 4 );
     const material = new THREE.MeshStandardMaterial( {color: 0x8B4513} );
     plane = new THREE.Mesh( geometry, material );
@@ -171,7 +173,7 @@ function instantiateSellerObjectsFromJsonArray(jsonArray) {
         newMesh.position.set(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z);
         localScene.add(newMesh);
         objectsToSync.set(newMesh.name, newMesh);
-        interactionManager.addDraggableObject(newMesh);
+        interactionObjects.push(newMesh);
 
         // if(__ENV__ === 'dev') {
         //     gui.addFolderWithPositions(newMesh, newMesh.name, -5, 5, 0.05);
@@ -179,12 +181,7 @@ function instantiateSellerObjectsFromJsonArray(jsonArray) {
     }
 }
 
-const initControls = () => {
-    // dragControls(renderer.domElement, dragAction, object)
-
-    // document.addEventListener('mousemove', onMouseMove, false);
-
-    // const dragoCont = new DragControls(renderer.domElement);
+const initControls = (isSeller) => {
 
     interactionManager = new InteractionManager(
         renderer,
@@ -193,12 +190,13 @@ const initControls = () => {
         isSeller
     );
 
+    interactionManager.setDraggableObjects(interactionObjects);
+
     if(__ENV__ === 'dev') {
         // visualize the interaction plane
         const helper = new THREE.PlaneHelper( interactionManager.interactionPlane, 5, 0xffff00 );
         localScene.add(helper);
-    }
-    
+    }    
 }
 
 function initDevThings() {
@@ -229,31 +227,6 @@ function moveRemoteVideoToScene(isInitiator) {
         }
         localScene.add( remoteVideoMesh );
     }, 2000 );
-}
-
-
-function activateDragControls() {
-
-    
-    dragControl = new DragControls( [ ...draggableObjectsSeller ], localCamera, renderer.domElement );
-    //dragControl.transforGroup = true;
-    dragControl.addEventListener( 'drag', function(event) {
-        gameController.sendGameobjectUpdate(getObjJSON(event.object));
-        render();
-    } );
-   
-    // dragControl.addEventListener('dragend', function(event) {
-    //     if(event.object.position.y > -1.5) {
-
-    //         let temp = event.object.clone();
-    //         temp.position.set(event.object.position.x, event.object.position.y, event.object.position.z);
-    //         temp.name = temp.uuid;
-    //         personalSpace.add(temp);
-    //         objectsToSync.set(temp.name, temp);
-    //         addObjectToDragConrols(temp);
-    //     }
-    //     event.object.position.set(event.object.startPosition.x, event.object.startPosition.y, event.object.startPosition.z);
-    // });
 }
 
 function animate() {
@@ -307,14 +280,6 @@ function updateRemoteObjects(data) {
     //TOOD maybe tween/interpolate between positions
 }
 
-function addObjectToDragConrols(obj) {
-    draggableObjectsSeller.push(obj);
-    dragControl = new DragControls([...draggableObjectsSeller], localCamera, renderer.domElement).addEventListener('drag', function(event) {
-        gameController.sendGameobjectUpdate(getObjJSON(event.object));
-        render();
-    });
-}
-
 function makeVideoMaterial(id) {
     let videoElement = document.getElementById(id);
     let videoTexture = new THREE.VideoTexture(videoElement);
@@ -329,7 +294,6 @@ function makeVideoMaterial(id) {
   }
 
 function render() {
-
     renderer.render( localScene, localCamera );
 }
 
