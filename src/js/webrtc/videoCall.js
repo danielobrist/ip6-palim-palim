@@ -231,7 +231,7 @@ export default class VideoCall{
 
         function doCall() {
             console.log('Sending offer to peer');
-            peerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError);
+            peerConnection.createOffer().then(setLocalAndSendMessage).catch(handleCreateOfferError);
         }
 
         function doAnswer() {
