@@ -1,4 +1,4 @@
-import GameState from './../../data/gameState';
+import GameState from '../config/sceneConfig1';
 
 export { writeShoppingList }
 

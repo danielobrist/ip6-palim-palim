@@ -1,12 +1,12 @@
 import PeerConnection from "./peerConnection";
-import {updateRemoteObjects, moveRemoteVideoToScene, switchView} from '../app/game';
-import {writeShoppingList} from '../app/components/shoppingList';
-import {startGame2} from './../app/game.js';
+import {updateRemoteObjects, moveRemoteVideoToScene, switchView} from '../game/game';
+import {writeShoppingList} from '../game/components/shoppingList';
+import {startGame2} from '../game/game.js';
 
 export let dataChannel;
 export let isInitiator;
 
-export default class VideoCall{
+export default class VideoChat{
     constructor(roomName) {
         isInitiator = false;
         let isChannelReady = false;

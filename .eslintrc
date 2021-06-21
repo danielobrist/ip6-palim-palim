@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["**/webrtc/adapter.js"],
+  "ignorePatterns": ["**/videoChat/adapter.js"],
   "rules": {
     "no-cond-assign": 1,
     "no-console": 0, //TODO maybe enable later

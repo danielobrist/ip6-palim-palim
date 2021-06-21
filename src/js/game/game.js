@@ -2,16 +2,12 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
-import {GameController} from './game/gameController.js';
-import {initScene, initCamera} from './game/scene';
+import {initScene, initCamera} from './components/mainScene';
 //import config from './../data/gameState';
 import InteractionManager from './components/interactionManager.js';
-import { Mesh } from 'three';
-// import DatGUIPalimPalim from './managers/datGUIPalimPalim';
+// import DatGUI from './managers/datGUI';
 
 export {start, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame2};
-
-const gameController = GameController();
 
 // an array of objects to sync
 const objectsToSync = new Map();
@@ -83,9 +79,9 @@ async function loadConfig(gameMode) {
     let configFile;
 
     if(gameMode === "2") {
-        configFile = await import('./../data/gameState2');
+        configFile = await import('./config/sceneConfig2');
     } else {
-        configFile = await import('./../data/gameState');
+        configFile = await import('./config/sceneConfig1');
     }
      
     config = configFile.default;
@@ -219,7 +215,7 @@ const initControls = (isSeller) => {
 }
 
 function initDevThings() {
-    gui = new DatGUIPalimPalim();
+    gui = new DatGUI();
     // gui.load();
 }
 

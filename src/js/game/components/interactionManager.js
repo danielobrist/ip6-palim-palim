@@ -1,12 +1,12 @@
 import * as THREE from 'three';
-import { GameController } from '../game/gameController';
+import { GameSync } from './gameSync';
 
 export default class InteractionManager {
     constructor(renderer, camera, isSeller) {
         this.renderer = renderer;
         this.camera = camera;
         this.domElement = renderer.domElement;
-        this.gameController = GameController();
+        this.gameSync = GameSync();
 
         this.selectedObject;
         this.draggableObjects = [];
@@ -100,7 +100,7 @@ export default class InteractionManager {
         this.selectedObject.object.position.copy(this.intersection); //moves selectedObject to the position where the ray intersected the interactionPlane
 
         // console.log(this.selectedObject.object.position.z);
-        this.gameController.sendGameobjectUpdate(this.selectedObject.object);
+        this.gameSync.sendGameobjectUpdate(this.selectedObject.object);
         
         //TODO
         // handle offset?

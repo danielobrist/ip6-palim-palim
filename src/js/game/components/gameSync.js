@@ -1,11 +1,11 @@
-export {GameController};
+export {GameSync};
 
-import {dataChannel} from '../../webrtc/videoCall';
+import {dataChannel} from '../../videoChat/videoChat';
 
 let localObjects = []; // JSONs of locally maintained objects - we send updates for these
 // let localObjectsMap = new Map();
 
-const GameController = () => {
+const GameSync = () => {
 
     function addLocalObject(obj) {
 

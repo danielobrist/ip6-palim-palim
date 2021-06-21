@@ -1,5 +1,5 @@
 // Manages all dat.GUI interactions
-export default class DatGUIPalimPalim {
+export default class DatGUI {
   constructor() {
     this.gui = new dat.GUI();
   }

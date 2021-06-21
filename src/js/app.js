@@ -1,21 +1,19 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
-import Config from './data/config';
 import Detector from './utils/detector';
-import GameScene from './app/gameScene';
-import VideoCall, {isInitiator} from './webrtc/videoCall';
-import {start} from './app/game';
+import VideoChat, {isInitiator} from './videoChat/videoChat';
+import {start, startGame2} from './game/game';
 
 // Styles
 import './../css/app.scss';
 
-let videoCall;
+let videoChat;
+const roomNameButton = document.getElementById('roomNameButton');
+
 // Check environment and set the Config helper
 if(__ENV__ === 'dev') {
     console.log('----- RUNNING IN DEV ENVIRONMENT! -----');
-
-    Config.isDev = true;
 }
 
 //initVideoChat()
@@ -24,7 +22,7 @@ initGame();
 
 function initVideoChat(roomName) {
     if(__ENV__ !== 'dev') {
-        videoCall = new VideoCall(roomName);
+        videoChat = new VideoChat(roomName);
         // TODO get isInitiator from VideoCall somehow...
     }
 }
@@ -42,12 +40,19 @@ function initGame() {
     }
 }
 
+if(__ENV__ !== 'dev') {
+    roomNameButton.addEventListener('click', () => {
+        initVideoChat(document.getElementById('roomName').value);
+    
+        document.getElementById('roomNameSection').classList.add = 'deactivated';
+    
+        let waitingToOtherRoomMates = document.createElement("p");
+        waitingToOtherRoomMates.innerHTML = 'Auf andere Raum-Teilnehmer warten...';
+    
+        document.getElementById('welcomeScreen').append(waitingToOtherRoomMates);
+    });
+}
 
-document.getElementById('roomNameButton').addEventListener('click', () => {
-    initVideoChat(document.getElementById('roomName').value);
-
-    document.getElementById('roomNameSection').classList.add = 'deactivated';
-
-    document.createElement("p").innerHTML = 'Auf andere Raum-Teilnehmer warten...';
-    document.getElementById('welcomeScreen').append(waitingToOtherRoomMates);
-});
+if(__ENV__ === 'dev') {
+    startGame2("1");
+}
