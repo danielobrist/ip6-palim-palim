@@ -4,7 +4,7 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {GameController} from './game/gameController.js';
 import {initScene, initCamera} from './game/scene';
-import GameState from './../data/gameState';
+//import config from './../data/gameState';
 import InteractionManager from './components/interactionManager.js';
 import { Mesh } from 'three';
 // import DatGUIPalimPalim from './managers/datGUIPalimPalim';
@@ -43,14 +43,17 @@ let selectedObject;
 let isMouseDown = false;
 let mouse = {x: 0, y: 0};
 
+let config;
+
 const start = (isInitiator) => {
         startGame(isInitiator);
 }
 
-function startGame(isInitiator) {
+async function startGame(isInitiator) {
     isSeller = isInitiator;
     console.log("Started game with isInitiator = " + isInitiator);
     init();
+    await loadConfig();
     // if(__ENV__ === 'dev') {
     //     initDevThings();
     // }
@@ -75,6 +78,11 @@ function init() {
 
 }
 
+async function loadConfig() {
+    const configFile = await import('./../data/gameState');
+    config = configFile.default;
+}
+
 const switchView = (isSeller) => {
     if (isSeller) {
         console.log('changing camera position!');
@@ -92,18 +100,17 @@ const switchView = (isSeller) => {
 }
 
 async function init3DObjects() {
-    
-    for (let i = 0; i < GameState.models.length; i++) {
+    for (let i = 0; i < config.models.length; i++) {
         const loader = new GLTFLoader();
-        let loadedData = await loader.loadAsync(GameState.models[i].path);
+        let loadedData = await loader.loadAsync(config.models[i].path);
         loadedData.scene.traverse((o) => {
             if (o.isMesh) {
                 let m = new THREE.Mesh();
-                o.scale.set(GameState.models[i].scale, GameState.models[i].scale, GameState.models[i].scale);
+                o.scale.set(config.models[i].scale, config.models[i].scale, config.models[i].scale);
 
                 m = o;
                 
-                salesObjects.set(GameState.models[i].id, m);
+                salesObjects.set(config.models[i].id, m);
 
             };
         });
@@ -145,10 +152,10 @@ async function init3DObjects() {
 
     if (isSeller) { 
         // init seller specific items in local scene
-        instantiateSellerObjectsFromJsonArray(GameState.sellerModelsStart);
+        instantiateSellerObjectsFromJsonArray(config.sellerModelsStart);
     } else {
         // init buyer specific items in local scene
-        instantiateSellerObjectsFromJsonArray(GameState.buyerModelsStart);
+        instantiateSellerObjectsFromJsonArray(config.buyerModelsStart);
     }
     
     renderer.outputEncoding = THREE.sRGBEncoding;
