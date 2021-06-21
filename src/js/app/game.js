@@ -9,7 +9,7 @@ import InteractionManager from './components/interactionManager.js';
 import { Mesh } from 'three';
 // import DatGUIPalimPalim from './managers/datGUIPalimPalim';
 
-export {start, getSceneJSON, updateRemoteObjects, moveRemoteVideoToScene, switchView};
+export {start, updateRemoteObjects, moveRemoteVideoToScene, switchView};
 
 const gameController = GameController();
 
@@ -234,22 +234,6 @@ function animate() {
     //cube.rotation.y += 0.01;
     // orbitControls.update();
     renderer.render( localScene, localCamera );
-}
-
-function getObjJSON(object) {
-    let obj = {name: object.name, position: object.position, rotation: object.rotation};
-    let json = JSON.stringify(obj);
-    console.log('JSON:' + json)
-    return json;
-}
-
-function getSceneJSON() {
-    // TODO build and return a JSON from all localObjects, not only cube
-    let cubeObj = {uuid: cube.uuid, position: cube.position, rotation: cube.rotation};
-    // let json = JSON.stringify(cubeObj);
-    let json = JSON.stringify(draggableObjectsSeller);
-    // console.log('JSON:' + json)
-    return json;
 }
 
 function updateRemoteObjects(data) {
