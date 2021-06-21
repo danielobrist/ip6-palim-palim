@@ -25,6 +25,7 @@ video {
   max-width: 80vw;
   max-height: 60vh;
   z-index: 995;
+  pointer-events: none;
 }
 
 #remoteVideoContainer video {
@@ -38,6 +39,7 @@ video {
   left: 2rem;
   bottom: 2rem;
   z-index: 999;
+  pointer-events: none;
 }
 
 #shoppingListContainer {
