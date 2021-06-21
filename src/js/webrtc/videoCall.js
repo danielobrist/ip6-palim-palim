@@ -242,7 +242,8 @@ export default class VideoCall{
             );
         }
 
-        function setLocalAndSendMessage(sessionDescription) {
+        const setLocalAndSendMessage = (sessionDescription) => {
+            console.log('setLocalAndSendMessage set local description: ', sessionDescription, peerConnection);
             peerConnection.setLocalDescription(sessionDescription);
             console.log('setLocalAndSendMessage sending message', sessionDescription);
             sendSignalingMessage(sessionDescription);
