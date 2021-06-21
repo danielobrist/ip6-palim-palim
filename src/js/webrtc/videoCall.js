@@ -1,6 +1,7 @@
 import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, moveRemoteVideoToScene, switchView} from '../app/game';
 import {writeShoppingList} from '../app/components/shoppingList';
+import {startGame2} from './../app/game.js';
 
 export let dataChannel;
 export let isInitiator;
@@ -49,29 +50,45 @@ export default class VideoCall{
             console.log('This peer is the initiator of room ' + room + '!');
             isChannelReady = true;
 
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            welcomeScreen.innerHTML = '';
-            const startGameButton = document.createElement("button");
-            startGameButton.innerHTML = 'Spiel starten';
-            startGameButton.id = 'startGameButton';
-            startGameButton.addEventListener('click', () => {
-                socket.emit('gameStart', room);
+            document.getElementById('welcomeScreen').classList.add('deactivated');
+            document.getElementById("startGameScreen").classList.remove('deactivated');
+
+            document.getElementById("startGameButton").addEventListener('click', () => {
+                goToGameModeScreen(room);
+                //socket.emit('gameStart', room);
             });    
-            welcomeScreen.append(startGameButton);
         });
 
-        socket.on('gameStart',  function() {
-            gameStart();
+        function goToGameModeScreen(room) {
+            document.getElementById('startGameScreen').classList.add('deactivated');
+            document.getElementById('gameModeScreen').classList.remove('deactivated');
+
+            let gameModeButtons = document.getElementsByClassName("button--gameMode");
+            for (var i = 0; i < gameModeButtons.length; i++) {
+
+                let gameModeButton = gameModeButtons.item(i);
+                let gameMode = gameModeButton.dataset.gamemode;
+
+                gameModeButton.addEventListener('click', () => {
+                    socket.emit('gameStart', room, gameMode);
+                });
+            }
+
+        }
+
+        socket.on('gameStart',  function(gameMode) {
+            gameStart(gameMode);
         });
 
-        function gameStart() {
+        function gameStart(gameMode) {
             removeWelcomeScreen();
             switchView(isInitiator);
+            startGame2(gameMode);
         }
 
         function removeWelcomeScreen() {
-            if(document.getElementById('welcomeScreen') !== null) {
-                document.getElementById('welcomeScreen').remove();
+            if(document.getElementById('overlayStartScreens') !== null) {
+                document.getElementById('overlayStartScreens').remove();
             }
             document.getElementById('remoteVideo').style.visibility = 'hidden';
             document.getElementById("remoteVideoContainer").style.zIndex = "-999";
@@ -298,6 +315,7 @@ export default class VideoCall{
             dataChannel = event.channel;
             dataChannel.onmessage = handleReceiveMessage;
             dataChannel.onerror = function (error) {
+                console.log("Data Channel Error:", error);
                 console.log("Data Channel Error:", error);
             };
             dataChannel.onopen = handleDataChannelStatusChange;

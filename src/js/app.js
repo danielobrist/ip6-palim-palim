@@ -43,17 +43,11 @@ function initGame() {
 }
 
 
-const welcomeScreen = document.getElementById('welcomeScreen');
-const roomNameSection = document.getElementById('roomNameSection');
-const roomName = document.getElementById('roomName');
-const roomNameButton = document.getElementById('roomNameButton');
+document.getElementById('roomNameButton').addEventListener('click', () => {
+    initVideoChat(document.getElementById('roomName').value);
 
-roomNameButton.addEventListener('click', () => {
-    initVideoChat(roomName.value);
+    document.getElementById('roomNameSection').classList.add = 'deactivated';
 
-    roomNameSection.style.display = 'none';
-
-    let waitingToOtherRoomMates = document.createElement("p");
-    waitingToOtherRoomMates.innerHTML = 'Auf andere Raum-Teilnehmer warten...';
-    welcomeScreen.append(waitingToOtherRoomMates);
+    document.createElement("p").innerHTML = 'Auf andere Raum-Teilnehmer warten...';
+    document.getElementById('welcomeScreen').append(waitingToOtherRoomMates);
 });

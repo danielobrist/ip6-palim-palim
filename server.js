@@ -67,9 +67,8 @@ io.sockets.on('connection', function(socket) {
     console.log('received bye');
   });
 
-  socket.on('gameStart', function (room) {
-    log("jetzt sind wir auf dem Server");
-    io.sockets.in(room).emit('gameStart');
+  socket.on('gameStart', function (room, gameMode) {
+    io.sockets.in(room).emit('gameStart', gameMode);
   });
 
 });

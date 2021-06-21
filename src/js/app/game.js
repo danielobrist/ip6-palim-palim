@@ -9,7 +9,7 @@ import InteractionManager from './components/interactionManager.js';
 import { Mesh } from 'three';
 // import DatGUIPalimPalim from './managers/datGUIPalimPalim';
 
-export {start, updateRemoteObjects, moveRemoteVideoToScene, switchView};
+export {start, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame2};
 
 const gameController = GameController();
 
@@ -49,14 +49,15 @@ const start = (isInitiator) => {
         startGame(isInitiator);
 }
 
-async function startGame(isInitiator) {
+function startGame(isInitiator) {
     isSeller = isInitiator;
     console.log("Started game with isInitiator = " + isInitiator);
     init();
-    await loadConfig();
-    // if(__ENV__ === 'dev') {
-    //     initDevThings();
-    // }
+}
+
+async function startGame2(gameMode) {
+    await loadConfig(gameMode);
+
     if (__ENV__ === 'dev') {
         initControls(isSeller);
     }
@@ -78,8 +79,15 @@ function init() {
 
 }
 
-async function loadConfig() {
-    const configFile = await import('./../data/gameState');
+async function loadConfig(gameMode) {
+    let configFile;
+
+    if(gameMode === "2") {
+        configFile = await import('./../data/gameState2');
+    } else {
+        configFile = await import('./../data/gameState');
+    }
+     
     config = configFile.default;
 }
 
