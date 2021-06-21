@@ -1,11 +1,12 @@
-# Palim Palim
+Palim Palim
+========
 
 A fun video chat application with integrated 3D multiplayer capabilities. //TODO project description
 
 Based on a basic boilerplate for a Three.js project including the use of Webpack and ES6 syntax via Babel.
 https://github.com/paulmg/ThreeJS-Webpack-ES6-Boilerplate/
 
-## Project Structure
+## :apple: Project Structure
 ```
 build - Directory for built and compressed files from the npm build script
 src - Directory for all dev files
@@ -20,7 +21,7 @@ src - Directory for all dev files
     └── assets - Is copied over to build folder with build command. Place external asset files here.
 ```
 
-## Getting started
+## :orange: Getting started
 Install dependencies:
 
 ```
@@ -42,7 +43,7 @@ npm start
 Spins up the node.js server at localhost:8080 and uses the current prod build from the build folder. Open a second tab to chat and play the game with yourself.
 
 
-## Running App in dev mode (wihout Server/VideoChat)
+## :pear: Running App in dev mode (wihout Server/VideoChat)
 After installing the dependencies, run:
 
 ```
@@ -53,26 +54,22 @@ This will spin up a webpack dev server at localhost:8080 and keeps track of all 
 
 
 
-## Other NPM Scripts
+## :cherries: All NPM Scripts
 You can run any of these individually if you'd like with the `npm run` command:
-* `test` - Runs the Mocha tests defined in test/test.js
+* `build` - Cleans build folder, lints js code, copies assets, sets env to production, compiles everything into build
+* `start` - Starts `server.js` at localhost:8080 serving the current prod build from the build folder
+* `test` - Runs the Mocha tests defined in `test/test.js`
 * `prebuild` - Cleans up build folder and lints `src/js`
 * `clean` - Cleans build folder
 * `lint` - Runs lint on the `src/js` folder and uses the `.eslintrc` file in root for linting rules
-* `webpack-server` - Start up a  webpack-dev-server with hot-module-replacement
-* `webpack-watch` - Run webpack in dev environment with watch
-* `dev:js` - Run webpack in dev environment without watch
-* `build:dir` - Copy files and folders from `src/public` to `build`
-* `build:js` - Run webpack in production environment
-
-## Input Controls
-* Press H to hide dat.GUI
-* Arrow controls will pan
-* Mouse left click will rotate/right click will pan
-* Scroll wheel zooms in and out
+* `webpack-server` - Starts up a webpack-dev-server with hot-module-replacement
+* `webpack-watch` - Runs webpack in dev environment with watch
+* `dev:js` - Runs webpack in dev environment without watch
+* `build:dir` - Copies files and folders from `src/public` to `build`
+* `build:js` - Runs webpack in production environment
 
 
-## Heroku Deployment
+## :grapes: Heroku Deployment
 Normally, Heroku will recognise the app as a node.js application and use the proper buildpack for the deployment. If you encounter any problems, try folliwing steps:
 * Set up Heroku CLI [More infos](https://devcenter.heroku.com/articles/heroku-cli)
 * Ensure the Heroku application is using the `heroku/nodejs` buildpack by running the `heroku buildpacks -a <your-heroku-app-name>` command. [More infos](https://devcenter.heroku.com/articles/nodejs-support#specifying-a-node-js-version)
@@ -81,7 +78,7 @@ Normally, Heroku will recognise the app as a node.js application and use the pro
 
 
 
-## TURN-Server aufsetzen
+## :banana: TURN-Server aufsetzen
 Um selbst einen TURN-Server (Traversal Using Relays around NAT (Network Address Translation)) zu erstellen, wird ein Linux-Server mit einer öffentlichen IP-Adresse (Internet Protocol Adresse) benötigt. Der in Palim-Palim verwendete TURN-Server benutzt Coturn, dies ist eine Open-Source Implementierung des TURN-Protokolls (https://www.hostsharing.net/features/coturn/).
 Spezifikationen Linux-Server (nicht zwingend):
 * 8 GB (Gigabyte) RAM (Random-Access Memory)
