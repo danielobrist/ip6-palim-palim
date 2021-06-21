@@ -30,6 +30,7 @@
       </svg>
     </div>
 
+    <!--<% if (htmlWebpackPlugin.options.env !== 'dev') { %>-->
     <section id="welcomeScreen">
       <h1>Palim-Palim Welcome Screen</h1>
       <p>Beschreibung, Begrüssung, bla bla</p>
@@ -38,14 +39,14 @@
         <button id="roomNameButton">Raum beitreten</button>
       </div>
     </section>
-
+    <!--<% } %>-->
 
     <div id="localVideoContainer">
-      <video id="localVideo" autoplay muted></video>
+      <video id="localVideo" autoplay muted playsinline></video>
     </div>
   
     <div id="remoteVideoContainer">
-      <video id="remoteVideo" autoplay></video>
+      <video id="remoteVideo" autoplay playsinline></video>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
