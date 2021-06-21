@@ -26,7 +26,7 @@ export default class PeerConnection {
                 this.rtcPeerConnection.setConfiguration(this.peerConnectionConfig);
             } else {
                 this.rtcPeerConnection = new RTCPeerConnection();
-                this.rtcPeerConnection.setConfiguration(this.peerConnectionConfig);
+                // this.rtcPeerConnection.setConfiguration(this.peerConnectionConfig);
             }
         
             console.log('Created RTCPeerConnnection: ' + this.rtcPeerConnection);

@@ -193,17 +193,21 @@ const initControls = (isSeller) => {
     interactionManager = new InteractionManager(
         renderer,
         localCamera,
-        renderer.domElement,
         isSeller
     );
 
     interactionManager.setDraggableObjects(interactionObjects);
 
     if(__ENV__ === 'dev') {
-        // visualize the interaction plane
-        const helper = new THREE.PlaneHelper( interactionManager.interactionPlane, 5, 0xffff00 );
-        localScene.add(helper);
+        // visualize the interaction plane and itemSink
+        const planeHelper = new THREE.PlaneHelper( interactionManager.interactionPlane, 5, 0xffff00 );
+        localScene.add(planeHelper);
+
     }    
+
+    // TODO only in dev if we have a basket
+    const boxHelper = new THREE.Box3Helper(interactionManager.itemSink, 0xff0000);
+    localScene.add(boxHelper);
 }
 
 function initDevThings() {

@@ -1,3 +1,4 @@
+// TODO rename, maybe sceneConfig?
 export default {
     models: [
         {

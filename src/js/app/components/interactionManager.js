@@ -2,14 +2,15 @@ import * as THREE from 'three';
 import { GameController } from '../game/gameController';
 
 export default class InteractionManager {
-    constructor(renderer, camera, domElement, isSeller) {
+    constructor(renderer, camera, isSeller) {
         this.renderer = renderer;
         this.camera = camera;
-        this.domElement = domElement;
+        this.domElement = renderer.domElement;
         this.gameController = GameController();
 
-        this.draggableObjects = [];
         this.selectedObject;
+        this.draggableObjects = [];
+        this.itemSink; //basket
 
         this.raycaster = new THREE.Raycaster();
         this.intersection = new THREE.Vector3();
@@ -19,8 +20,13 @@ export default class InteractionManager {
         this.domElement.addEventListener('pointerup', this.onPointerUp);
         this.mouse = new THREE.Vector2();
 
-        this.interactionPlane = new THREE.Plane();
+        this.setupInteractionPlane(isSeller);
+        this.setupItemSink();
+        
+    }
 
+    setupInteractionPlane(isSeller) {
+        this.interactionPlane = new THREE.Plane();
         if (isSeller){
             this.interactionPlane.setFromNormalAndCoplanarPoint(this.camera.getWorldDirection(this.interactionPlane.normal), new THREE.Vector3(0,0,-3));
         } else {
@@ -28,6 +34,11 @@ export default class InteractionManager {
         }
     }
 
+    setupItemSink() {
+        this.itemSink = new THREE.Box3;
+        // TODO this.itemSink.setFromObject with basket object instead
+        this.itemSink.setFromCenterAndSize(new THREE.Vector3(0,0,-2.5), new THREE.Vector3(1,1,1))
+    }
 
     addDraggableObject(obj) {
         this.draggableObjects.push(obj);
@@ -51,19 +62,32 @@ export default class InteractionManager {
 
     onPointerDown = (event) => {
         console.log('Pointer down event');
-        this.getMousePosition(event);
 
+        this.getMousePosition(event);
         this.raycaster.setFromCamera( this.mouse, this.camera );
+
         const intersects = this.raycaster.intersectObjects(this.draggableObjects);
         this.selectedObject = intersects[0];
-        console.log(this.selectedObject);
 
+        this.raycaster.ray.intersectPlane(this.interactionPlane, this.intersection); //saves intersection point into this.intersection
+        this.selectedObject.object.position.copy(this.intersection);
+
+        console.log(this.selectedObject);
     }
 
     onPointerUp = (event) => {
         console.log('Pointer up event');
+        // TODO check if selectedObject is over itemSink/basket
+        this.getMousePosition(event);
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+
+        if(this.raycaster.ray.intersectsBox(this.itemSink)) {
+            console.log('Item put in basket!');
+            // TODO remove from scene, put into basket (where?) and update item count in game state somehow
+        }
+
+        // finally
         this.selectedObject = null;
-        
     }
 
     onPointerMove = (event) => {
@@ -71,6 +95,7 @@ export default class InteractionManager {
 
         this.getMousePosition(event);
         this.raycaster.setFromCamera(this.mouse, this.camera);
+
         this.raycaster.ray.intersectPlane(this.interactionPlane, this.intersection); //saves intersection point into this.intersection
         this.selectedObject.object.position.copy(this.intersection); //moves selectedObject to the position where the ray intersected the interactionPlane
 
@@ -78,12 +103,7 @@ export default class InteractionManager {
         this.gameController.sendGameobjectUpdate(this.selectedObject.object);
         
         //TODO
-        // handle offset
-
-        //TODO 
-        // gameController.sendGameobjectUpdate(getObjJSON(event.object));
-        // render();
-
+        // handle offset?
     }
 
     getMousePosition = (event) => {

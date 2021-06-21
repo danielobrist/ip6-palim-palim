@@ -44,14 +44,13 @@ function initLight() {
     directionalLight3.position.set(2, 2, 20);
     // scene.add(directionalLight3);
 
-    // TODO show only in dev
     if(__ENV__ === 'dev') {
         const helper = new THREE.DirectionalLightHelper( directionalLight1, 5 );
         scene.add( helper );
         const helper1 = new THREE.DirectionalLightHelper( directionalLight2, 5 );
-        scene.add( helper );
+        scene.add( helper1 );
         const helper2 = new THREE.DirectionalLightHelper( directionalLight3, 5 );
-        scene.add( helper );
+        scene.add( helper2 );
     }
   
 }
