@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["**/app/physics/ammo.js"],
+  "ignorePatterns": ["**/webrtc/adapter.js"],
   "rules": {
     "no-cond-assign": 1,
     "no-console": 0, //TODO maybe enable later
