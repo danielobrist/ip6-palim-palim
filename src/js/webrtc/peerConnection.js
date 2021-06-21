@@ -22,12 +22,15 @@ export default class PeerConnection {
     create() {
         try {
             if (location.hostname !== 'localhost') {
-                this.rtcPeerConnection = new RTCPeerConnection(this.peerConnectionConfig);
+                this.rtcPeerConnection = new RTCPeerConnection();
+                this.rtcPeerConnection.setConfiguration(this.peerConnectionConfig);
             } else {
-                this.rtcPeerConnection = new RTCPeerConnection(this.peerConnectionConfig);
+                this.rtcPeerConnection = new RTCPeerConnection();
+                this.rtcPeerConnection.setConfiguration(this.peerConnectionConfig);
             }
         
             console.log('Created RTCPeerConnnection: ' + this.rtcPeerConnection);
+            console.log('With config: ' + this.rtcPeerConnection.getConfiguration())
             return this.rtcPeerConnection;
 
           } catch (e) {
