@@ -7,7 +7,7 @@ import {initScene, initCamera} from './components/mainScene';
 import InteractionManager from './components/interactionManager.js';
 // import DatGUI from './managers/datGUI';
 
-export {start, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame2};
+export {startGame, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGameMode};
 
 // an array of objects to sync
 const objectsToSync = new Map();
@@ -41,17 +41,13 @@ let mouse = {x: 0, y: 0};
 
 let config;
 
-const start = (isInitiator) => {
-        startGame(isInitiator);
-}
-
 function startGame(isInitiator) {
     isSeller = isInitiator;
     console.log("Started game with isInitiator = " + isInitiator);
     init();
 }
 
-async function startGame2(gameMode) {
+async function startGameMode(gameMode) {
     await loadConfig(gameMode);
 
     if (__ENV__ === 'dev') {

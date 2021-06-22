@@ -1,7 +1,7 @@
 import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, moveRemoteVideoToScene, switchView} from '../game/game';
 import {writeShoppingList} from '../game/components/shoppingList';
-import {startGame2} from '../game/game.js';
+import {startGameMode} from '../game/game.js';
 
 export let dataChannel;
 export let isInitiator;
@@ -83,7 +83,7 @@ export default class VideoChat{
         function gameStart(gameMode) {
             removeWelcomeScreen();
             switchView(isInitiator);
-            startGame2(gameMode);
+            startGameMode(gameMode);
         }
 
         function removeWelcomeScreen() {
