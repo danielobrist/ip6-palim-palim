@@ -1,4 +1,4 @@
-Palim Palim
+:bell: Palim Palim
 ========
 
 A fun video chat application with integrated 3D multiplayer capabilities. //TODO project description
