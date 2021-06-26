@@ -1,8 +1,10 @@
 import * as THREE from 'three';
 import { GameSync } from './gameSync';
 
-export default class InteractionManager {
+export default class GameEventManager extends THREE.EventDispatcher{
     constructor(renderer, camera, isSeller) {
+        super();
+
         this.renderer = renderer;
         this.camera = camera;
         this.domElement = renderer.domElement;
@@ -70,20 +72,21 @@ export default class InteractionManager {
         this.selectedObject = intersects[0];
 
         this.raycaster.ray.intersectPlane(this.interactionPlane, this.intersection); //saves intersection point into this.intersection
-        this.selectedObject.object.position.copy(this.intersection);
-
-        console.log(this.selectedObject);
+        if (this.selectedObject) {
+            this.selectedObject.object.position.copy(this.intersection);
+            console.log(this.selectedObject);
+        }
     }
 
     onPointerUp = (event) => {
         console.log('Pointer up event');
-        // TODO check if selectedObject is over itemSink/basket
         this.getMousePosition(event);
         this.raycaster.setFromCamera(this.mouse, this.camera);
 
+        // TODO check if this.selectedObject is intersecting this.itemSink instead! (interactionPlane needs to intersect with itemsink for this to work!)
         if(this.raycaster.ray.intersectsBox(this.itemSink)) {
-            console.log('Item put in basket!');
-            // TODO remove from scene, put into basket (where?) and update item count in game state somehow
+            console.log(this.selectedObject.object.name + ' put in basket!');
+            this.dispatchEvent( { type: 'basketAdd', item: this.selectedObject.object } );
         }
 
         // finally

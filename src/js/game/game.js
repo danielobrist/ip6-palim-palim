@@ -4,7 +4,9 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {initScene, initCamera} from './components/mainScene';
 //import config from './../data/gameState';
-import InteractionManager from './components/interactionManager.js';
+import GameEventManager from './components/gameEventManager.js';
+import GameStateManager from './components/gameStateManager';
+import GameState from './components/gameState';
 // import DatGUI from './managers/datGUI';
 
 export {start, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame2};
@@ -34,10 +36,12 @@ let physicsWorld;
 let salesObjects = new Map();
 let gui;
 
-let interactionManager;
+let gameEventManager;
 let selectedObject;
 let isMouseDown = false;
 let mouse = {x: 0, y: 0};
+
+let gameStateManager = new GameStateManager();
 
 let config;
 
@@ -104,8 +108,17 @@ const switchView = (isSeller) => {
 }
 
 async function init3DObjects() {
+    const manager = new THREE.LoadingManager();
+    // TODO Loading bar/screen https://stackoverflow.com/questions/35575065/how-to-make-a-loading-screen-in-three-js/35584276
+    manager.onProgress = (url, itemsLoaded, itemsTotal) => {
+        console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+    }
+    manager.onLoad = () => {
+        document.getElementById("appContainer").querySelector('#loading').style.display = 'none';
+    }
+    const loader = new GLTFLoader(manager);
+    // TODO Proper loading
     for (let i = 0; i < config.models.length; i++) {
-        const loader = new GLTFLoader();
         let loadedData = await loader.loadAsync(config.models[i].path);
         loadedData.scene.traverse((o) => {
             if (o.isMesh) {
@@ -194,23 +207,33 @@ function instantiateSellerObjectsFromJsonArray(jsonArray) {
 
 const initControls = (isSeller) => {
 
-    interactionManager = new InteractionManager(
+    gameEventManager = new GameEventManager(
         renderer,
         localCamera,
         isSeller
     );
 
-    interactionManager.setDraggableObjects(interactionObjects);
+    // TODO this should be in gameLoopManager
+    gameEventManager.setDraggableObjects(interactionObjects);
+    gameEventManager.addEventListener( 'basketAdd', function ( event ) {
+
+        localScene.remove(event.item);
+        // TODO scenemanager.show event.item in basket somehow
+        // TODO update state
+        gameStateManager.addItemToBasket(event.item);
+        let count = gameStateManager.getBasketItemCount("DuckMesh3")
+        console.log(count);
+    } );
 
     if(__ENV__ === 'dev') {
         // visualize the interaction plane and itemSink
-        const planeHelper = new THREE.PlaneHelper( interactionManager.interactionPlane, 5, 0xffff00 );
+        const planeHelper = new THREE.PlaneHelper( gameEventManager.interactionPlane, 5, 0xffff00 );
         localScene.add(planeHelper);
 
     }    
 
     // TODO only in dev if we have a basket
-    const boxHelper = new THREE.Box3Helper(interactionManager.itemSink, 0xff0000);
+    const boxHelper = new THREE.Box3Helper(gameEventManager.itemSink, 0xff0000);
     localScene.add(boxHelper);
 }
 

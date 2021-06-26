@@ -125,5 +125,25 @@ export default {
         515159,
         515157,
         515156
-    ]
+    ],
+    gameOverCheck: function(basketContent) {
+        //TODO return true if buyerModelsTargets are all in basket
+        if (!Array.isArray(basketContent)){
+            return false;
+        }
+        if (this.buyerModelsTarget.length !== basketContent.length) {
+            return false;
+        }
+        // .concat() to not mutate arguments
+        const arr1 = this.buyerModelsTarget.concat().sort();
+        const arr2 = basketContent.concat().sort();
+    
+        for (let i = 0; i < arr1.length; i++) {
+            if (arr1[i] !== arr2[i]) {
+                return false;
+            }
+        }
+    
+        return true;
+    }
 };
