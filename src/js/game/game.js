@@ -7,6 +7,7 @@ import {initScene, initCamera} from './components/mainScene';
 import GameEventManager from './components/gameEventManager.js';
 import GameStateManager from './components/gameStateManager';
 import GameState from './components/gameState';
+import { Vector3 } from 'three';
 // import DatGUI from './managers/datGUI';
 
 export {start, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame2};
@@ -57,11 +58,11 @@ function startGame(isInitiator) {
 
 async function startGame2(gameMode) {
     await loadConfig(gameMode);
-
+    await init3DObjects();
     if (__ENV__ === 'dev') {
         initControls(isSeller);
     }
-    init3DObjects();
+    
     animate();
 }
 
@@ -194,6 +195,7 @@ function instantiateSellerObjectsFromJsonArray(jsonArray) {
     for(let i = 0; i < jsonArray.length; i++) {
         let newMesh = salesObjects.get(jsonArray[i].id).clone();
         newMesh.name = jsonArray[i].name;
+        newMesh.startPosition = new Vector3(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z)
         newMesh.position.set(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z);
         localScene.add(newMesh);
         objectsToSync.set(newMesh.name, newMesh);
@@ -214,7 +216,10 @@ const initControls = (isSeller) => {
     );
 
     // TODO this should be in gameLoopManager
-    gameEventManager.setDraggableObjects(interactionObjects);
+    // gameEventManager.setDraggableObjects(interactionObjects);
+    gameEventManager.draggableObjects = interactionObjects;
+    console.log(gameEventManager.draggableObjects);
+    // console.log(JSON.stringify(gameEventManager.draggableObjects));
     gameEventManager.addEventListener( 'basketAdd', function ( event ) {
 
         localScene.remove(event.item);
@@ -233,8 +238,18 @@ const initControls = (isSeller) => {
     }    
 
     // TODO only in dev if we have a basket
-    const boxHelper = new THREE.Box3Helper(gameEventManager.itemSink, 0xff0000);
+    const boxHelper = new THREE.Box3Helper(gameEventManager.shoppingBasket, 0xff0000);
     localScene.add(boxHelper);
+
+    const boxhelper2 = new THREE.Box3Helper(gameEventManager.selectionSpace, 0x00ffff);
+    localScene.add(boxhelper2);
+
+    gameEventManager.setupDispensers();
+    gameEventManager.dispensers.forEach((dispenser) => {
+        let bh = new THREE.Box3Helper(dispenser, 0x00ff00);
+        localScene.add(bh);
+    })
+
 }
 
 function initDevThings() {

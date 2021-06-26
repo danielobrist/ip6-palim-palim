@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Box3, Vector3 } from 'three';
 import { GameSync } from './gameSync';
 
 export default class GameEventManager extends THREE.EventDispatcher{
@@ -11,8 +12,11 @@ export default class GameEventManager extends THREE.EventDispatcher{
         this.gameSync = GameSync();
 
         this.selectedObject;
+        this.dragStartPoint = new Vector3();
         this.draggableObjects = [];
-        this.itemSink; //basket
+        this.shoppingBasket;
+        this.selectionSpace;
+        this.dispensers = [];
 
         this.raycaster = new THREE.Raycaster();
         this.intersection = new THREE.Vector3();
@@ -23,8 +27,8 @@ export default class GameEventManager extends THREE.EventDispatcher{
         this.mouse = new THREE.Vector2();
 
         this.setupInteractionPlane(isSeller);
-        this.setupItemSink();
-        
+        this.setupBasketSpace();
+        this.setupSelectionSpace();
     }
 
     setupInteractionPlane(isSeller) {
@@ -36,10 +40,24 @@ export default class GameEventManager extends THREE.EventDispatcher{
         }
     }
 
-    setupItemSink() {
-        this.itemSink = new THREE.Box3;
+    setupBasketSpace() {
+        this.shoppingBasket = new THREE.Box3;
         // TODO this.itemSink.setFromObject with basket object instead
-        this.itemSink.setFromCenterAndSize(new THREE.Vector3(0,0,-2.5), new THREE.Vector3(1,1,1))
+        this.shoppingBasket.setFromCenterAndSize(new THREE.Vector3(0,0,-2.5), new THREE.Vector3(1,1,1));
+    }
+
+    setupSelectionSpace() {
+        this.selectionSpace = new THREE.Box3;
+        this.selectionSpace.setFromCenterAndSize(new THREE.Vector3(0,0,2.5), new THREE.Vector3(7,1,1));
+    }
+
+    // deprecated
+    setupDispensers() {
+        this.draggableObjects.forEach((item) => {
+            let dispenser = new THREE.Box3();
+            dispenser.setFromObject(item);
+            this.dispensers.push(dispenser);
+        });
     }
 
     addDraggableObject(obj) {
@@ -70,10 +88,17 @@ export default class GameEventManager extends THREE.EventDispatcher{
 
         const intersects = this.raycaster.intersectObjects(this.draggableObjects);
         this.selectedObject = intersects[0];
+        if (intersects.length > 0){
+            this.dragStartPoint.copy(intersects[0].object.position);
+            if (this.raycaster.ray.intersectsBox(this.selectionSpace)) {
+                // TODO add a placeholder clone to the scene with opacity at startPosition but dont add it to draggableObjects
+            }
+        }
 
         this.raycaster.ray.intersectPlane(this.interactionPlane, this.intersection); //saves intersection point into this.intersection
         if (this.selectedObject) {
             this.selectedObject.object.position.copy(this.intersection);
+            this.gameSync.sendGameobjectUpdate(this.selectedObject.object);
             console.log(this.selectedObject);
         }
     }
@@ -83,8 +108,16 @@ export default class GameEventManager extends THREE.EventDispatcher{
         this.getMousePosition(event);
         this.raycaster.setFromCamera(this.mouse, this.camera);
 
+        if (this.raycaster.ray.intersectsBox(this.selectionSpace)) {
+            // TODO remove the placeholder from the scene
+            this.selectedObject.object.position.copy(this.selectedObject.object.startPosition);
+            this.gameSync.sendGameobjectUpdate(this.selectedObject.object);
+        } else if (!this.raycaster.ray.intersectsBox(this.selectionSpace)) {
+            // TODO up the opacity of the placeholder and add it to draggableObjects
+
+        }
         // TODO check if this.selectedObject is intersecting this.itemSink instead! (interactionPlane needs to intersect with itemsink for this to work!)
-        if(this.raycaster.ray.intersectsBox(this.itemSink)) {
+        if(this.raycaster.ray.intersectsBox(this.shoppingBasket)) {
             console.log(this.selectedObject.object.name + ' put in basket!');
             this.dispatchEvent( { type: 'basketAdd', item: this.selectedObject.object } );
         }
