@@ -126,24 +126,36 @@ export default {
         515157,
         515156
     ],
-    gameOverCheck: function(basketContent) {
-        //TODO return true if buyerModelsTargets are all in basket
-        if (!Array.isArray(basketContent)){
-            return false;
-        }
-        if (this.buyerModelsTarget.length !== basketContent.length) {
-            return false;
-        }
-        // .concat() to not mutate arguments
-        const arr1 = this.buyerModelsTarget.concat().sort();
-        const arr2 = basketContent.concat().sort();
-    
-        for (let i = 0; i < arr1.length; i++) {
-            if (arr1[i] !== arr2[i]) {
+    gameOverCheck: function(shoppingListMap, basketItemsMap) {
+        // checks if all shoppingList items are in the basket
+
+        // console.log(shoppingListMap);
+        // console.log(basketItemsMap);
+
+        for (const [key, value] of shoppingListMap.entries()) {
+            if (!basketItemsMap.has(key)){
                 return false;
+            } else {
+                let basketItem = basketItemsMap.get(key);
+                if (basketItem.count !== value.count) {
+                    return false;
+                }
             }
         }
-    
         return true;
-    }
+    },
+    shoppingList: new Map([
+        ['DuckMesh3', 
+            {
+                name: "DuckMesh3", 
+                count: 1
+            }
+        ], 
+        ['Apple1', 
+            {
+                name: "Apple1", 
+                count: 1
+            }
+        ]
+    ])
 };

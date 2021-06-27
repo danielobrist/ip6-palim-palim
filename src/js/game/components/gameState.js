@@ -1,7 +1,7 @@
 export default class GameState {
     constructor() {
         this.gameOver = false;
-        this.basketItems = [];
+        this.basketItems = new Map();
         this.sellerItems = [];
     }
 

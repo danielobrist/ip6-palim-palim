@@ -12,6 +12,7 @@ export default class GameEventManager extends THREE.EventDispatcher{
         this.gameSync = GameSync();
 
         this.selectedObject;
+        this.selectedObjectPlaceholder;
         this.dragStartPoint = new Vector3();
         this.draggableObjects = [];
         this.shoppingBasket;
@@ -92,6 +93,7 @@ export default class GameEventManager extends THREE.EventDispatcher{
             this.dragStartPoint.copy(intersects[0].object.position);
             if (this.raycaster.ray.intersectsBox(this.selectionSpace)) {
                 // TODO add a placeholder clone to the scene with opacity at startPosition but dont add it to draggableObjects
+                this.dispatchEvent( { type: 'itemRemove', item: this.selectedObject.object } );
             }
         }
 
@@ -108,7 +110,7 @@ export default class GameEventManager extends THREE.EventDispatcher{
         this.getMousePosition(event);
         this.raycaster.setFromCamera(this.mouse, this.camera);
 
-        if (this.raycaster.ray.intersectsBox(this.selectionSpace)) {
+        if (this.raycaster.ray.intersectsBox(this.selectionSpace) && this.selectedObject) {
             // TODO remove the placeholder from the scene
             this.selectedObject.object.position.copy(this.selectedObject.object.startPosition);
             this.gameSync.sendGameobjectUpdate(this.selectedObject.object);

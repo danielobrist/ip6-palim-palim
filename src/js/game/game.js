@@ -42,7 +42,7 @@ let selectedObject;
 let isMouseDown = false;
 let mouse = {x: 0, y: 0};
 
-let gameStateManager = new GameStateManager();
+let gameStateManager;
 
 let config;
 
@@ -93,6 +93,7 @@ async function loadConfig(gameMode) {
     }
      
     config = configFile.default;
+    gameStateManager = new GameStateManager(config);
 }
 
 const switchView = (isSeller) => {
@@ -218,15 +219,21 @@ const initControls = (isSeller) => {
     gameEventManager.draggableObjects = interactionObjects;
     console.log(gameEventManager.draggableObjects);
     // console.log(JSON.stringify(gameEventManager.draggableObjects));
-    gameEventManager.addEventListener( 'basketAdd', function ( event ) {
-
+    gameEventManager.addEventListener( 'basketAdd', function (event) {
         localScene.remove(event.item);
         // TODO scenemanager.show event.item in basket somehow
         // TODO update state
         gameStateManager.addItemToBasket(event.item);
-        let count = gameStateManager.getBasketItemCount("DuckMesh3")
-        console.log(count);
+
     } );
+    gameEventManager.addEventListener( 'itemRemove', function (event) {
+        // let selectedObjectPlaceholder = event.item.clone();
+
+        // console.log(event.item.startPosition);
+        // selectedObjectPlaceholder.position.set(event.item.startPosition);
+        // selectedObjectPlaceholder.material.opacity = 0.5;
+        // localScene.add(selectedObjectPlaceholder);
+    });
 
     if(__ENV__ === 'dev') {
         // visualize the interaction plane and itemSink

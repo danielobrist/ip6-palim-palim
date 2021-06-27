@@ -108,4 +108,5 @@ export default {
         515157,
         515156
     ]
+    //TODO add shoppingList and gameOverCheck function like in sceneConfig1
 };
