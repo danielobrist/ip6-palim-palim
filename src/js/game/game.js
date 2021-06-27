@@ -8,7 +8,7 @@ import GameEventManager from './components/gameEventManager.js';
 import GameStateManager from './components/gameStateManager';
 import GameState from './components/gameState';
 import { Vector3 } from 'three';
-// import DatGUI from './managers/datGUI';
+import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 
 export {start, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame2};
 
@@ -32,8 +32,8 @@ let isSeller = false;
 
 let duckMesh;
 let apricotMesh, apricotMesh1;
-// let orbitControls;
-let physicsWorld;
+let orbitControls;
+
 let salesObjects = new Map();
 let gui;
 
@@ -57,12 +57,16 @@ function startGame(isInitiator) {
 }
 
 async function startGame2(gameMode) {
+
+    
     await loadConfig(gameMode);
     await init3DObjects();
     if (__ENV__ === 'dev') {
         initControls(isSeller);
     }
-    
+    if(__ENV__ === 'dev') {
+        initDevThings();
+    }
     animate();
 }
 
@@ -76,7 +80,6 @@ function init() {
     localScene = initScene();
     localCamera = initCamera(isSeller);
 
-    // orbitControls = new OrbitControls( localCamera, renderer.domElement );
 
 }
 
@@ -184,11 +187,6 @@ async function init3DObjects() {
     plane = new THREE.Mesh( geometry, material );
     plane.receiveShadow = true;
     localScene.add( plane );
-
-    // if(__ENV__ === 'dev') {
-    //     initDevThings();
-    // }
-
 }
 
 function instantiateSellerObjectsFromJsonArray(jsonArray) {
@@ -252,9 +250,14 @@ const initControls = (isSeller) => {
 
 }
 
+
 function initDevThings() {
-    gui = new DatGUI();
-    // gui.load();
+    orbitControls = new OrbitControls( localCamera, renderer.domElement );
+    orbitControls.enabled = false;
+    gui = new GUI();
+    const orbitControlsFolder = gui.addFolder("OrbitControls");
+    orbitControlsFolder.add(orbitControls, 'enabled');
+    gui.domElement.parentElement.style.zIndex = "999999";
 }
 
 function moveRemoteVideoToScene(isInitiator) {
@@ -285,7 +288,9 @@ function moveRemoteVideoToScene(isInitiator) {
 function animate() {
     requestAnimationFrame( animate );
     //cube.rotation.y += 0.01;
-    // orbitControls.update();
+    if(orbitControls) {
+        orbitControls.update();
+    }
     renderer.render( localScene, localCamera );
 }
 

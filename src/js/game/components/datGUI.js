@@ -1,7 +1,14 @@
+import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
+
 // Manages all dat.GUI interactions
 export default class DatGUI {
   constructor() {
-    this.gui = new dat.GUI();
+    this.gui = new GUI();
+  }
+
+
+  addFolder(name) {
+    this.gui.addFolder(name);
   }
 
   addFolderWithPositions(el, name, rangeStart, rangeEnd, step) {
