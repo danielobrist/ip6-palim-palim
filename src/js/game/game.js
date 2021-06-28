@@ -94,6 +94,17 @@ async function loadConfig(gameMode) {
      
     config = configFile.default;
     gameStateManager = new GameStateManager(config);
+    gameStateManager.addEventListener('gameOver', function(event) {
+        gameEventManager.sendGameOver();
+    });
+
+    // gameEventManager.addEventListener( 'basketAdd', function (event) {
+    //     localScene.remove(event.item);
+    //     // TODO scenemanager.show event.item in basket somehow
+    //     // TODO update state
+    //     gameStateManager.addItemToBasket(event.item);
+
+    // } );
 }
 
 const switchView = (isSeller) => {

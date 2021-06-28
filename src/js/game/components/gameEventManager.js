@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Box3, Vector3 } from 'three';
 import { GameSync } from './gameSync';
 
-export default class GameEventManager extends THREE.EventDispatcher{
+export default class GameEventManager extends THREE.EventDispatcher {
     constructor(renderer, camera, isSeller) {
         super();
 
@@ -153,6 +153,10 @@ export default class GameEventManager extends THREE.EventDispatcher{
 
         this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 	    this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    }
+
+    sendGameOver() {
+        this.gameSync.sendGameOver();
     }
     
 }

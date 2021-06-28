@@ -77,13 +77,19 @@ const GameSync = () => {
         return json;
     }
 
+    function sendGameOver() {
+        alert("GAME OVER");
+        // datachannel2.send('gameOver');
+    }
+
     return {
         addLocalObject,
         startSharedSceneSync,
         stopSharedSceneSync,
         sendGameobjectUpdate,
         updateRemoteObjects,
-        getObjJSON
+        getObjJSON,
+        sendGameOver
     }
 
 }

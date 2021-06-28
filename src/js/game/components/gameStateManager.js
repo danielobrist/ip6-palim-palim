@@ -1,8 +1,11 @@
+import * as THREE from 'three';
 import GameState from "./gameState";
 
-export default class GameStateManager {
+export default class GameStateManager extends THREE.EventDispatcher {
     constructor(config){
-        this.gameState = new GameState()
+        super();
+
+        this.gameState = new GameState();
         this.gameOverCheck = config.gameOverCheck;
         this.shoppingList = config.shoppingList;
         // TODO get this dynamically from the config
@@ -48,6 +51,7 @@ export default class GameStateManager {
         if (gameOver === true) {
             alert('GAME OVER');
             // TODO send peer gameover message and finish round for both
+            this.dispatchEvent( { type: 'gameOver' } );
         }
     }
 }

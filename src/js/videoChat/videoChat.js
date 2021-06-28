@@ -2,8 +2,10 @@ import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, moveRemoteVideoToScene, switchView} from '../game/game';
 import {writeShoppingList} from '../game/components/shoppingList';
 import {startGame2} from '../game/game.js';
+import DataChannel from "./dataChannel";
 
 export let dataChannel;
+// export let dataChannel2;
 export let isInitiator;
 
 export default class VideoChat{
@@ -306,18 +308,15 @@ export default class VideoChat{
             dataChannel.onerror = handleDataChannelError;
             dataChannel.onopen = handleDataChannelStatusChange;
             dataChannel.onclose = handleDataChannelStatusChange;
-
             console.log('CREATED DATACHANNEL gameUpdates')
         }
 
         function handleDataChannelAdded(event) {
             console.log('Received Channel Callback');
+            // new DataChannel(event.channel);
             dataChannel = event.channel;
             dataChannel.onmessage = handleReceiveMessage;
-            dataChannel.onerror = function (error) {
-                console.log("Data Channel Error:", error);
-                console.log("Data Channel Error:", error);
-            };
+            dataChannel.onerror = handleDataChannelError;
             dataChannel.onopen = handleDataChannelStatusChange;
             dataChannel.onclose = handleDataChannelStatusChange;
             console.log('CREATED DATACHANNEL gameUpdates');
@@ -333,7 +332,7 @@ export default class VideoChat{
 
         function handleDataChannelStatusChange(event) {
             if (dataChannel) {
-                var state = dataChannel.readyState;
+                var state = dataChannel.readyState; 
 
                 if (state === "open") {
                     console.log("DATA CHANNEL STATE: open")
@@ -342,21 +341,5 @@ export default class VideoChat{
                 }
             }
         }
-
-        ///////////////////////////////////////////////
-        /////   synchronization of gameobjects    /////
-        ///////////////////////////////////////////////
-
-        // function startGameSync() {
-        //   let interval = setInterval(sendGameobjectPositions, 30);
-        // }
-
-        // function sendGameobjectPositions(sceneJson) {
-        //   //TODO send JSON Strings of gameobject and positions
-        //   if (dataChannel && dataChannel.readyState === "open") {
-        //     dataChannel.send(sceneJson);
-        //   }
-        // }
-
     }
 }
