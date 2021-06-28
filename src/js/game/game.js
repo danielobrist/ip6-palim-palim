@@ -1,77 +1,49 @@
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
+import {GLTFLoader} from 'three/examples/jsm/loaders/gltfloader';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {initScene, initCamera} from './components/mainScene';
 //import config from './../data/gameState';
-import InteractionManager from './components/interactionManager.js';
+import GameEventManager from './components/gameEventManager.js';
 // import DatGUI from './managers/datGUI';
 
-export {startGame, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGameMode};
+export {updateRemoteObjects};
 
-// an array of objects to sync
-const objectsToSync = new Map();
-
-const renderer = new THREE.WebGLRenderer({
-    alpha: true
-});
-
-let localScene;
-let localCamera;
-
-let draggableObjectsSeller = [];
-const interactionObjects = [];
-
-let cube, cube2, cube3;
-let duckMesh1, duckMesh2, duckMesh3;
-let plane;
-let isSeller = false;
-
-let duckMesh;
-let apricotMesh, apricotMesh1;
-// let orbitControls;
-let physicsWorld;
-let salesObjects = new Map();
-let gui;
-
-let interactionManager;
-let selectedObject;
-let isMouseDown = false;
-let mouse = {x: 0, y: 0};
-
-let config;
-
-function startGame(isInitiator) {
-    isSeller = isInitiator;
-    console.log("Started game with isInitiator = " + isInitiator);
-    init();
-}
-
-async function startGameMode(gameMode) {
-    await loadConfig(gameMode);
-
-    if (__ENV__ === 'dev') {
-        initControls(isSeller);
+export default class GameManager {
+    config;
+    isSeller;
+    
+    constructor(gameStateManager, sceneManager) {
+        this.gameStateManager = gameStateManager;
+        this.sceneManager = sceneManager;
     }
-    init3DObjects();
-    animate();
+
+    initGame(isInitiator) {
+        this.isSeller = !isInitiator;
+        
+        console.log("Started game with isInitiator = " + isInitiator);
+        this.sceneManager.initGameScene(this.isSeller);
+    }
+
+    async startGameMode(gameMode) {
+        this.sceneManager.moveRemoteVideoToScene(this.isInitiator);
+        this.sceneManager.switchView(this.isSeller);
+        this.config = await loadConfig(gameMode);
+
+        if (__ENV__ === 'dev') {
+            this.sceneManager.initControls(this.isSeller);
+        }
+        await this.sceneManager.init3DObjects(this.isSeller, this.config);
+        this.sceneManager.animate();
+    }
+
+    preload() {
+
+    }
+
 }
 
-function init() {
-
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    renderer.autoClear = false;
-    document.getElementById("appContainer").appendChild( renderer.domElement );
-
-    localScene = initScene();
-    localCamera = initCamera(isSeller);
-
-    // orbitControls = new OrbitControls( localCamera, renderer.domElement );
-
-}
-
-async function loadConfig(gameMode) {
+async function loadConfig(gameMode, config) {
     let configFile;
 
     if(gameMode === "2") {
@@ -80,172 +52,43 @@ async function loadConfig(gameMode) {
         configFile = await import('./config/sceneConfig1');
     }
      
-    config = configFile.default;
+    return configFile.default;
 }
 
-const switchView = (isSeller) => {
-    if (isSeller) {
-        console.log('changing camera position!');
-        localCamera.position.x = 0;
-        localCamera.position.y = 6;
-        localCamera.position.z = -10;
-        localCamera.lookAt( 0, 2, 0 );
-    } else {
-        localCamera.position.x = 0;
-        localCamera.position.y = 6;
-        localCamera.position.z = 10;
-        localCamera.lookAt( 0, 2, 0 );
-    }
-    initControls(isSeller);
-}
-
-async function init3DObjects() {
-    for (let i = 0; i < config.models.length; i++) {
-        const loader = new GLTFLoader();
-        let loadedData = await loader.loadAsync(config.models[i].path);
-        loadedData.scene.traverse((o) => {
-            if (o.isMesh) {
-                let m = new THREE.Mesh();
-                o.scale.set(config.models[i].scale, config.models[i].scale, config.models[i].scale);
-
-                m = o;
-                
-                salesObjects.set(config.models[i].id, m);
-
-            };
-        });
-    }
 
 
-    // for (let i = 0; i < GameState.models.length; i++) {
-    //     const loader = new GLTFLoader();
-    //     let ob = new THREE.Object3D();    
-    //     let loadedData = await loader.loadAsync(GameState.models[i].path);
-        
-        
-    //     console.log('------sellsObject: '+GameState.models[i].id+'-------');
-        
-    //     loadedData.scene.traverse((o) => { 
-    //         if (o.isMesh) {
-    //             console.log('mesh:');
-    //             console.log(o);
-    //             ob.add(o);
-    //         }
-    //     });
 
-    //     console.log('obj:');
-    //     console.log(ob);
+// an array of objects to sync
+const objectsToSync = new Map();
 
-    //     let m = new THREE.Mesh();
-    //     ob.scale.set(GameState.models[i].scale, GameState.models[i].scale, GameState.models[i].scale);
 
-    //     m = ob;
-    //     let drago = new DragControls( [m], localCamera, renderer.domElement );
-    //     drago.addEventListener( 'drag', function(event) {
-    //         gameController.sendGameobjectUpdate(getObjJSON(event.object));
-    //         render();
-    //     } );
-        
-    //     salesObjects.set(GameState.models[i].id, m);
 
-    // }
+let localScene;
+let localCamera;
 
-    if (isSeller) { 
-        // init seller specific items in local scene
-        instantiateSellerObjectsFromJsonArray(config.sellerModelsStart);
-    } else {
-        // init buyer specific items in local scene
-        instantiateSellerObjectsFromJsonArray(config.buyerModelsStart);
-    }
-    
-    renderer.outputEncoding = THREE.sRGBEncoding;
+const interactionObjects = [];
 
-    // init static stuff for both (eg. counter, etc)
-    const geometry = new THREE.BoxGeometry( 6, 1, 4 );
-    const material = new THREE.MeshStandardMaterial( {color: 0x8B4513} );
-    plane = new THREE.Mesh( geometry, material );
-    plane.receiveShadow = true;
-    localScene.add( plane );
+let isSeller = false;
 
-    // if(__ENV__ === 'dev') {
-    //     initDevThings();
-    // }
+let duckMesh;
+// let orbitControls;
+let salesObjects = new Map();
+let gui;
 
-}
+let interactionManager;
 
-function instantiateSellerObjectsFromJsonArray(jsonArray) {
-    for(let i = 0; i < jsonArray.length; i++) {
-        let newMesh = salesObjects.get(jsonArray[i].id).clone();
-        newMesh.name = jsonArray[i].name;
-        newMesh.position.set(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z);
-        localScene.add(newMesh);
-        objectsToSync.set(newMesh.name, newMesh);
-        interactionObjects.push(newMesh);
 
-        // if(__ENV__ === 'dev') {
-        //     gui.addFolderWithPositions(newMesh, newMesh.name, -5, 5, 0.05);
-        // }
-    }
-}
 
-const initControls = (isSeller) => {
+// function init() {
+//     // orbitControls = new OrbitControls( localCamera, renderer.domElement );
+// }
 
-    interactionManager = new InteractionManager(
-        renderer,
-        localCamera,
-        isSeller
-    );
+// function initDevThings() {
+//     gui = new DatGUI();
+//     // gui.load();
+// }
 
-    interactionManager.setDraggableObjects(interactionObjects);
 
-    if(__ENV__ === 'dev') {
-        // visualize the interaction plane and itemSink
-        const planeHelper = new THREE.PlaneHelper( interactionManager.interactionPlane, 5, 0xffff00 );
-        localScene.add(planeHelper);
-
-    }    
-
-    // TODO only in dev if we have a basket
-    const boxHelper = new THREE.Box3Helper(interactionManager.itemSink, 0xff0000);
-    localScene.add(boxHelper);
-}
-
-function initDevThings() {
-    gui = new DatGUI();
-    // gui.load();
-}
-
-function moveRemoteVideoToScene(isInitiator) {
-    setTimeout(() => {
-        console.log("------------moveRemoteVideoToScene-------------");
-
-        const webcamRemoteVideo = document.getElementById("remoteVideo");
-        const webcamReomoteVideoAspectRatio = webcamRemoteVideo.offsetWidth/webcamRemoteVideo.offsetHeight;
-        const remoteVideoWidth = 6;
-        const remoteVideoHeight = remoteVideoWidth/webcamReomoteVideoAspectRatio;
-
-        console.log(webcamRemoteVideo);
-        console.log("width: " + webcamRemoteVideo.offsetWidth);
-        console.log("height: " + webcamRemoteVideo.offsetHeight);
-
-        const remoteVideoGeometry = new THREE.PlaneGeometry( remoteVideoWidth, remoteVideoHeight );
-        const remoteVideoMaterial = makeVideoMaterial("remoteVideo");
-        const remoteVideoMesh = new THREE.Mesh( remoteVideoGeometry, remoteVideoMaterial );
-        if (isInitiator) {
-            remoteVideoMesh.position.set(0, remoteVideoHeight / 2, 2);
-        } else {
-            remoteVideoMesh.position.set(0, remoteVideoHeight/2, -2);
-        }
-        localScene.add( remoteVideoMesh );
-    }, 2000 );
-}
-
-function animate() {
-    requestAnimationFrame( animate );
-    //cube.rotation.y += 0.01;
-    // orbitControls.update();
-    renderer.render( localScene, localCamera );
-}
 
 function updateRemoteObjects(data) {
     let obj = JSON.parse(data);
@@ -275,20 +118,5 @@ function updateRemoteObjects(data) {
     //TOOD maybe tween/interpolate between positions
 }
 
-function makeVideoMaterial(id) {
-    let videoElement = document.getElementById(id);
-    let videoTexture = new THREE.VideoTexture(videoElement);
-  
-    let videoMaterial = new THREE.MeshBasicMaterial({
-      map: videoTexture,
-      overdraw: true,
-      side: THREE.DoubleSide,
-    });
-  
-    return videoMaterial;
-  }
 
-function render() {
-    renderer.render( localScene, localCamera );
-}
 

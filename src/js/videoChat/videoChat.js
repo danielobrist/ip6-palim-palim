@@ -1,7 +1,8 @@
 import PeerConnection from "./peerConnection";
-import {updateRemoteObjects, moveRemoteVideoToScene, switchView} from '../game/game';
+import {updateRemoteObjects} from '../game/game';
+import {moveRemoteVideoToScene} from '../game/sceneManager';
 import {writeShoppingList} from '../game/components/shoppingList';
-import {startGameMode} from '../game/game.js';
+import {appManager} from '../app.js';
 
 export let dataChannel;
 export let isInitiator;
@@ -50,6 +51,8 @@ export default class VideoChat{
             console.log('This peer is the initiator of room ' + room + '!');
             isChannelReady = true;
 
+            appManager.gameManager.initGame(true);
+
             document.getElementById('welcomeScreen').classList.add('deactivated');
             document.getElementById("startGameScreen").classList.remove('deactivated');
 
@@ -77,26 +80,13 @@ export default class VideoChat{
         }
 
         socket.on('gameStart',  function(gameMode) {
-            gameStart(gameMode);
+            appManager.gameModeStart(gameMode);
         });
-
-        function gameStart(gameMode) {
-            removeWelcomeScreen();
-            switchView(isInitiator);
-            startGameMode(gameMode);
-        }
-
-        function removeWelcomeScreen() {
-            if(document.getElementById('overlayStartScreens') !== null) {
-                document.getElementById('overlayStartScreens').remove();
-            }
-            document.getElementById('remoteVideo').style.visibility = 'hidden';
-            document.getElementById("remoteVideoContainer").style.zIndex = "-999";
-        }
 
         socket.on('joined', function(room) {
             console.log('joined: ' + room);
             isChannelReady = true;
+            appManager.gameManager.initGame(false);
             document.getElementById('welcomeScreen').innerHTML = '';
         });
 
@@ -171,8 +161,6 @@ export default class VideoChat{
                 for (const track of localStream.getTracks()) {
                     peerConnection.addTrack(track);
                 }
-
-                moveRemoteVideoToScene(isInitiator);
 
                 isStarted = true;
                 console.log('isInitiator', isInitiator);

@@ -43,16 +43,7 @@ export default {
             name:   'Ei'
         }
     ],
-    sellerModelsStart: [
-        {
-            id:     518168,
-            startPosition: {
-                x:  -1.5,
-                y:  0,
-                z:  -2
-            },
-            name:   'DuckMesh1'
-        },
+    buyerModelsStart: [
         {
             id:     518168,
             startPosition: {
@@ -63,8 +54,9 @@ export default {
             name:   'DuckMesh2'
         }
     ],
+    sellerModelsStart: [],
 
-    buyerModelsStart: [
+    modelsStart: [
         {
             id:     889985,
             startPosition: {

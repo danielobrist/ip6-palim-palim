@@ -58,7 +58,7 @@ const GameSync = () => {
         // console.log('Parsed JSON uuid: ' + obj.uuid + ', positionx: ' + obj.position.x + ', rotationx: ' + obj.rotation._x);
     
         //TODO update only specific object!
-        localElement = getLocalObject
+        //localElement = getLocalObject
         cube.position.x = obj.position.x;
         cube.position.y = obj.position.y;
         cube.position.z = obj.position.z;

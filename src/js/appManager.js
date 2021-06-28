@@ -3,13 +3,18 @@ import "regenerator-runtime/runtime";
 
 import Detector from './utils/detector';
 import VideoChat, {isInitiator} from './videoChat/videoChat';
-import {startGame, startGameMode} from './game/game';
+import GameManager from './game/game';
 import MenuManager from "./menuManager";
+import SceneManager from "./game/sceneManager";
+import GameStateManager from "./game/gameStateManager";
 
 export default class AppManager {
     
     constructor() {
         this.menuManager = new MenuManager();
+        const sceneManager = new SceneManager();
+        const gameStateManager = new GameStateManager(sceneManager);
+        this.gameManager = new GameManager(gameStateManager, sceneManager);
     }
 
     start() {
@@ -19,15 +24,21 @@ export default class AppManager {
         }
         
         checkWebGlCapabilities();
-        startGame(isInitiator);
+        //this.gameManager.initGame(isInitiator);
         
     
         if(isProd()) {
             this.menuManager.startMenu();        
         } else {
-            startGameMode("1");
+            this.gameManager.initGame(true);
+            this.gameManager.startGameMode("1");
         }
 
+    }
+
+    gameModeStart(gameMode) {
+        this.menuManager.removeMenu();
+        this.gameManager.startGameMode(gameMode);
     }
 
     // TODO move to VideoChatManager

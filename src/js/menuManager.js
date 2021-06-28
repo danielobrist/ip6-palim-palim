@@ -13,4 +13,12 @@ export default class MenuManager {
             document.getElementById('welcomeScreen').append(waitingToOtherRoomMates);
         });
     }
+
+    removeMenu() {
+        if(document.getElementById('overlayStartScreens') !== null) {
+            document.getElementById('overlayStartScreens').remove();
+        }
+        document.getElementById('remoteVideo').style.visibility = 'hidden';
+        document.getElementById("remoteVideoContainer").style.zIndex = "-999";
+    }
 }

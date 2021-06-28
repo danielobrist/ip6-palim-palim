@@ -1,12 +1,13 @@
 import * as THREE from 'three';
-import { GameSync } from './gameSync';
+import {appManager} from './../../app';
 
-export default class InteractionManager {
-    constructor(renderer, camera, isSeller) {
+
+export default class GameEventManager {
+    constructor(renderer, camera, gameSync, isSeller) {
         this.renderer = renderer;
         this.camera = camera;
         this.domElement = renderer.domElement;
-        this.gameSync = GameSync();
+        this.gameSync = gameSync;
 
         this.selectedObject;
         this.draggableObjects = [];
@@ -28,9 +29,9 @@ export default class InteractionManager {
     setupInteractionPlane(isSeller) {
         this.interactionPlane = new THREE.Plane();
         if (isSeller){
-            this.interactionPlane.setFromNormalAndCoplanarPoint(this.camera.getWorldDirection(this.interactionPlane.normal), new THREE.Vector3(0,0,-3));
-        } else {
             this.interactionPlane.setFromNormalAndCoplanarPoint(this.camera.getWorldDirection(this.interactionPlane.normal), new THREE.Vector3(0,0,3));
+        } else {
+            this.interactionPlane.setFromNormalAndCoplanarPoint(this.camera.getWorldDirection(this.interactionPlane.normal), new THREE.Vector3(0,0,-3));
         }
     }
 
@@ -72,7 +73,6 @@ export default class InteractionManager {
         this.raycaster.ray.intersectPlane(this.interactionPlane, this.intersection); //saves intersection point into this.intersection
         this.selectedObject.object.position.copy(this.intersection);
 
-        console.log(this.selectedObject);
     }
 
     onPointerUp = (event) => {
@@ -98,6 +98,8 @@ export default class InteractionManager {
 
         this.raycaster.ray.intersectPlane(this.interactionPlane, this.intersection); //saves intersection point into this.intersection
         this.selectedObject.object.position.copy(this.intersection); //moves selectedObject to the position where the ray intersected the interactionPlane
+
+        appManager.gameManager.sceneManager.animate();
 
         // console.log(this.selectedObject.object.position.z);
         this.gameSync.sendGameobjectUpdate(this.selectedObject.object);
