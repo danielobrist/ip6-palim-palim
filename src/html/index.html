@@ -32,44 +32,48 @@
 
     <% if (htmlWebpackPlugin.options.env !== 'dev') { %>
     <div id="overlayStartScreens">
-      <section id="welcomeScreen">
-        <h1>Palim-Palim Welcome Screen</h1>
-        <p>Beschreibung, Begrüssung, bla bla</p>
-        <div id="roomNameSection">
-          <input type="text" name="roomName" id="roomName" />
-          <button id="roomNameButton">Raum beitreten</button>
-        </div>
-      </section>
+        <section id="welcomeScreen">
+          <div>
+            <h1>Palim-Palim</h1>
+            <h2>Dein virtueller Einkaufsladen</h2>
+            <p>Wähle eine beliebige Raumnummer und teile diese deinem Enkelkind mit.</p>
+            <div id="roomNameSection">
+              <label for="roomName">Raumnummer</label>
+              <input type="number" name="roomName" id="roomName" />
+              <button id="roomNameButton">Raum beitreten</button>
+            </div>
+          </div>
+        </section>
 
-      <section id="startGameScreen" class="deactivated">
-        <button id="startGameButton">Spiel starten</button>
-      </section>
+        <section id="startGameScreen" class="deactivated">
+          <button id="startGameButton">Spiel starten</button>
+        </section>
 
-      <section id="gameModeScreen" class="deactivated">
-        <h1>Modus auswählen</h1>
-        <div data-gamemode="1" class="button button--gameMode" id="bli">
-          Modus 1
-        </div>
-        <div data-gamemode="2" class="button button--gameMode">
-          Modus 2 (ohne Banane und Entchen)
-        </div>
-      </section>
+        <section id="gameModeScreen" class="deactivated">
+          <h1>Modus auswählen</h1>
+          <div data-gamemode="1" class="button button--gameMode" id="bli">
+            Modus 1
+          </div>
+          <div data-gamemode="2" class="button button--gameMode">
+            Modus 2 (ohne Banane und Entchen)
+          </div>
+        </section>
 
-      <!-- <section id="videoSettingScreen" class="deactivated">
-        <h1>Video-Setting auswählen</h1>
-        <div data-video="1" class="button button--video">
-          ohne Video
-        </div>
-        <div data-video="2" class="button button--video">
-          Video als separater Layer
-        </div>
-        <div data-video="3" class="button button--video">
-          integriertes Video
-        </div>
-        <div data-video="4" class="button button--video">
-          freigestelltes Video
-        </div>
-      </section> -->
+        <!-- <section id="videoSettingScreen" class="deactivated">
+          <h1>Video-Setting auswählen</h1>
+          <div data-video="1" class="button button--video">
+            ohne Video
+          </div>
+          <div data-video="2" class="button button--video">
+            Video als separater Layer
+          </div>
+          <div data-video="3" class="button button--video">
+            integriertes Video
+          </div>
+          <div data-video="4" class="button button--video">
+            freigestelltes Video
+          </div>
+        </section> -->
     </div>
 
     <% } %>

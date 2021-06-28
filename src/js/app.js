@@ -42,14 +42,21 @@ function initGame() {
 
 if(__ENV__ !== 'dev') {
     roomNameButton.addEventListener('click', () => {
-        initVideoChat(document.getElementById('roomName').value);
-    
-        document.getElementById('roomNameSection').classList.add = 'deactivated';
-    
+        let roomNumber = document.getElementById('roomName').value;
+        initVideoChat(roomNumber);
+
         let waitingToOtherRoomMates = document.createElement("p");
-        waitingToOtherRoomMates.innerHTML = 'Auf andere Raum-Teilnehmer warten...';
-    
-        document.getElementById('welcomeScreen').append(waitingToOtherRoomMates);
+        waitingToOtherRoomMates.innerHTML = 'Teile deinem Enkelkind eure Raumnummer mit und warte, bis dieses in euren Raum kommt.';
+        waitingToOtherRoomMates.classList.add('waitingToOtherRoomMates');
+
+        let roomNumberElement = document.createElement("p");
+        roomNumberElement.innerHTML = roomNumber;
+        roomNumberElement.classList.add('roomNumber');
+
+        let welcomeScreen = document.querySelector('#welcomeScreen > div');
+        welcomeScreen.innerHTML = '';
+        welcomeScreen.append(waitingToOtherRoomMates);
+        welcomeScreen.append(roomNumberElement);
     });
 }
 
