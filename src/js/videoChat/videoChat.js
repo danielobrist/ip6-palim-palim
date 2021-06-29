@@ -1,11 +1,11 @@
 import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, moveRemoteVideoToScene, switchView} from '../game/game';
 import {writeShoppingList} from '../game/components/shoppingList';
-import {startGame2} from '../game/game.js';
+import {startGame, showGameOver, cleanUpScene} from '../game/game.js';
 import DataChannel from "./dataChannel";
 
 export let dataChannel;
-// export let dataChannel2;
+export let dataChannel2;
 export let isInitiator;
 
 export default class VideoChat{
@@ -85,7 +85,7 @@ export default class VideoChat{
         function gameStart(gameMode) {
             removeWelcomeScreen();
             switchView(isInitiator);
-            startGame2(gameMode);
+            startGame(gameMode);
         }
 
         function removeWelcomeScreen() {
@@ -179,7 +179,8 @@ export default class VideoChat{
                 isStarted = true;
                 console.log('isInitiator', isInitiator);
                 if (isInitiator) {
-                    initDataChannel();
+                    initDataChannel('gameUpdates', handleReceiveMessage);
+                    initDataChannel2('gameEvents', handleGameEventMessage);
                     console.log('Created RTCDataChannel');
                     doCall();
                 }
@@ -301,29 +302,70 @@ export default class VideoChat{
         /////   create and handle datachannel   /////
         /////////////////////////////////////////////
 
-        function initDataChannel() {
-            console.log('CREATING DATACHANNEL gameUpdates')
-            dataChannel = peerConnection.createDataChannel('gameUpdates');
-            dataChannel.onmessage = handleReceiveMessage;
+        function initDataChannel(channelName, messageReceivedCallback) {
+            console.log('CREATING DATACHANNEL ' + channelName);
+            dataChannel = peerConnection.createDataChannel(channelName);
+            dataChannel.onmessage = messageReceivedCallback;
             dataChannel.onerror = handleDataChannelError;
             dataChannel.onopen = handleDataChannelStatusChange;
             dataChannel.onclose = handleDataChannelStatusChange;
-            console.log('CREATED DATACHANNEL gameUpdates')
+            console.log('CREATED DATACHANNEL ' + channelName);
         }
+
+        function initDataChannel2(channelName, messageReceivedCallback) {
+            console.log('CREATING DATACHANNEL ' + channelName);
+            dataChannel2 = peerConnection.createDataChannel(channelName);
+            dataChannel2.onmessage = messageReceivedCallback;
+            dataChannel2.onerror = handleDataChannelError;
+            dataChannel2.onopen = handleDataChannelStatusChange;
+            dataChannel2.onclose = handleDataChannelStatusChange;
+            console.log('CREATED DATACHANNEL ' + channelName);
+        }
+
 
         function handleDataChannelAdded(event) {
             console.log('Received Channel Callback');
-            // new DataChannel(event.channel);
-            dataChannel = event.channel;
-            dataChannel.onmessage = handleReceiveMessage;
-            dataChannel.onerror = handleDataChannelError;
-            dataChannel.onopen = handleDataChannelStatusChange;
-            dataChannel.onclose = handleDataChannelStatusChange;
-            console.log('CREATED DATACHANNEL gameUpdates');
+            console.log(event.channel);
+
+            if (event.channel.label === 'gameUpdates') {
+                // new DataChannel(event.channel);
+
+                // dataChannel = event.channel;
+                // dataChannel.onmessage = event.channel.onmessage;
+                // dataChannel.onerror = event.channel.onerror;
+                // dataChannel.onopen = event.channel.onopen;
+                // dataChannel.onclose = event.channel.onclose;
+
+                dataChannel = event.channel;
+                dataChannel.onmessage = handleReceiveMessage;
+                dataChannel.onerror = event.channel.onerror;
+                dataChannel.onopen = event.channel.onopen;
+                dataChannel.onclose = event.channel.onclose;
+            }
+
+            if (event.channel.label === 'gameEvents') {
+                // new DataChannel(event.channel);
+                dataChannel2 = event.channel;
+                dataChannel2.onmessage = handleGameEventMessage;
+                dataChannel2.onerror = event.channel.onerror;
+                dataChannel2.onopen = event.channel.onopen;
+                dataChannel2.onclose = event.channel.onclose;
+            }
+
         }
 
         function handleReceiveMessage(event) {
             updateRemoteObjects(event.data);
+        }
+
+        function handleGameEventMessage(event) {
+            if (event.data === 'gameOver') {
+                showGameOver(false);
+            }
+            if (event.data === 'gameModeSelection') {
+                cleanUpScene();
+                //TODO Return to gameMode selection (buyer)
+            }
         }
 
         function handleDataChannelError(error) {
@@ -338,6 +380,16 @@ export default class VideoChat{
                     console.log("DATA CHANNEL STATE: open")
                 } else {
                     console.log("DATA CHANNEL STATE: closed")
+                }
+            }
+
+            if (dataChannel2) {
+                var state2 = dataChannel2.readyState; 
+
+                if (state2 === "open") {
+                    console.log("DATA CHANNEL2 STATE: open")
+                } else {
+                    console.log("DATA CHANNEL2 STATE: closed")
                 }
             }
         }

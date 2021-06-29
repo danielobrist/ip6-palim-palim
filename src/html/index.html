@@ -39,7 +39,7 @@
             <p>Wähle eine beliebige Raumnummer und teile diese deinem Enkelkind mit.</p>
             <div id="roomNameSection">
               <label for="roomName">Raumnummer</label>
-              <input type="number" name="roomName" id="roomName" />
+              <input type="number" name="roomName" id="roomName" value="123"></input>
               <button id="roomNameButton">Raum beitreten</button>
             </div>
           </div>
@@ -59,6 +59,7 @@
           </div>
         </section>
 
+
         <!-- <section id="videoSettingScreen" class="deactivated">
           <h1>Video-Setting auswählen</h1>
           <div data-video="1" class="button button--video">
@@ -74,6 +75,11 @@
             freigestelltes Video
           </div>
         </section> -->
+    </div>
+    
+    <div id="gameOverScreen" class="deactivated">
+      <h1 id="gameOverTitle">Game Over</h1>
+      <button id="restartGameButton">Neues Spiel</button>
     </div>
 
     <% } %>

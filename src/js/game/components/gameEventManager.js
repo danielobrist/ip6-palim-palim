@@ -156,7 +156,11 @@ export default class GameEventManager extends THREE.EventDispatcher {
     }
 
     sendGameOver() {
-        this.gameSync.sendGameOver();
+        this.gameSync.sendGameEventMessage('gameOver');
+    }
+
+    sendGoToGameModeSelection() {
+        this.gameSync.sendGameEventMessage('gameModeSelection');
     }
     
 }

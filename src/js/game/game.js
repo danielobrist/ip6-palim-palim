@@ -9,8 +9,9 @@ import GameStateManager from './components/gameStateManager';
 import GameState from './components/gameState';
 import { Vector3 } from 'three';
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
+import { GameSync } from './components/gameSync';
 
-export {start, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame2};
+export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene};
 
 // an array of objects to sync
 const objectsToSync = new Map();
@@ -46,19 +47,7 @@ let gameStateManager;
 
 let config;
 
-const start = (isInitiator) => {
-        startGame(isInitiator);
-}
-
-function startGame(isInitiator) {
-    isSeller = isInitiator;
-    console.log("Started game with isInitiator = " + isInitiator);
-    init();
-}
-
-async function startGame2(gameMode) {
-
-    
+async function startGame(gameMode) {
     await loadConfig(gameMode);
     await init3DObjects();
     if (__ENV__ === 'dev') {
@@ -70,8 +59,21 @@ async function startGame2(gameMode) {
     animate();
 }
 
-function init() {
+const showGameOver = (showRestart) => {
+    document.getElementById('gameOverScreen').classList.remove('deactivated');
+    if (showRestart) {
+        document.getElementById('restartGameButton').addEventListener('click', () => {
+            cleanUpScene();
+            gameEventManager.sendGoToGameModeSelection();
+            //TODO Return to gameMode selection (buyer)
+        });    
+    } else {
+        document.getElementById('restartGameButton').style.display = 'none';
+    }
+    
+}
 
+const prepare = () => {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.autoClear = false;
@@ -79,8 +81,29 @@ function init() {
 
     localScene = initScene();
     localCamera = initCamera(isSeller);
+}
 
+const cleanUpScene = () => {
+    cleanUp(localScene);
+}
 
+const cleanUp = (obj) => {
+    while(obj.children.length > 0){ 
+        cleanUp(obj.children[0]);
+        obj.remove(obj.children[0]);
+      }
+      if(obj.geometry) obj.geometry.dispose();
+    
+      if(obj.material){ 
+        //in case of map, bumpMap, normalMap, envMap ...
+        Object.keys(obj.material).forEach(prop => {
+          if(!obj.material[prop])
+            return;
+          if(obj.material[prop] !== null && typeof obj.material[prop].dispose === 'function')                                  
+            obj.material[prop].dispose();                                                      
+        })
+        obj.material.dispose();
+      }
 }
 
 async function loadConfig(gameMode) {
@@ -96,6 +119,7 @@ async function loadConfig(gameMode) {
     gameStateManager = new GameStateManager(config);
     gameStateManager.addEventListener('gameOver', function(event) {
         gameEventManager.sendGameOver();
+        showGameOver(true);  //TODO refactor this, true should be !isSeller
     });
 
     // gameEventManager.addEventListener( 'basketAdd', function (event) {

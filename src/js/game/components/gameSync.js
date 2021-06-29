@@ -1,6 +1,6 @@
 export {GameSync};
 
-import {dataChannel} from '../../videoChat/videoChat';
+import {dataChannel, dataChannel2} from '../../videoChat/videoChat';
 
 let localObjects = []; // JSONs of locally maintained objects - we send updates for these
 // let localObjectsMap = new Map();
@@ -77,9 +77,14 @@ const GameSync = () => {
         return json;
     }
 
+    // old
     function sendGameOver() {
-        alert("GAME OVER");
-        // datachannel2.send('gameOver');
+        dataChannel2.send('gameOver');
+    }
+
+    // new, use this
+    const sendGameEventMessage = (message) => {
+        dataChannel2.send(message);
     }
 
     return {
@@ -89,7 +94,8 @@ const GameSync = () => {
         sendGameobjectUpdate,
         updateRemoteObjects,
         getObjJSON,
-        sendGameOver
+        sendGameOver,
+        sendGameEventMessage
     }
 
 }

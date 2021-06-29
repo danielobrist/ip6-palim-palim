@@ -49,7 +49,7 @@ export default class GameStateManager extends THREE.EventDispatcher {
     checkGameOver() {
         let gameOver = this.gameOverCheck(this.shoppingList, this.gameState.basketItems)
         if (gameOver === true) {
-            alert('GAME OVER');
+            // alert('GAME OVER');
             // TODO send peer gameover message and finish round for both
             this.dispatchEvent( { type: 'gameOver' } );
         }
