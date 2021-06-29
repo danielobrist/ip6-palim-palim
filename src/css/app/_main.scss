@@ -136,13 +136,22 @@ video {
 
 #settingScreens {
   display: inline-block;
-  width: 55%;
+  width: 70%;
   vertical-align: top;
 }
 
 .deactivated {
   display: none !important;
 }
+
+.deactivatedVideo {
+  z-index: -999;
+}
+
+.deactivatedVideo video {
+  visibility: hidden;
+}
+
 
 #gameModeScreen > .button, #videoModeScreen > .button {
     padding: 30px 40px;

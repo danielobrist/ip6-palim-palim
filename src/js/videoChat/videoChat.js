@@ -1,7 +1,7 @@
 import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, switchView, placeVideos} from '../game/game';
 import {writeShoppingList} from '../game/components/shoppingList';
-import {startGame, showGameOver, cleanUpScene} from '../game/game.js';
+import {startGame, showGameOver, cleanUpScene, returnToGameModeSelection} from '../game/game.js';
 import DataChannel from "./dataChannel";
 
 export let dataChannel;
@@ -375,8 +375,8 @@ export default class VideoChat{
                 showGameOver(false);
             }
             if (event.data === 'gameModeSelection') {
-                cleanUpScene();
-                //TODO Return to gameMode selection (buyer)
+                // todo cleanUpScene();
+                returnToGameModeSelection();
             }
         }
 

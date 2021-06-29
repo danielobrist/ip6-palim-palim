@@ -12,7 +12,7 @@ import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 import { GameSync } from './components/gameSync';
 import {isInitiator} from "../videoChat/videoChat";
 
-export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos};
+export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos, returnToGameModeSelection};
 
 // an array of objects to sync
 const objectsToSync = new Map();
@@ -63,16 +63,27 @@ async function startGame(gameMode) {
 const showGameOver = (showRestart) => {
     document.getElementById('overlay').classList.remove('whileGameIsRunning');
     document.getElementById('gameOverScreen').classList.remove('deactivated');
+    showVideos();
     if (showRestart) {
         document.getElementById('restartGameButton').addEventListener('click', () => {
-            cleanUpScene();
+            //todo cleanUpScene();
             gameEventManager.sendGoToGameModeSelection();
-            //TODO Return to gameMode selection (buyer)
-        });    
+            returnToGameModeSelection();
+        });
     } else {
-        document.getElementById('restartGameButton').style.display = 'none';
+        document.getElementById('restartGameButton').classList.add('deactivated');
     }
-    
+}
+
+const showVideos = () => {
+    document.getElementById("remoteVideoContainer").classList.remove('deactivatedVideo');
+    document.getElementById("localVideoContainer").classList.remove('deactivatedVideo');
+    document.getElementById('remoteVideoContainer').classList.remove('gamemode--2');
+}
+
+const returnToGameModeSelection = () => {
+    document.getElementById('gameOverScreen').classList.add('deactivated');
+    document.getElementById('gameModeScreen').classList.remove('deactivated');
 }
 
 const prepare = () => {
@@ -302,31 +313,23 @@ const placeVideos = (videoMode, isInitiator) => {
             break;
         case "2":
             placeRemoteVideo();
-            placeLocalVideo();
             break;
         default:
-            hideRemoteVideo();
-            placeLocalVideo();
             moveRemoteVideoToScene(isInitiator);
+            hideRemoteVideo();
     }
 }
 
 const hideRemoteVideo = () => {
-    document.getElementById('remoteVideo').style.visibility = 'hidden';
-    document.getElementById("remoteVideoContainer").style.zIndex = "-999";
+    document.getElementById("remoteVideoContainer").classList.add('deactivatedVideo');
 }
 
 const hideLocalVideo = () => {
-    document.getElementById('localVideo').style.visibility = 'hidden';
-    document.getElementById("localVideoContainer").style.zIndex = "-999";
+    document.getElementById("localVideoContainer").classList.add('deactivatedVideo');
 }
 
 const placeRemoteVideo = () => {
     document.getElementById('remoteVideoContainer').classList.add('gamemode--2');
-}
-
-const placeLocalVideo = () => {
-    document.getElementById('localVideoContainer').classList.add('in-game');
 }
 
 function initDevThings() {
