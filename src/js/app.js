@@ -31,21 +31,19 @@ function initWebGL() {
 const initGameLobby = () => {
     if(__ENV__ !== 'dev') {
         roomNameButton.addEventListener('click', () => {
+            document.getElementById('welcomeScreen').classList.add('deactivated');
+
             let roomNumber = document.getElementById('roomName').value;
             initVideoChat(roomNumber);
-    
-            let waitingToOtherRoomMates = document.createElement("p");
-            waitingToOtherRoomMates.innerHTML = 'Teile deinem Enkelkind eure Raumnummer mit und warte, bis dieses in euren Raum kommt.';
-            waitingToOtherRoomMates.classList.add('waitingToOtherRoomMates');
-    
+
+            let waitingToOtherRoomMates = document.getElementById('waitingToOtherRoomMates');
+            waitingToOtherRoomMates.classList.remove('deactivated');
+
             let roomNumberElement = document.createElement("p");
             roomNumberElement.innerHTML = roomNumber;
             roomNumberElement.classList.add('roomNumber');
-    
-            let welcomeScreen = document.querySelector('#welcomeScreen > div');
-            welcomeScreen.innerHTML = '';
-            welcomeScreen.append(waitingToOtherRoomMates);
-            welcomeScreen.append(roomNumberElement);
+            waitingToOtherRoomMates.append(roomNumberElement);
+
         });
     }
 }

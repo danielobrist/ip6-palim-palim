@@ -16,31 +16,44 @@
 
 video {
   max-width: 100%;
-  width: 320px;
+}
+
+#videoContainer {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
 }
 
 #remoteVideoContainer {
-  position: absolute;
-  left: 2rem;
-  top: 2rem;
-  max-width: 80vw;
-  max-height: 60vh;
-  z-index: 995;
-  pointer-events: none;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+#remoteVideoContainer.gamemode--2 {
+  left: 0;
+  top: 0;
+  max-width: 50%;
 }
 
 #remoteVideoContainer video {
-  max-width: 100%;
-  width: 800px;
-  max-height: 100%;
+  width: 100%;
 }
 
 #localVideoContainer {
+  padding-right: 2rem;
+  max-width: 45%;
+  display: inline-block;
+}
+
+#localVideoContainer.in-game {
+  right: 0;
+  top: 2rem;
   position: absolute;
-  left: 2rem;
-  bottom: 2rem;
-  z-index: 999;
-  pointer-events: none;
+  max-width: 25%;
 }
 
 #shoppingListContainer {
@@ -73,7 +86,6 @@ video {
   top: 0;
   transform: rotate(-10.2deg);
   padding: 21px 22px;
-  box-sizing: border-box;
 }
 
 #shoppingList h2 {
@@ -82,7 +94,7 @@ video {
   margin-bottom: 20px;
 }
 
-h2::before {
+#shoppingList h2::before {
   content: "";
   position: absolute;
   bottom: -5px;
@@ -101,32 +113,40 @@ h2::before {
   line-height: 1.3;
 }
 
-#overlayStartScreens {
+#overlay {
   position: absolute;
   width: 100%;
   height: 100%;
   background: #002b38;
-  z-index: 20;
+  z-index: 100;
+  padding: 2rem;
 }
 
-#overlayStartScreens > section {
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 2rem;
+#overlay.whileGameIsRunning {
+  background: none;
+  pointer-events: none;
+}
+
+#overlayStartScreens {
+  display: inline-block;
+  width: 55%;
+  vertical-align: top;
 }
 
 .deactivated {
   display: none !important;
 }
 
-#gameModeScreen > div {
+#gameModeScreen > .button, #videoModeScreen > .button {
   padding: 5rem;
   border: 1px solid black;
   font-weight: bold;
 }
 
-#overlayStartScreens > #welcomeScreen {
+#welcomeScreen {
+  position: absolute;
+  left: 0;
+  top: 0;
   display: flex;
   height: 100%;
   width: 100%;
@@ -134,21 +154,21 @@ h2::before {
   justify-content: center;
 }
 
-#overlayStartScreens label, #overlayStartScreens h1, #overlayStartScreens button, #overlayStartScreens h2 {
+#overlay label, #overlay h1, #overlay button, #overlay h2, #overlay .subtitle {
   color: white;
   text-align: center;
 }
 
-#overlayStartScreens h1 {
+#overlay h1 {
   font-size: 60px;
   margin-bottom: 6px;
 }
 
-#overlayStartScreens h2 {
+#overlay .subtitle {
   font-size: 40px;
 }
 
-#welcomeScreen h2 + p {
+#welcomeScreen .subtitle + p {
   font-size: 18px;
   color: white;
   font-weight: bold;
@@ -185,7 +205,7 @@ div#roomNameSection input {
   border: 4px solid white;
 }
 
-#roomNameSection button#roomNameButton {
+#roomNameSection button#roomNameButton, #startGameScreen button#startGameButton {
   background: white;
   color: #002b38;
   font-size: 18px;
@@ -195,7 +215,7 @@ div#roomNameSection input {
   display: block;
 }
 
-#welcomeScreen .waitingToOtherRoomMates, #welcomeScreen .roomNumber {
+#waitingToOtherRoomMates p, #waitingToOtherRoomMates p.roomNumber {
   font-size: 20px;
   font-weight: bold;
   max-width: 500px;
@@ -204,7 +224,7 @@ div#roomNameSection input {
   color: white;
 }
 
-#welcomeScreen .roomNumber {
+#waitingToOtherRoomMates p.roomNumber {
   font-size: 50px;
   margin-top: 12px;
 }
@@ -218,4 +238,6 @@ div#roomNameSection input {
   z-index: 1000;
   position: absolute;
   background-color: #33333378;
+  left: 0;
+  top: 0;
 }

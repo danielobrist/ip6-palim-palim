@@ -1,5 +1,5 @@
 import PeerConnection from "./peerConnection";
-import {updateRemoteObjects, moveRemoteVideoToScene, switchView} from '../game/game';
+import {updateRemoteObjects, switchView, placeVideos} from '../game/game';
 import {writeShoppingList} from '../game/components/shoppingList';
 import {startGame, showGameOver, cleanUpScene} from '../game/game.js';
 import DataChannel from "./dataChannel";
@@ -52,7 +52,7 @@ export default class VideoChat{
             console.log('This peer is the initiator of room ' + room + '!');
             isChannelReady = true;
 
-            document.getElementById('welcomeScreen').classList.add('deactivated');
+            document.getElementById('waitingToOtherRoomMates').classList.add('deactivated');
             document.getElementById("startGameScreen").classList.remove('deactivated');
 
             document.getElementById("startGameButton").addEventListener('click', () => {
@@ -72,34 +72,48 @@ export default class VideoChat{
                 let gameMode = gameModeButton.dataset.gamemode;
 
                 gameModeButton.addEventListener('click', () => {
-                    socket.emit('gameStart', room, gameMode);
+                    goToVideoModeScreen(room, gameMode);
                 });
             }
 
         }
+        
+        function goToVideoModeScreen(room, gameMode) {
+            document.getElementById('gameModeScreen').classList.add('deactivated');
+            document.getElementById('videoModeScreen').classList.remove('deactivated');
 
-        socket.on('gameStart',  function(gameMode) {
-            gameStart(gameMode);
+            let videoModeButtons = document.getElementsByClassName("button--videoMode");
+            for (var i = 0; i < videoModeButtons.length; i++) {
+
+                let videoModeButton = videoModeButtons.item(i);
+                let videoMode = videoModeButton.dataset.videomode;
+
+                videoModeButton.addEventListener('click', () => {
+                    socket.emit('gameStart', room, gameMode, videoMode);
+                });
+            }
+        }
+
+        socket.on('gameStart',  function(gameMode, videoMode) {
+            gameStart(gameMode, videoMode);
         });
 
-        function gameStart(gameMode) {
-            removeWelcomeScreen();
+        function gameStart(gameMode, videoMode) {
+            hideOverlay();
+            placeVideos(videoMode, isInitiator);
             switchView(isInitiator);
             startGame(gameMode);
         }
 
-        function removeWelcomeScreen() {
-            if(document.getElementById('overlayStartScreens') !== null) {
-                document.getElementById('overlayStartScreens').remove();
-            }
-            document.getElementById('remoteVideo').style.visibility = 'hidden';
-            document.getElementById("remoteVideoContainer").style.zIndex = "-999";
+        function hideOverlay() {
+            document.getElementById('overlay').classList.add('whileGameIsRunning');
+            document.getElementById('videoModeScreen').classList.add('deactivated');
         }
 
         socket.on('joined', function(room) {
             console.log('joined: ' + room);
             isChannelReady = true;
-            document.getElementById('welcomeScreen').innerHTML = '';
+            document.getElementById('waitingToOtherRoomMates').classList.add('deactivated');
         });
 
         socket.on('log', function(array) {
@@ -173,8 +187,6 @@ export default class VideoChat{
                 for (const track of localStream.getTracks()) {
                     peerConnection.addTrack(track);
                 }
-
-                moveRemoteVideoToScene(isInitiator);
 
                 isStarted = true;
                 console.log('isInitiator', isInitiator);

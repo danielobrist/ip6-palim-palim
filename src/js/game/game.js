@@ -10,8 +10,9 @@ import GameState from './components/gameState';
 import { Vector3 } from 'three';
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 import { GameSync } from './components/gameSync';
+import {isInitiator} from "../videoChat/videoChat";
 
-export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene};
+export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos};
 
 // an array of objects to sync
 const objectsToSync = new Map();
@@ -60,6 +61,7 @@ async function startGame(gameMode) {
 }
 
 const showGameOver = (showRestart) => {
+    document.getElementById('overlay').classList.remove('whileGameIsRunning');
     document.getElementById('gameOverScreen').classList.remove('deactivated');
     if (showRestart) {
         document.getElementById('restartGameButton').addEventListener('click', () => {
@@ -292,6 +294,40 @@ const initControls = (isSeller) => {
 
 }
 
+const placeVideos = (videoMode, isInitiator) => {
+    switch (videoMode) {
+        case "1":
+            hideRemoteVideo();
+            hideLocalVideo();
+            break;
+        case "2":
+            placeRemoteVideo();
+            placeLocalVideo();
+            break;
+        default:
+            hideRemoteVideo();
+            placeLocalVideo();
+            moveRemoteVideoToScene(isInitiator);
+    }
+}
+
+const hideRemoteVideo = () => {
+    document.getElementById('remoteVideo').style.visibility = 'hidden';
+    document.getElementById("remoteVideoContainer").style.zIndex = "-999";
+}
+
+const hideLocalVideo = () => {
+    document.getElementById('localVideo').style.visibility = 'hidden';
+    document.getElementById("localVideoContainer").style.zIndex = "-999";
+}
+
+const placeRemoteVideo = () => {
+    document.getElementById('remoteVideoContainer').classList.add('gamemode--2');
+}
+
+const placeLocalVideo = () => {
+    document.getElementById('localVideoContainer').classList.add('in-game');
+}
 
 function initDevThings() {
     orbitControls = new OrbitControls( localCamera, renderer.domElement );
