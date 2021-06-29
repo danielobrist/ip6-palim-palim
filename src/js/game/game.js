@@ -32,6 +32,7 @@ let duckMesh1, duckMesh2, duckMesh3;
 let plane;
 let isSeller = false;
 
+let basketMesh;
 let duckMesh;
 let apricotMesh, apricotMesh1;
 let orbitControls;
@@ -86,7 +87,7 @@ const returnToGameModeSelection = () => {
     document.getElementById('gameModeScreen').classList.remove('deactivated');
 }
 
-const prepare = () => {
+const prepare = async () => {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.autoClear = false;
@@ -94,6 +95,28 @@ const prepare = () => {
 
     localScene = initScene();
     localCamera = initCamera(isSeller);
+
+
+    // init static stuff for both (eg. counter, etc)
+    const geometry = new THREE.BoxGeometry( 6, 1, 4 );
+    const material = new THREE.MeshStandardMaterial( {color: 0x8B4513} );
+    plane = new THREE.Mesh( geometry, material );
+    plane.receiveShadow = true;
+    localScene.add( plane );
+    
+    const staticStuffLoader = new GLTFLoader();
+    let basket = await staticStuffLoader.loadAsync('./assets/models/basket.glb');
+    basket.scene.traverse((o) => {
+        if (o.isMesh) {
+            basketMesh = new THREE.Mesh();
+            o.scale.set(2, 2, 2);
+            let basketMaterial = new THREE.MeshStandardMaterial({color: '#F00'});  
+            basketMesh = o;
+            basketMesh.material = basketMaterial;
+            basketMesh.position.set(0,-0.5,-2.6);
+        };
+    });
+    localScene.add(basketMesh);
 }
 
 const cleanUpScene = () => {
@@ -230,12 +253,7 @@ async function init3DObjects() {
     
     renderer.outputEncoding = THREE.sRGBEncoding;
 
-    // init static stuff for both (eg. counter, etc)
-    const geometry = new THREE.BoxGeometry( 6, 1, 4 );
-    const material = new THREE.MeshStandardMaterial( {color: 0x8B4513} );
-    plane = new THREE.Mesh( geometry, material );
-    plane.receiveShadow = true;
-    localScene.add( plane );
+
 }
 
 function instantiateSellerObjectsFromJsonArray(jsonArray) {
@@ -259,7 +277,8 @@ const initControls = (isSeller) => {
     gameEventManager = new GameEventManager(
         renderer,
         localCamera,
-        isSeller
+        isSeller,
+        basketMesh
     );
 
     // TODO this should be in gameLoopManager

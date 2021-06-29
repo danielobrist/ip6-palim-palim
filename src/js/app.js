@@ -1,5 +1,6 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import adapter from 'webrtc-adapter';
 
 import Detector from './utils/detector';
 import VideoChat, {isInitiator} from './videoChat/videoChat';
@@ -17,14 +18,14 @@ if(__ENV__ === 'dev') {
 }
 
 
-function initWebGL() {
+async function initWebGL() {
     // Check for webGL capabilities
     if(!Detector.webgl) {
         Detector.addGetWebGLMessage();
     } else {
         const container = document.getElementById('appContainer');
         // new GameScene(container);
-        prepare();
+        await prepare();
     }
 }
 
