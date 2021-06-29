@@ -40,7 +40,7 @@
       </div>
 
       <% if (htmlWebpackPlugin.options.env !== 'dev') { %>
-        <div id="overlayStartScreens"> <!-- todo rename to settingScreens -->
+        <div id="settingScreens">
 
           <section id="waitingToOtherRoomMates" class="deactivated">
             <p>Teile deinem Enkelkind eure Raumnummer mit und warte, bis dieses in euren Raum kommt.</p>
@@ -51,17 +51,17 @@
           </section>
 
           <section id="gameModeScreen" class="deactivated">
-            <h1>Modus auswählen</h1>
+            <h2>Spiel auswählen</h2>
             <div data-gamemode="1" class="button button--gameMode">
-              Modus 1
+              Gemüseladen
             </div>
             <div data-gamemode="2" class="button button--gameMode">
-              Modus 2 (ohne Banane und Entchen)
+              Supermarkt
             </div>
           </section>
 
           <section id="videoModeScreen" class="deactivated">
-            <h1>Videomodus auswählen</h1>
+            <h2>Videomodus auswählen</h2>
             <div data-videomode="1" class="button button--videoMode">
               Modus 1
             </div>
