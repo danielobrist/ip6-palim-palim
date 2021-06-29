@@ -3,7 +3,7 @@ import { Box3, Vector3 } from 'three';
 import { GameSync } from './gameSync';
 
 export default class GameEventManager extends THREE.EventDispatcher {
-    constructor(renderer, camera, isSeller) {
+    constructor(renderer, camera, isSeller, shoppingBasketMesh) {
         super();
 
         this.renderer = renderer;
@@ -16,6 +16,7 @@ export default class GameEventManager extends THREE.EventDispatcher {
         this.dragStartPoint = new Vector3();
         this.draggableObjects = [];
         this.shoppingBasket;
+        this.shoppingBasketMesh = shoppingBasketMesh;
         this.selectionSpace;
         this.dispensers = [];
 
@@ -43,8 +44,10 @@ export default class GameEventManager extends THREE.EventDispatcher {
 
     setupBasketSpace() {
         this.shoppingBasket = new THREE.Box3;
-        // TODO this.itemSink.setFromObject with basket object instead
-        this.shoppingBasket.setFromCenterAndSize(new THREE.Vector3(0,0,-2.5), new THREE.Vector3(1,1,1));
+
+        this.shoppingBasket.setFromObject(this.shoppingBasketMesh);
+
+        // this.shoppingBasket.setFromCenterAndSize(new THREE.Vector3(0,0,-2.5), new THREE.Vector3(1,1,1));
     }
 
     setupSelectionSpace() {

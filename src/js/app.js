@@ -17,14 +17,14 @@ if(__ENV__ === 'dev') {
 }
 
 
-function initWebGL() {
+async function initWebGL() {
     // Check for webGL capabilities
     if(!Detector.webgl) {
         Detector.addGetWebGLMessage();
     } else {
         const container = document.getElementById('appContainer');
         // new GameScene(container);
-        prepare();
+        await prepare();
     }
 }
 
