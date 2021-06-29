@@ -231,7 +231,7 @@ div#roomNameSection input {
   border: 4px solid white;
 }
 
-#roomNameSection button#roomNameButton, #startGameScreen button#startGameButton {
+#roomNameSection button#roomNameButton, #startGameScreen button#startGameButton, #gameOverScreen button#restartGameButton {
   background: white;
   color: #002b38;
   font-size: 18px;
@@ -256,17 +256,4 @@ div#roomNameSection input {
 #waitingToOtherRoomMates p.roomNumber {
   font-size: 50px;
   margin-top: 12px;
-}
-
-#gameOverScreen {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  position: absolute;
-  background-color: #33333378;
-  left: 0;
-  top: 0;
 }
