@@ -1,5 +1,6 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import adapter from 'webrtc-adapter';
 
 import Detector from './utils/detector';
 import VideoChat, {isInitiator} from './videoChat/videoChat';
