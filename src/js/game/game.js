@@ -12,7 +12,7 @@ import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 import { GameSync } from './components/gameSync';
 import {isInitiator} from "../videoChat/videoChat";
 
-export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos, returnToGameModeSelection};
+export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos, returnToGameModeSelection, removeFromScene};
 
 // an array of objects to sync
 const objectsToSync = new Map();
@@ -141,6 +141,15 @@ const cleanUp = (obj) => {
         obj.material.dispose();
       }
 }
+
+const removeFromScene = (itemName) => {
+    console.log('REMOVING ' + itemName);
+    let temp = localScene.getObjectByName(itemName);
+    console.log(temp);
+    // temp.geometry.dispose();
+    // temp.material.dispose();
+    localScene.remove( temp );
+} 
 
 async function loadConfig(gameMode) {
     let configFile;

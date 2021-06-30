@@ -1,7 +1,7 @@
 import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, switchView, placeVideos} from '../game/game';
 import {writeShoppingList} from '../game/components/shoppingList';
-import {startGame, showGameOver, cleanUpScene, returnToGameModeSelection} from '../game/game.js';
+import {startGame, showGameOver, cleanUpScene, returnToGameModeSelection, removeFromScene} from '../game/game.js';
 import DataChannel from "./dataChannel";
 
 export let dataChannel;
@@ -371,12 +371,20 @@ export default class VideoChat{
         }
 
         function handleGameEventMessage(event) {
-            if (event.data === 'gameOver') {
+            console.log("RECEIVED GAME EVENT MESSAGE");
+            console.log(event.data);
+            let gameEvent = JSON.parse(event.data);
+            if (gameEvent.message === 'gameOver') {
                 showGameOver(false);
             }
-            if (event.data === 'gameModeSelection') {
+            if (gameEvent.message === 'gameModeSelection') {
                 // todo cleanUpScene();
                 returnToGameModeSelection();
+            }
+            if (gameEvent.message === 'remove') {
+                console.log("Calling removeFromScene");
+                removeFromScene(gameEvent.item);
+                // sceneManager.removeFromScene(event.data.item);
             }
         }
 

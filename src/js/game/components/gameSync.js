@@ -73,7 +73,7 @@ const GameSync = () => {
     const getObjJSON = (object) => {
         let obj = {name: object.name, position: object.position, rotation: object.rotation};
         let json = JSON.stringify(obj);
-        console.log('JSON:' + json)
+        // console.log('JSON:' + json)
         return json;
     }
 
@@ -83,8 +83,19 @@ const GameSync = () => {
     }
 
     // new, use this
-    const sendGameEventMessage = (message) => {
-        dataChannel2.send(message);
+    const sendGameEventMessage = (message, item) => {
+        console.log("SENDING GAME EVENT MESSAGE:");
+
+        let msg = {
+            message: message,
+            item: item
+        };
+        let json = JSON.stringify(msg);
+        console.log(json);
+
+        dataChannel2.send(
+            json
+        );
     }
 
     return {

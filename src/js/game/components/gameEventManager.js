@@ -125,6 +125,7 @@ export default class GameEventManager extends THREE.EventDispatcher {
         if(this.raycaster.ray.intersectsBox(this.shoppingBasket)) {
             console.log(this.selectedObject.object.name + ' put in basket!');
             this.dispatchEvent( { type: 'basketAdd', item: this.selectedObject.object } );
+            this.sendRemoveFromScene(this.selectedObject.object.name);
         }
 
         // finally
@@ -159,11 +160,15 @@ export default class GameEventManager extends THREE.EventDispatcher {
     }
 
     sendGameOver() {
-        this.gameSync.sendGameEventMessage('gameOver');
+        this.gameSync.sendGameEventMessage('gameOver', null);
     }
 
     sendGoToGameModeSelection() {
-        this.gameSync.sendGameEventMessage('gameModeSelection');
+        this.gameSync.sendGameEventMessage('gameModeSelection', null);
     }
     
+    sendRemoveFromScene(itemName) {
+        this.gameSync.sendGameEventMessage('remove', itemName);
+    }
+
 }
