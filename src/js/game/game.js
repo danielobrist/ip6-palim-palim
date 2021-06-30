@@ -316,20 +316,15 @@ const initControls = (isSeller) => {
         const planeHelper = new THREE.PlaneHelper( gameEventManager.interactionPlane, 5, 0xffff00 );
         localScene.add(planeHelper);
 
+        const basketBoxHelper = new THREE.Box3Helper(gameEventManager.shoppingBasket, 0xff0000);
+        localScene.add(basketBoxHelper);
+
+        const selectionSpaceBoxHelper = new THREE.Box3Helper(gameEventManager.selectionSpace, 0x00ffff);
+        localScene.add(selectionSpaceBoxHelper);
+
     }    
 
-    // TODO only in dev if we have a basket
-    const boxHelper = new THREE.Box3Helper(gameEventManager.shoppingBasket, 0xff0000);
-    localScene.add(boxHelper);
-
-    const boxhelper2 = new THREE.Box3Helper(gameEventManager.selectionSpace, 0x00ffff);
-    localScene.add(boxhelper2);
-
-    gameEventManager.setupDispensers();
-    gameEventManager.dispensers.forEach((dispenser) => {
-        let bh = new THREE.Box3Helper(dispenser, 0x00ff00);
-        localScene.add(bh);
-    })
+    
 
 }
 
