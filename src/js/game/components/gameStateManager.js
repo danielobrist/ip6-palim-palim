@@ -8,47 +8,30 @@ export default class GameStateManager extends THREE.EventDispatcher {
         this.gameState = new GameState();
         this.gameOverCheck = config.gameOverCheck;
         this.shoppingList = config.shoppingList;
-        // TODO get this dynamically from the config
-        // this.shoppingListMap = new Map();
-        // this.shoppingListMap.set(
-        //     'DuckMesh3', 
-        //     {
-        //         name: "DuckMesh3", 
-        //         count: 1
-        //     }
-        // );
-        // this.shoppingListMap.set(
-        //     'Apple1', 
-        //     {
-        //         name: "Apple1", 
-        //         count: 1
-        //     }
-        // );
     }
 
     addItemToBasket(item) {
         // check if basketItems contains an item with this name as key
-        let basketItem = this.gameState.basketItems.get(item.name);
+        let basketItem = this.gameState.basketItems.get(item.typeId);
         console.log(basketItem);
         if (basketItem !== undefined) {
             // update the count of the basketItem
             basketItem.count += 1;
-            this.gameState.basketItems.set(item.name, basketItem);
+            this.gameState.basketItems.set(item.typeId, basketItem);
         } else {
             // create and set new basketItem
             basketItem = {
-                name: item.name,
                 count: 1
             };
-            this.gameState.basketItems.set(item.name, basketItem);
+            this.gameState.basketItems.set(item.typeId, basketItem);
         }
-        console.log('ADDED ITEM TO BASKET: ' + item.name)
+        console.log('ADDED ITEM TO BASKET: ' + item.name + ' WITH ID ' + item.objectId);
         this.checkGameOver();
     }
 
     checkGameOver() {
         let gameOver = this.gameOverCheck(this.shoppingList, this.gameState.basketItems)
-        if (gameOver === true) {
+        if (gameOver) {
             // alert('GAME OVER');
             // TODO send peer gameover message and finish round for both
             this.dispatchEvent( { type: 'gameOver' } );

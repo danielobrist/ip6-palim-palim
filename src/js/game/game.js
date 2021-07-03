@@ -143,9 +143,9 @@ const cleanUp = (obj) => {
       }
 }
 
-const removeFromScene = (itemName) => {
-    console.log('REMOVING ' + itemName);
-    let temp = localScene.getObjectByName(itemName);
+const removeFromScene = (objectId) => {
+    console.log('REMOVING ITEM WITH ID ' + objectId);
+    let temp = localScene.getObjectByProperty( 'objectId', objectId );
     console.log(temp);
     // temp.geometry.dispose();
     // temp.material.dispose();
@@ -213,17 +213,15 @@ async function init3DObjects() {
 
                 m = o;
                 
-                salesObjects.set(config.models[i].id, m);
+                salesObjects.set(config.models[i].typeId, m);
 
             };
         });
     }
 
-    console.log("INSTANTIATE OBJECTS : " + isSeller);
-    // init items in local scene
     instantiateSellerObjectsFromJsonArray(config.buyerModelsStart);
-    
-    
+    console.log("INSTANTIATE OBJECTS : " + isSeller);
+
     renderer.outputEncoding = THREE.sRGBEncoding;
 
 
@@ -231,12 +229,14 @@ async function init3DObjects() {
 
 function instantiateSellerObjectsFromJsonArray(jsonArray) {
     for(let i = 0; i < jsonArray.length; i++) {
-        let newMesh = salesObjects.get(jsonArray[i].id).clone();
+        let newMesh = salesObjects.get(jsonArray[i].typeId).clone();
         newMesh.name = jsonArray[i].name;
-        newMesh.startPosition = new Vector3(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z)
+        newMesh.startPosition = new Vector3(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z); //todo startPosition = .position
         newMesh.position.set(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z);
+        newMesh.objectId = jsonArray[i].objectId;
+        newMesh.typeId = jsonArray[i].typeId;
         localScene.add(newMesh);
-        objectsToSync.set(newMesh.name, newMesh);
+        objectsToSync.set(newMesh.objectId, newMesh);
         interactionObjects.push(newMesh);
 
         // if(__ENV__ === 'dev') {
@@ -276,20 +276,24 @@ const initControls = (isSeller) => {
     });
 
     if(__ENV__ === 'dev') {
-        // visualize the interaction plane and itemSink
-        const planeHelper = new THREE.PlaneHelper( gameEventManager.interactionPlane, 5, 0xffff00 );
-        localScene.add(planeHelper);
+        visualizeTheInteractionPlaneAndItemSink();
+    }
 
-        const basketBoxHelper = new THREE.Box3Helper(gameEventManager.shoppingBasket, 0xff0000);
-        localScene.add(basketBoxHelper);
 
-        const selectionSpaceBoxHelper = new THREE.Box3Helper(gameEventManager.selectionSpace, 0x00ffff);
-        localScene.add(selectionSpaceBoxHelper);
 
-    }    
 
-    
 
+}
+
+const visualizeTheInteractionPlaneAndItemSink = () => {
+    const planeHelper = new THREE.PlaneHelper( gameEventManager.interactionPlane, 5, 0xffff00 );
+    localScene.add(planeHelper);
+
+    const basketBoxHelper = new THREE.Box3Helper(gameEventManager.shoppingBasket, 0xff0000);
+    localScene.add(basketBoxHelper);
+
+    const selectionSpaceBoxHelper = new THREE.Box3Helper(gameEventManager.selectionSpace, 0x00ffff);
+    localScene.add(selectionSpaceBoxHelper);
 }
 
 const placeVideos = async (videoMode, isInitiator) => {
@@ -366,8 +370,8 @@ function updateRemoteObjects(data) {
     let obj = JSON.parse(data);
     // console.log('Parsed JSON uuid: ' + obj.uuid + ', positionx: ' + obj.position.x + ', rotationx: ' + obj.rotation._x);
 
-    if(objectsToSync.has(obj.name)) {
-        let localElement = localScene.getObjectByName(obj.name);
+    if(objectsToSync.has(obj.objectId)) {
+        let localElement = localScene.getObjectByProperty( 'objectId', obj.objectId );
 
         localElement.position.x = obj.position.x;
         localElement.position.y = obj.position.y;
@@ -377,11 +381,12 @@ function updateRemoteObjects(data) {
         localElement.rotation.z = obj.rotation._z;
     } else {
         // creates and add to scene and objectsToSync
+        duckMesh.objectId = obj.objectId;
         duckMesh.name = obj.name;
         duckMesh.position.set(obj.position.x, obj.position.y, obj.position.z);
         let newObj = duckMesh.clone();
         // let newObj = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(obj.position.x, obj.position.y, obj.position.z), true, draggableObjectsSeller, personalSpace);
-        objectsToSync.set(newObj.name, newObj);
+        objectsToSync.set(newObj.objectId, newObj);
         // newObj.position.set(obj.position.x, obj.position.y, obj.position.z);
         localScene.add(newObj);
         // addObjectToDragConrols(newObj);

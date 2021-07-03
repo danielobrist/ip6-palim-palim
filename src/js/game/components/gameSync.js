@@ -58,7 +58,7 @@ const GameSync = () => {
         // console.log('Parsed JSON uuid: ' + obj.uuid + ', positionx: ' + obj.position.x + ', rotationx: ' + obj.rotation._x);
     
         //TODO update only specific object!
-        localElement = getLocalObject
+        let localElement = getLocalObject
         cube.position.x = obj.position.x;
         cube.position.y = obj.position.y;
         cube.position.z = obj.position.z;
@@ -71,9 +71,8 @@ const GameSync = () => {
     }
 
     const getObjJSON = (object) => {
-        let obj = {name: object.name, position: object.position, rotation: object.rotation};
+        let obj = {name: object.name, position: object.position, rotation: object.rotation, typeId: object.typeId, objectId: object.objectId};
         let json = JSON.stringify(obj);
-        // console.log('JSON:' + json)
         return json;
     }
 
