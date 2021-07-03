@@ -36,9 +36,9 @@ export default class GameEventManager extends THREE.EventDispatcher {
     setupInteractionPlane(isSeller) {
         this.interactionPlane = new THREE.Plane();
         if (isSeller){
-            this.interactionPlane.setFromNormalAndCoplanarPoint(this.camera.getWorldDirection(this.interactionPlane.normal), new THREE.Vector3(0,0,-3));
+            this.interactionPlane.setFromCoplanarPoints(new THREE.Vector3(3,0,-3) , new THREE.Vector3(-3,0,-3), new THREE.Vector3(0,2.5,0));
         } else {
-            this.interactionPlane.setFromNormalAndCoplanarPoint(this.camera.getWorldDirection(this.interactionPlane.normal), new THREE.Vector3(0,0,3));
+            this.interactionPlane.setFromCoplanarPoints(new THREE.Vector3(3,0,3) , new THREE.Vector3(-3,0,3), new THREE.Vector3(0,2.5,0));
         }
     }
 
