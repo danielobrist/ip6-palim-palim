@@ -11,6 +11,7 @@ import { Vector3 } from 'three';
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 import { GameSync } from './components/gameSync';
 import {isInitiator} from "../videoChat/videoChat";
+import {writeShoppingList} from './components/shoppingList';
 
 export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos, returnToGameModeSelection, removeFromScene};
 
@@ -52,10 +53,11 @@ let config;
 async function startGame(gameMode) {
     await loadConfig(gameMode);
     await init3DObjects();
+    if(isInitiator) {
+        writeShoppingList(config.shoppingList, config.models);
+    }
     if (__ENV__ === 'dev') {
         initControls(isSeller);
-    }
-    if(__ENV__ === 'dev') {
         initDevThings();
     }
     document.getElementById("appContainer").classList.remove('deactivated');

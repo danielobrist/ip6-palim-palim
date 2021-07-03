@@ -1,6 +1,5 @@
 import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, switchView, placeVideos} from '../game/game';
-import {writeShoppingList} from '../game/components/shoppingList';
 import {startGame, showGameOver, cleanUpScene, returnToGameModeSelection, removeFromScene} from '../game/game.js';
 import DataChannel from "./dataChannel";
 
@@ -38,8 +37,6 @@ export default class VideoChat{
         socket.on('created', function(room) {
             console.log('Created room ' + room);
             isInitiator = true;
-            
-            writeShoppingList(isInitiator);
         });
 
         socket.on('full', function(room) {

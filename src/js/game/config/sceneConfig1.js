@@ -5,42 +5,48 @@ export default {
             path:   './assets/models/duck.glb',
             scale:  0.005,
             type:   'gltf',
-            name:   'Entchen'
+            name:   'Entchen',
+            pluralName: 'Entchen'
         },
         {
             typeId:     100001,
             path:   './assets/models/apricot.glb',
             scale:  0.009,
             type:   'gltf',
-            name:   'Aprikose'
+            name:   'Aprikose',
+            pluralName: 'Aprikosen'
         },
         {
             typeId:     100002,
             path:   './assets/models/banana.glb',
             scale:  0.16,
             type:   'gltf',
-            name:   'Banane'
+            name:   'Banane',
+            pluralName: 'Bananen'
         },
         {
             typeId:     100003,
             path:   './assets/models/apple.glb',
             scale:  0.07,
             type:   'gltf',
-            name:   'Apfel'
+            name:   'Apfel',
+            pluralName: 'Äpfel'
         },
         {
             typeId:     100004,
             path:   './assets/models/pear.glb',
             scale:  0.1,
             type:   'gltf',
-            name:   'Birne'
+            name:   'Birne',
+            pluralName: 'Birnen'
         },
         {
             typeId:     100005,
             path:   './assets/models/egg.glb',
             scale:  0.06,
             type:   'gltf',
-            name:   'Ei'
+            name:   'Ei',
+            pluralName: 'Eier'
         }
     ],
 
@@ -101,11 +107,6 @@ export default {
         }
     ],
 
-    buyerModelsTarget: [
-        515159,
-        515157,
-        515156
-    ],
     gameOverCheck: function(shoppingListMap, basketItemsMap) {
         // checks if all shoppingList items are in the basket
 

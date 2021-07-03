@@ -1,29 +1,30 @@
-import GameState from '../config/sceneConfig1';
-
 export { writeShoppingList }
 
 const visualShoppingList = document.getElementById('shoppingList');
 const visualShoppingListContainer = document.getElementById('shoppingListContainer');
+let shoppingItems;
 
-const writeShoppingList = (isSeller) => {
+const writeShoppingList = (shoppingList, models) => {
 
-    if(isSeller) {
-        visualShoppingListContainer.style.display = "block";
+    shoppingItems = models;
+    visualShoppingListContainer.style.display = "block";
 
-        let targetShoppingItems = GameState.buyerModelsTarget;
-        
-        targetShoppingItems.forEach(function(element) {
-            let singleShoppingItem = document.createElement("p");
-            singleShoppingItem.innerHTML = getNameOfShoppingItem(element);
-            visualShoppingList.append(singleShoppingItem);
-        });   
+    for (const [key, value] of shoppingList.entries()) {
+        let singleShoppingItem = document.createElement("p");
+        singleShoppingItem.innerHTML = value.count + " " + getNameOfShoppingItem(key, value.count);
+        visualShoppingList.append(singleShoppingItem);
     }
+
 }
 
-function getNameOfShoppingItem(id) {
-    for(let i = 0; i < GameState.models.length; i++) {
-        if(GameState.models[i].id == id) {
-            return GameState.models[i].name;
+function getNameOfShoppingItem(typeId, count) {
+    for(let i = 0; i < shoppingItems.length; i++) {
+        if(shoppingItems[i].typeId == typeId) {
+            if(count == 1) {
+                return shoppingItems[i].name;
+            } else {
+                return shoppingItems[i].pluralName;
+            }
         }
     }
 
