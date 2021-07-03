@@ -4,6 +4,10 @@
   height: 100vh;
 }
 
+body {
+  background-color: skyblue;
+}
+
 #appContainer {
   position: absolute;
   z-index: 10;
@@ -26,7 +30,7 @@ video {
   top: 0;
   height: 100%;
   width: 100%;
-  z-index: 100;
+  z-index: 9;
 }
 
 #remoteVideoContainer {
@@ -132,6 +136,7 @@ video {
   background: none;
   pointer-events: none;
   padding: 0;
+  z-index: 8;
 }
 
 #settingScreens {

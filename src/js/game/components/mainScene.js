@@ -6,7 +6,7 @@ let scene;
 
 function initScene() {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( 'skyblue' );
+    scene.background = null; //new THREE.Color( 'skyblue' );
 
     initLight();
 
