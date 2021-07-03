@@ -123,9 +123,18 @@ export default class GameEventManager extends THREE.EventDispatcher {
         }
         // TODO check if this.selectedObject is intersecting this.itemSink instead! (interactionPlane needs to intersect with itemsink for this to work!)
         if(this.raycaster.ray.intersectsBox(this.shoppingBasket)) {
-            console.log(this.selectedObject.object.name + ' put in basket!');
-            this.dispatchEvent( { type: 'basketAdd', item: this.selectedObject.object } );
-            this.sendRemoveFromScene(this.selectedObject.object.name);
+
+            this.selectedObject.object.geometry.computeBoundingBox();
+            this.selectedObject.object.updateMatrixWorld();
+            var box1 = this.selectedObject.object.geometry.boundingBox.clone();
+            box1.applyMatrix4(this.selectedObject.object.matrixWorld);
+
+            if (box1.intersectsBox(this.shoppingBasket)){
+                console.log(this.selectedObject.object.name + ' put in basket!');
+                this.dispatchEvent( { type: 'basketAdd', item: this.selectedObject.object } );
+                this.sendRemoveFromScene(this.selectedObject.object.name);
+            }
+
         }
 
         // finally
