@@ -24,6 +24,7 @@ async function initWebGL() {
         Detector.addGetWebGLMessage();
     } else {
         const container = document.getElementById('appContainer');
+        container.classList.add('deactivated');
         // new GameScene(container);
         await prepare();
     }

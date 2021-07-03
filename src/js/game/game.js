@@ -58,6 +58,7 @@ async function startGame(gameMode) {
     if(__ENV__ === 'dev') {
         initDevThings();
     }
+    document.getElementById("appContainer").classList.remove('deactivated');
     animate();
 }
 
@@ -218,47 +219,10 @@ async function init3DObjects() {
         });
     }
 
-
-    // for (let i = 0; i < GameState.models.length; i++) {
-    //     const loader = new GLTFLoader();
-    //     let ob = new THREE.Object3D();    
-    //     let loadedData = await loader.loadAsync(GameState.models[i].path);
-        
-        
-    //     console.log('------sellsObject: '+GameState.models[i].id+'-------');
-        
-    //     loadedData.scene.traverse((o) => { 
-    //         if (o.isMesh) {
-    //             console.log('mesh:');
-    //             console.log(o);
-    //             ob.add(o);
-    //         }
-    //     });
-
-    //     console.log('obj:');
-    //     console.log(ob);
-
-    //     let m = new THREE.Mesh();
-    //     ob.scale.set(GameState.models[i].scale, GameState.models[i].scale, GameState.models[i].scale);
-
-    //     m = ob;
-    //     let drago = new DragControls( [m], localCamera, renderer.domElement );
-    //     drago.addEventListener( 'drag', function(event) {
-    //         gameController.sendGameobjectUpdate(getObjJSON(event.object));
-    //         render();
-    //     } );
-        
-    //     salesObjects.set(GameState.models[i].id, m);
-
-    // }
-
-    if (isSeller) { 
-        // init seller specific items in local scene
-        instantiateSellerObjectsFromJsonArray(config.sellerModelsStart);
-    } else {
-        // init buyer specific items in local scene
-        instantiateSellerObjectsFromJsonArray(config.buyerModelsStart);
-    }
+    console.log("INSTANTIATE OBJECTS : " + isSeller);
+    // init items in local scene
+    instantiateSellerObjectsFromJsonArray(config.buyerModelsStart);
+    
     
     renderer.outputEncoding = THREE.sRGBEncoding;
 
@@ -328,7 +292,7 @@ const initControls = (isSeller) => {
 
 }
 
-const placeVideos = (videoMode, isInitiator) => {
+const placeVideos = async (videoMode, isInitiator) => {
     switch (videoMode) {
         case "1":
             hideRemoteVideo();
@@ -338,7 +302,7 @@ const placeVideos = (videoMode, isInitiator) => {
             placeRemoteVideo();
             break;
         default:
-            moveRemoteVideoToScene(isInitiator);
+            await moveRemoteVideoToScene(isInitiator);
             hideRemoteVideo();
     }
 }
@@ -365,7 +329,7 @@ function initDevThings() {
 }
 
 function moveRemoteVideoToScene(isInitiator) {
-    setTimeout(() => {
+
         console.log("------------moveRemoteVideoToScene-------------");
 
         const webcamRemoteVideo = document.getElementById("remoteVideo");
@@ -386,7 +350,7 @@ function moveRemoteVideoToScene(isInitiator) {
             remoteVideoMesh.position.set(0, remoteVideoHeight/2, -2);
         }
         localScene.add( remoteVideoMesh );
-    }, 2000 );
+
 }
 
 function animate() {
