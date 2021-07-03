@@ -46,7 +46,7 @@ export default class GameEventManager extends THREE.EventDispatcher {
         this.shoppingBasket = new THREE.Box3;
 
         this.shoppingBasket.setFromObject(this.shoppingBasketMesh);
-
+        this.shoppingBasket.expandByScalar(0.1);
         // this.shoppingBasket.setFromCenterAndSize(new THREE.Vector3(0,0,-2.5), new THREE.Vector3(1,1,1));
     }
 
