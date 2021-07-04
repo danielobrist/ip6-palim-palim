@@ -126,6 +126,11 @@ export default {
         return true;
     },
     shoppingList: new Map([
+        [100004,
+            {
+                count: 1
+            }
+        ],
         [100000,
             {
                 count: 1

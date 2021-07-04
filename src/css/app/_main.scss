@@ -5,10 +5,22 @@
 }
 
 body {
-  background-image: url('https://palimpalim.severin-peyer.ch/supermarket.jpg');
+  height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  height: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+  background-image: url('https://palimpalim.severin-peyer.ch/supermarket_v2.jpg');
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vh;
+  background-position: center center;
 }
 
 #appContainer {
@@ -93,12 +105,13 @@ video {
 #shoppingList {
   width: 200px;
   height: 300px;
-  background: green;
+  background: #FFFDF4;
   position: absolute;
   left: 0;
   top: 0;
   transform: rotate(-10.2deg);
   padding: 21px 22px;
+  box-shadow: #0000002e 0px 0px 25px 11px;
 }
 
 #shoppingList h2 {
@@ -118,7 +131,7 @@ video {
 }
 
 #shoppingList h2, #shoppingList p {
-  color: white;
+  color: #222222;
 }
 
 #shoppingList p {
