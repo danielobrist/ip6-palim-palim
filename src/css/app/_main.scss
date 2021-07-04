@@ -5,7 +5,10 @@
 }
 
 body {
-  background-color: skyblue;
+  background-image: url('https://palimpalim.severin-peyer.ch/supermarket.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
 }
 
 #appContainer {
