@@ -1,8 +1,9 @@
-export { writeShoppingList }
+export { writeShoppingList, strikeThroughPurchasedItemsFromShoppingList }
 
 const visualShoppingList = document.getElementById('shoppingList');
 const visualShoppingListContainer = document.getElementById('shoppingListContainer');
-let shoppingItems;
+let shoppingItems, hideShoppingList;
+
 
 const writeShoppingList = (shoppingList, models) => {
 
@@ -10,28 +11,23 @@ const writeShoppingList = (shoppingList, models) => {
     visualShoppingListContainer.style.display = "block";
 
     for (const [key, value] of shoppingList.entries()) {
-        let singleShoppingItem = document.createElement("p");
-        singleShoppingItem.innerHTML = value.count + " " + getNameOfShoppingItem(key, value.count);
-        visualShoppingList.append(singleShoppingItem);
+        createHtmlElementForShoppingItem(key, value.count);
     }
 
-}
+};
 
-function getNameOfShoppingItem(typeId, count) {
+const getNameOfShoppingItem = (typeId, count) => {
     for(let i = 0; i < shoppingItems.length; i++) {
-        if(shoppingItems[i].typeId == typeId) {
-            if(count == 1) {
+        if(shoppingItems[i].typeId === typeId) {
+            if(count === 1) {
                 return shoppingItems[i].name;
-            } else {
-                return shoppingItems[i].pluralName;
             }
+            return shoppingItems[i].pluralName;
         }
     }
 
     return null;
-}
-
-let hideShoppingList;
+};
 
 visualShoppingListContainer.addEventListener("click", function() {
     
@@ -46,3 +42,50 @@ visualShoppingListContainer.addEventListener("click", function() {
         }, 10000);
     }
 });
+
+const strikeThroughPurchasedItemsFromShoppingList = (typeId) => {
+    if(visualShoppingListContainer.classList.contains("visible")) {
+        if(strikeThroughSpecificItemFromShoppingList(typeId)) {
+            clearTimeout(hideShoppingList);
+        }
+    } else if(strikeThroughSpecificItemFromShoppingList(typeId)) {
+        visualShoppingListContainer.classList.add("visible");
+    }
+
+    hideShoppingList = window.setTimeout(() => {
+        visualShoppingListContainer.classList.remove("visible");
+    }, 5000);
+};
+
+const strikeThroughSpecificItemFromShoppingList = (typeId) => {
+    const shoppingListItem = document.getElementById('shoppingListItem--' + typeId);
+
+    if(shoppingListItem && shoppingListItemIsNotStrikeThrough(shoppingListItem)) {
+        const count = parseInt(shoppingListItem.dataset.count);
+        if (count === 1) {
+            shoppingListItem.classList.add('strikeThrough');
+        } else {
+            shoppingListItem.dataset.count = String(count - 1);
+        }
+        return true;
+    }
+
+    return false;
+};
+
+const shoppingListItemIsNotStrikeThrough = (shoppingListItem) => {
+    if(shoppingListItem.dataset.count > 1) {
+        return true;
+    }
+    return shoppingListItem.dataset.count === "1" && !shoppingListItem.classList.contains('strikeThrough');
+};
+
+const createHtmlElementForShoppingItem = (typeId, count) => {
+    const singleShoppingItemContainer = document.createElement("div");
+    const singleShoppingItem = document.createElement("p");
+    singleShoppingItemContainer.append(singleShoppingItem);
+    singleShoppingItem.innerHTML = getNameOfShoppingItem(typeId, count);
+    singleShoppingItem.dataset.count = count;
+    singleShoppingItem.id = 'shoppingListItem--' + typeId;
+    visualShoppingList.append(singleShoppingItemContainer);
+};

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import GameState from "./gameState";
+import {strikeThroughPurchasedItemsFromShoppingList} from './shoppingList';
 
 export default class GameStateManager extends THREE.EventDispatcher {
     constructor(config){
@@ -26,6 +27,7 @@ export default class GameStateManager extends THREE.EventDispatcher {
             this.gameState.basketItems.set(item.typeId, basketItem);
         }
         console.log('ADDED ITEM TO BASKET: ' + item.name + ' WITH ID ' + item.objectId);
+        strikeThroughPurchasedItemsFromShoppingList(item.typeId);
         this.checkGameOver();
     }
 
