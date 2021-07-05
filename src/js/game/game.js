@@ -13,6 +13,7 @@ import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 import { GameSync } from './components/gameSync';
 import {isInitiator} from "../videoChat/videoChat";
 import {writeShoppingList} from './components/shoppingList';
+import party from "party-js";
 
 export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos, returnToGameModeSelection, removeFromScene};
 
@@ -69,19 +70,45 @@ async function startGame(gameMode) {
 }
 
 const showGameOver = (showRestart) => {
+    playConfetti();
     audioManager.playWinSound();
-    document.getElementById('overlay').classList.remove('whileGameIsRunning');
-    document.getElementById('gameOverScreen').classList.remove('deactivated');
-    showVideos();
-    if (showRestart) {
-        document.getElementById('restartGameButton').addEventListener('click', () => {
-            //todo cleanUpScene();
-            gameEventManager.sendGoToGameModeSelection();
-            returnToGameModeSelection();
-        });
-    } else {
-        document.getElementById('restartGameButton').classList.add('deactivated');
-    }
+    
+    setTimeout(function(){ 
+        document.getElementById('overlay').classList.remove('whileGameIsRunning');
+        document.getElementById('gameOverScreen').classList.remove('deactivated');
+        showVideos();
+        if (showRestart) {
+            document.getElementById('restartGameButton').addEventListener('click', () => {
+                //todo cleanUpScene();
+                gameEventManager.sendGoToGameModeSelection();
+                returnToGameModeSelection();
+            });
+        } else {
+            document.getElementById('restartGameButton').classList.add('deactivated');
+        }
+    }, 2500);
+    
+}
+
+const playConfetti = () => {
+    const element = document.getElementById("appContainer")
+    party.confetti(element,{
+        count: party.variation.range(200, 400),
+        /**
+         * Whether the debugging mode should be enabled.
+         */
+        debug: false,
+        /**
+         * The amount of gravity to apply to particles in the scene, in pixels.
+         * Note that this value is positive by default, since the y-axis increases
+         * downwards in a DOM.
+         */
+        gravity: 800,
+        /**
+         * The z-index to place the DOM containers at.
+         */
+        zIndex: 99999,
+    });
 }
 
 const showVideos = () => {
