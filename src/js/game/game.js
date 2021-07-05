@@ -6,6 +6,7 @@ import {initScene, initCamera} from './components/mainScene';
 //import config from './../data/gameState';
 import GameEventManager from './components/gameEventManager.js';
 import GameStateManager from './components/gameStateManager';
+import AudioManager from './components/audioManager';
 import GameState from './components/gameState';
 import { Vector3 } from 'three';
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
@@ -21,6 +22,7 @@ const objectsToSync = new Map();
 const renderer = new THREE.WebGLRenderer({
     alpha: true
 });
+
 
 let localScene;
 let localCamera;
@@ -42,6 +44,8 @@ let salesObjects = new Map();
 let gui;
 
 let gameEventManager;
+let audioManager;
+
 let selectedObject;
 let isMouseDown = false;
 let mouse = {x: 0, y: 0};
@@ -65,6 +69,7 @@ async function startGame(gameMode) {
 }
 
 const showGameOver = (showRestart) => {
+    audioManager.playWinSound();
     document.getElementById('overlay').classList.remove('whileGameIsRunning');
     document.getElementById('gameOverScreen').classList.remove('deactivated');
     showVideos();
@@ -99,6 +104,7 @@ const prepare = async () => {
     localScene = initScene();
     localCamera = initCamera(isSeller);
 
+    audioManager = new AudioManager(localCamera);
 
     // init static stuff for both (eg. counter, etc)
     const geometry = new THREE.BoxGeometry( 6, 1, 4 );
@@ -120,6 +126,7 @@ const prepare = async () => {
         };
     });
     localScene.add(basketMesh);
+
 }
 
 const cleanUpScene = () => {
@@ -162,10 +169,10 @@ async function loadConfig(gameMode) {
     } else {
         configFile = await import('./config/sceneConfig1');
     }
-     
+
     config = configFile.default;
     gameStateManager = new GameStateManager(config);
-    gameStateManager.addEventListener('gameOver', function(event) {
+    gameStateManager.addEventListener('gameOver', (event) => {
         gameEventManager.sendGameOver();
         showGameOver(true);  //TODO refactor this, true should be !isSeller
     });
