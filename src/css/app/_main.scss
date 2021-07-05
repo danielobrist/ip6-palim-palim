@@ -16,7 +16,7 @@ body::before {
   height: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.8;
+  opacity: 0.35;
   background-image: url('https://palimpalim.severin-peyer.ch/supermarket_v2.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -127,7 +127,7 @@ video {
   left: 0;
   width: 100%;
   height: 3px;
-  background: white;
+  background: #222222;
 }
 
 #shoppingList h2, #shoppingList p {
@@ -154,7 +154,7 @@ video {
   left: 0;
   width: 100%;
   height: 2px;
-  background: white;
+  background: #222222;
   animation-name: strikeThrough;
   animation-duration: 1.5s;
   animation-delay: 0.5s;
