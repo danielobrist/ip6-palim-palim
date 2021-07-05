@@ -9,6 +9,8 @@
 </head>
 
 <body>
+  <div id="sceneBackground"></div>
+
   <section id="appContainer" class="main">
     <div id="loading">Loading...</div>
   </section>
@@ -95,20 +97,24 @@
         </section>
       </div>
 
-      <% } %>
+  <% } %>
 
-        <section id="welcomeScreen">
-          <div>
-            <h1>Palim-Palim</h1>
-            <p class="subtitle">Dein virtueller Einkaufsladen</p>
-            <p>Wähle eine beliebige Raumnummer und teile diese deinem Enkelkind mit.</p>
-            <div id="roomNameSection">
-              <label for="roomName">Raumnummer</label>
-              <input type="number" name="roomName" id="roomName" />
-              <button id="roomNameButton">Raum beitreten</button>
-            </div>
-          </div>
-        </section>
+    <section id="welcomeScreen">
+      <div>
+        <h1>Palim-Palim</h1>
+        <p class="subtitle">Dein virtueller Einkaufsladen</p>
+        <p>Wähle eine beliebige Raumnummer und teile diese deinem Enkelkind mit.</p>
+        <div id="roomNameSection">
+          <label for="roomName">Raumnummer</label>
+          <input type="number" name="roomName" id="roomName" />
+          <button id="roomNameButton">Raum beitreten</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="explanationScreen" class="deactivated">
+        <button id="closeExplanationScreen">Erklärung schliessen</button>
+    </section>
   </div>
 
   <script src="adapter.js"></script>

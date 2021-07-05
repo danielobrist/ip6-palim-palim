@@ -57,6 +57,7 @@ let config;
 
 async function startGame(gameMode) {
     await loadConfig(gameMode);
+    loadBackground();
     await init3DObjects();
     if(isInitiator) {
         writeShoppingList(config.shoppingList, config.models);
@@ -67,6 +68,11 @@ async function startGame(gameMode) {
     }
     document.getElementById("appContainer").classList.remove('deactivated');
     animate();
+}
+
+const loadBackground = () => {
+    let background = document.getElementById('sceneBackground');
+    background.style.backgroundImage = "url('./assets/supermarket_v2.jpg')";
 }
 
 const showGameOver = (showRestart) => {

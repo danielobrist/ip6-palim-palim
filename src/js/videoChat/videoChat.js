@@ -91,12 +91,14 @@ export default class VideoChat{
             }
         }
 
-        socket.on('gameStart',  function(gameMode, videoMode) {
-            gameStart(gameMode, videoMode);
+        socket.on('gameStart',  function(gameMode, videoMode, room) {
+            gameStart(gameMode, videoMode, room);
         });
 
-        function gameStart(gameMode, videoMode) {
-            hideOverlay();
+        function gameStart(gameMode, videoMode, room) {
+            // hideOverlay();
+            hideSettingScreens();
+            showExplanationScreen(room);
             placeVideos(videoMode, isInitiator);
             switchView(isInitiator);
             startGame(gameMode);
@@ -104,8 +106,31 @@ export default class VideoChat{
 
         function hideOverlay() {
             document.getElementById('overlay').classList.add('whileGameIsRunning');
-            document.getElementById('videoModeScreen').classList.add('deactivated');
         }
+
+        function hideSettingScreens() {
+            document.getElementById('videoModeScreen').classList.add('deactivated');
+            document.getElementById('settingScreens').classList.add('deactivated');
+        }
+
+        function showExplanationScreen(room) {
+            if(isInitiator) {
+                document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanation-buyer.jpg')";
+            } else {
+                document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanation-seller.jpg')";
+                document.getElementById('closeExplanationScreen').classList.add('deactivated');
+            }
+            document.getElementById('explanationScreen').classList.remove('deactivated');
+
+            document.getElementById('closeExplanationScreen').addEventListener('click', () => {
+                socket.emit('closeExplanationScreen', room);
+            });
+        }
+
+        socket.on('closeExplanationScreen', () => {
+            document.getElementById('explanationScreen').classList.add('deactivated');
+            hideOverlay();
+        });
 
         socket.on('joined', function(room) {
             console.log('joined: ' + room);
@@ -276,7 +301,7 @@ export default class VideoChat{
             peerConnection.setLocalDescription(sessionDescription);
             console.log('setLocalAndSendMessage sending message', sessionDescription);
             sendSignalingMessage(sessionDescription);
-        }
+        };
 
         function onCreateSessionDescriptionError(error) {
             console.log('Failed to create session description: ' + error.toString());

@@ -68,7 +68,11 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('gameStart', function (room, gameMode, videoMode) {
-    io.sockets.in(room).emit('gameStart', gameMode, videoMode);
+    io.sockets.in(room).emit('gameStart', gameMode, videoMode, room);
   });
+
+  socket.on('closeExplanationScreen', (room) => {
+    io.sockets.in(room).emit('closeExplanationScreen');
+  })
 
 });
