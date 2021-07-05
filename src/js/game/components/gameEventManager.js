@@ -158,14 +158,13 @@ export default class GameEventManager extends THREE.EventDispatcher {
     }
 
     getMousePosition = (event) => {
-        //TODO test this (alternative from DragControls) 
-        // const rect = _domElement.getBoundingClientRect();
-        // _mouse.x = ( ( event.clientX - rect.left ) / rect.width ) * 2 - 1;
-		// _mouse.y = - ( ( event.clientY - rect.top ) / rect.height ) * 2 + 1;
-        // 
+        const rect = this.domElement.getBoundingClientRect();
+        this.mouse.x = ( ( event.clientX - rect.left ) / rect.width ) * 2 - 1;
+		this.mouse.y = - ( ( event.clientY - rect.top ) / rect.height ) * 2 + 1;
 
-        this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-	    this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        // old - keep in case
+        // this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	    // this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     }
 
     sendGameOver() {
