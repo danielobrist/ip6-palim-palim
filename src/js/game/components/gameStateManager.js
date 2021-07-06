@@ -31,18 +31,38 @@ export default class GameStateManager extends THREE.EventDispatcher {
     }
 
     addItemToBasket(item) {
+        this.addItemToListOfItemsInBasket(item);
+        this.addItemToVisualBasket(item);
+        console.log('ADDED ITEM TO BASKET: ' + item.name + ' WITH ID ' + item.objectId);
+        this.checkGameOver();
+    }
+
+    addItemToListOfItemsInBasket(item) {
         if (this.gameState.basketItems.get(item.typeId)) {
             this.gameState.basketItems.set(item.typeId, this.gameState.basketItems.get(item.typeId) + 1);
         } else {
             this.gameState.basketItems.set(item.typeId, 1);
         }
-        console.log('ADDED ITEM TO BASKET: ' + item.name + ' WITH ID ' + item.objectId);
-        strikeThroughPurchasedItemsFromShoppingList(item.typeId);
-        this.checkGameOver();
+    }
+
+    addItemToVisualBasket(item) {
+        const freePosition = this.getFreePositionInBasket();
+
+        if(freePosition) {
+            item.scale.set(0.75, 0.75, 0.75);
+            item.position.set(freePosition.x, freePosition.y, freePosition.z);
+            freePosition.occupied = true;
+        } else {
+            //todo what if all 6 positions are occupied?
+        }
+    }
+
+    getFreePositionInBasket() {
+        return this.gameState.positionsForItemsInBasket.sort(() => 0.5 - Math.random()).find(pos => !pos.occupied);
     }
 
     checkGameOver() {
-        let gameOver = this.gameOverCheck(this.shoppingList, this.gameState.basketItems)
+        const gameOver = this.gameOverCheck(this.shoppingList, this.gameState.basketItems)
         if (gameOver) {
             // alert('GAME OVER');
             // TODO send peer gameover message and finish round for both

@@ -12,7 +12,7 @@ import { Vector3 } from 'three';
 import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 import { GameSync } from './components/gameSync';
 import {isInitiator} from "../videoChat/videoChat";
-import {writeShoppingList} from './components/shoppingList';
+import {strikeThroughPurchasedItemsFromShoppingList, writeShoppingList} from './components/shoppingList';
 import party from "party-js";
 
 export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos, returnToGameModeSelection, removeFromScene, hideOverlay};
@@ -58,6 +58,9 @@ let config;
 async function startGame(gameMode) {
     await loadConfig(gameMode);
     loadBackground();
+    if (__ENV__ === 'dev') {
+        gui = new GUI();
+    }
     await init3DObjects();
     if (__ENV__ === 'dev') {
         initControls(isSeller);
@@ -284,7 +287,6 @@ const instantiateSellerObjectsFromJsonArray = (jsonArray) => {
 
         sphereMesh.add(newMesh);   // set the acutal item mesh as a child of the bounding sphere
 
-        sphereMesh.name = jsonArray[i].name;
         sphereMesh.startPosition = new Vector3(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z); //todo startPosition = .position
         sphereMesh.position.set(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z);
         sphereMesh.objectId = jsonArray[i].objectId;
@@ -292,11 +294,15 @@ const instantiateSellerObjectsFromJsonArray = (jsonArray) => {
 
         objectsToSync.set(sphereMesh.objectId, sphereMesh);
         interactionObjects.push(sphereMesh);
-
         
-        // if(__ENV__ === 'dev') {
-        //     gui.addFolderWithPositions(newMesh, newMesh.name, -5, 5, 0.05);
-        // }
+        if(__ENV__ === 'dev') {
+            //gui.addFolderWithPositions(sphereMesh, sphereMesh.name, -5, 5, 0.05);
+            const rangeStart = -5, rangeEnd = 5, step = 0.05;
+            const folder = gui.addFolder(sphereMesh.objectId);
+            folder.add(sphereMesh.position, "x", rangeStart, rangeEnd, step);
+            folder.add(sphereMesh.position, "y", rangeStart, rangeEnd, step);
+            folder.add(sphereMesh.position, "z", rangeStart, rangeEnd, step);
+        }
     }
 }
 
@@ -341,10 +347,13 @@ const initControls = (isSeller) => {
     console.log(gameEventManager.draggableObjects);
     // console.log(JSON.stringify(gameEventManager.draggableObjects));
     gameEventManager.addEventListener( 'basketAdd', function (event) {
-        localScene.remove(event.item);
+
+        //localScene.remove(event.item);
+
         // TODO scenemanager.show event.item in basket somehow
         // TODO update state
         gameStateManager.addItemToBasket(event.item);
+        strikeThroughPurchasedItemsFromShoppingList(event.item.typeId);
         audioManager.playCompleteTaskSound();
     } );
     gameEventManager.addEventListener( 'itemRemove', function (event) {
@@ -406,7 +415,6 @@ const placeRemoteVideo = () => {
 function initDevThings() {
     orbitControls = new OrbitControls( localCamera, renderer.domElement );
     orbitControls.enabled = false;
-    gui = new GUI();
     const orbitControlsFolder = gui.addFolder("OrbitControls");
     orbitControlsFolder.add(orbitControls, 'enabled');
     gui.domElement.parentElement.style.zIndex = "999999";
