@@ -29,12 +29,18 @@ body #sceneBackground {
 #explanationScreen {
   background-size: contain;
   z-index: 10000;
+  background-color: white;
 }
 
 #closeExplanationScreen {
   position: absolute;
   top: 2rem;
   right: 2rem;
+  background: #002b38;
+  font-size: 29px;
+  font-weight: bold;
+  padding: 1.2rem 2rem;
+  border-radius: 2.4rem;
 }
 
 #appContainer {
