@@ -1,112 +1,145 @@
 export default {
     models: [
         {
-            id:     518168,
+            typeId:     100000,
             path:   './assets/models/duck.glb',
             scale:  0.005,
             type:   'gltf',
-            name:   'Entchen'
+            name:   'Entchen',
+            pluralName: 'Entchen'
         },
         {
-            id:     889985,
+            typeId:     100001,
             path:   './assets/models/apricot.glb',
             scale:  0.009,
             type:   'gltf',
-            name:   'Aprikose'
+            name:   'Aprikose',
+            pluralName: 'Aprikosen'
         },
         {
-            id:     515156,
+            typeId:     100002,
             path:   './assets/models/banana.glb',
-            scale:  0.16,
+            scale:  0.08,
             type:   'gltf',
-            name:   'Banane'
+            name:   'Banane',
+            pluralName: 'Bananen'
         },
         {
-            id:     515157,
+            typeId:     100003,
             path:   './assets/models/apple.glb',
             scale:  0.07,
             type:   'gltf',
-            name:   'Apfel'
+            name:   'Apfel',
+            pluralName: 'Äpfel'
         },
         {
-            id:     515158,
+            typeId:     100004,
             path:   './assets/models/pear.glb',
-            scale:  0.1,
+            scale:  0.08,
             type:   'gltf',
-            name:   'Aprikose'
+            name:   'Birne',
+            pluralName: 'Birnen'
         },
         {
-            id:     515159,
+            typeId:     100005,
             path:   './assets/models/egg.glb',
             scale:  0.06,
             type:   'gltf',
-            name:   'Ei'
-        }
-    ],
-    sellerModelsStart: [
-        {
-            id:     518168,
-            startPosition: {
-                x:  -1.5,
-                y:  0,
-                z:  -2
-            },
-            name:   'DuckMesh1'
-        },
-        {
-            id:     518168,
-            startPosition: {
-                x:  0,
-                y:  0,
-                z:  -2
-            },
-            name:   'DuckMesh2'
+            name:   'Ei',
+            pluralName: 'Eier'
         }
     ],
 
     buyerModelsStart: [
         {
-            id:     889985,
+            objectId:     200000,
+            typeId:       100000,
+            startPosition: {
+                x:  -2.4,
+                y:  -0.1,
+                z:  2.5
+            }
+        },
+        {
+            objectId:     200001,
+            typeId:       100001,
             startPosition: {
                 x:  -1.5,
-                y:  -0.5,
-                z:  2.3
-            },
-            name:   'Apricot1'
+                y:  -0.1,
+                z:  2.5
+            }
         },
         {
-            id:     515157,
+            objectId:     200002,
+            typeId:       100002,
+            startPosition: {
+                x:  0.5,
+                y:  0,
+                z:  2.5
+            }
+        },
+        {
+            objectId:     200003,
+            typeId:       100003,
             startPosition: {
                 x:  -0.5,
-                y:  -0.5,
-                z:  2.3
-            },
-            name:   'Apple1'
+                y:  -0.1,
+                z:  2.5
+            }
         },
         {
-            id:     515158,
+            objectId:     200004,
+            typeId:       100004,
             startPosition: {
                 x:  1.5,
-                y:  -0.5,
-                z:  2.2
-            },
-            name:   'Pear1'
+                y:  -0.1,
+                z:  2.5
+            }
         },
         {
-            id:     515159,
+            objectId:     200005,
+            typeId:       100005,
             startPosition: {
                 x:  2.5,
-                y:  -0.5,
+                y:  -0.1,
                 z:  2.5
-            },
-            name:   'Egg1'
+            }
         }
     ],
 
-    buyerModelsTarget: [
-        515159,
-        515157,
-        515156
-    ]
-    //TODO add shoppingList and gameOverCheck function like in sceneConfig1
+    gameOverCheck: function(shoppingListMap, basketItemsMap) {
+        // checks if all shoppingList items are in the basket
+
+        console.log(shoppingListMap);
+        console.log(basketItemsMap);
+
+        for (const [key, value] of shoppingListMap.entries()) {
+            if (!basketItemsMap.has(key)){
+                return false;
+            } else {
+                let basketItem = basketItemsMap.get(key);
+                if (basketItem.count !== value.count) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    },
+    shoppingList: new Map([
+        [100004,
+            {
+                count: 1
+            }
+        ],
+        [100000,
+            {
+                count: 1
+            }
+        ], 
+        [100003,
+            {
+                count: 1
+            }
+        ]
+    ])
 };
