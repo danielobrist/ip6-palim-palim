@@ -31,9 +31,16 @@ function initCamera(isSeller) {
 }
 
 function initLight() {
-    const directionalLight1 = new THREE.DirectionalLight( 0xffffff, 1 );
+    const directionalLight1 = new THREE.DirectionalLight( 0xffffff, 0.7 );
     directionalLight1.position.set(2, 2, 0);
     scene.add(directionalLight1);
+
+    const directionalLight4 = new THREE.DirectionalLight( 0xffffff, 0.7 );
+    directionalLight1.position.set(-2, 2, 0);
+    scene.add(directionalLight4);
+
+    const ambientLight = new THREE.AmbientLight( 0x404040 );
+    scene.add( ambientLight );
 
     const directionalLight2 = new THREE.DirectionalLight( 0xffffff, 1 );
     directionalLight2.position.set(2, 2, -20);
