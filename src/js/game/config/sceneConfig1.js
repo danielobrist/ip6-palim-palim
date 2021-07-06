@@ -70,6 +70,24 @@ export default {
             }
         },
         {
+            objectId:     200006,
+            typeId:       100001,
+            startPosition: {
+                x:  -1.2,
+                y:  -0.1,
+                z:  2.8
+            }
+        },
+        {
+            objectId:     200007,
+            typeId:       100001,
+            startPosition: {
+                x:  -1.8,
+                y:  -0.1,
+                z:  2.8
+            }
+        },
+        {
             objectId:     200002,
             typeId:       100002,
             startPosition: {
@@ -110,36 +128,13 @@ export default {
     gameOverCheck: function(shoppingListMap, basketItemsMap) {
         // checks if all shoppingList items are in the basket
 
-        console.log(shoppingListMap);
-        console.log(basketItemsMap);
-
         for (const [key, value] of shoppingListMap.entries()) {
             if (!basketItemsMap.has(key)){
                 return false;
-            } else {
-                let basketItem = basketItemsMap.get(key);
-                if (basketItem.count !== value.count) {
-                    return false;
-                }
+            } else if (basketItemsMap.get(key) !== value) {
+                return false;
             }
         }
         return true;
-    },
-    shoppingList: new Map([
-        [100004,
-            {
-                count: 1
-            }
-        ],
-        [100000,
-            {
-                count: 1
-            }
-        ], 
-        [100003,
-            {
-                count: 1
-            }
-        ]
-    ])
+     }
 };

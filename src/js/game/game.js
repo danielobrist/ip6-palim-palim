@@ -59,9 +59,6 @@ async function startGame(gameMode) {
     await loadConfig(gameMode);
     loadBackground();
     await init3DObjects();
-    if(isInitiator) {
-        writeShoppingList(config.shoppingList, config.models);
-    }
     if (__ENV__ === 'dev') {
         initControls(isSeller);
         initDevThings();
@@ -209,6 +206,10 @@ async function loadConfig(gameMode) {
         gameEventManager.sendGameOver();
         showGameOver(true);  //TODO refactor this, true should be !isSeller
     });
+
+    if(isInitiator) {
+        writeShoppingList(gameStateManager.shoppingList, config.models);
+    }
 
     // gameEventManager.addEventListener( 'basketAdd', function (event) {
     //     localScene.remove(event.item);

@@ -11,7 +11,7 @@ const writeShoppingList = (shoppingList, models) => {
     visualShoppingListContainer.style.display = "block";
 
     for (const [key, value] of shoppingList.entries()) {
-        createHtmlElementForShoppingItem(key, value.count);
+        createHtmlElementForShoppingItem(key, value);
     }
 
 };
