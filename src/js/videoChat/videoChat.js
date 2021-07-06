@@ -1,6 +1,6 @@
 import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, switchView, placeVideos} from '../game/game';
-import {startGame, showGameOver, cleanUpScene, returnToGameModeSelection, removeFromScene} from '../game/game.js';
+import {startGame, showGameOver, cleanUpScene, returnToGameModeSelection, removeFromScene, hideOverlay} from '../game/game.js';
 import DataChannel from "./dataChannel";
 
 export let dataChannel;
@@ -104,9 +104,6 @@ export default class VideoChat{
             startGame(gameMode);
         }
 
-        function hideOverlay() {
-            document.getElementById('overlay').classList.add('whileGameIsRunning');
-        }
 
         function hideSettingScreens() {
             document.getElementById('videoModeScreen').classList.add('deactivated');

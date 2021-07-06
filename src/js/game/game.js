@@ -15,7 +15,7 @@ import {isInitiator} from "../videoChat/videoChat";
 import {writeShoppingList} from './components/shoppingList';
 import party from "party-js";
 
-export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos, returnToGameModeSelection, removeFromScene};
+export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos, returnToGameModeSelection, removeFromScene, hideOverlay};
 
 // an array of objects to sync
 const objectsToSync = new Map();
@@ -70,6 +70,11 @@ async function startGame(gameMode) {
 const loadBackground = () => {
     let background = document.getElementById('sceneBackground');
     background.style.backgroundImage = "url('./assets/illustrations/supermarket_v2.jpg')";
+}
+
+const hideOverlay = () => {
+    document.getElementById('overlay').classList.add('whileGameIsRunning');
+    audioManager.playPalimSound();
 }
 
 const showGameOver = (showRestart) => {
@@ -340,7 +345,7 @@ const initControls = (isSeller) => {
         // TODO scenemanager.show event.item in basket somehow
         // TODO update state
         gameStateManager.addItemToBasket(event.item);
-
+        audioManager.playCompleteTaskSound();
     } );
     gameEventManager.addEventListener( 'itemRemove', function (event) {
         // let selectedObjectPlaceholder = event.item.clone();
@@ -354,10 +359,6 @@ const initControls = (isSeller) => {
     if(__ENV__ === 'dev') {
         visualizeTheInteractionPlaneAndItemSink();
     }
-
-
-
-
 
 }
 
