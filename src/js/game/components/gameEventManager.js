@@ -31,6 +31,8 @@ export default class GameEventManager extends THREE.EventDispatcher {
         this.setupInteractionPlane(isSeller);
         this.setupBasketSpace();
         this.setupSelectionSpace();
+
+        this.isBuyer = isSeller; //temporary hack
     }
 
     setupInteractionPlane(isSeller) {
@@ -92,7 +94,21 @@ export default class GameEventManager extends THREE.EventDispatcher {
 
         const intersects = this.raycaster.intersectObjects(this.draggableObjects);
         this.selectedObject = intersects[0];
-        if (intersects.length > 0){
+
+        let boundingBox;
+        if (this.selectedObject) {         
+            this.selectedObject.object.geometry.computeBoundingBox();
+            this.selectedObject.object.updateMatrixWorld();
+            boundingBox = this.selectedObject.object.geometry.boundingBox.clone();
+            boundingBox.applyMatrix4(this.selectedObject.object.matrixWorld);
+        }
+
+        if (this.isBuyer && boundingBox && boundingBox.intersectsBox(this.selectionSpace)) {
+            this.selectedObject = null;
+            return;
+        }
+
+        if (intersects.length > 0 ){
             this.dragStartPoint.copy(intersects[0].object.position);
             if (this.raycaster.ray.intersectsBox(this.selectionSpace)) {
                 // TODO add a placeholder clone to the scene with opacity at startPosition but dont add it to draggableObjects
@@ -120,30 +136,24 @@ export default class GameEventManager extends THREE.EventDispatcher {
             boundingBox.applyMatrix4(this.selectedObject.object.matrixWorld);
         }
 
-        // if (this.raycaster.ray.intersectsBox(this.selectionSpace) && this.selectedObject) {
-
-            if (boundingBox.intersectsBox(this.selectionSpace)) {
-                // TODO remove the placeholder from the scene
-                this.selectedObject.object.position.copy(this.selectedObject.object.startPosition);
-                this.gameSync.sendGameobjectUpdate(this.selectedObject.object);
-            }
+        if (boundingBox && boundingBox.intersectsBox(this.selectionSpace)) {
+            // TODO remove the placeholder from the scene
+            this.selectedObject.object.position.copy(this.selectedObject.object.startPosition);
+            this.gameSync.sendGameobjectUpdate(this.selectedObject.object);
+        }
 
 
         // } else if (!this.raycaster.ray.intersectsBox(this.selectionSpace)) {
         //     // TODO up the opacity of the placeholder and add it to draggableObjects
 
         // }
-        // TODO check if this.selectedObject is intersecting this.itemSink instead! (interactionPlane needs to intersect with itemsink for this to work!)
-        // if(this.raycaster.ray.intersectsBox(this.shoppingBasket)) {
 
 
-            if (boundingBox.intersectsBox(this.shoppingBasket)) {
-                console.log(this.selectedObject.object.name + ' put in basket!');
-                this.dispatchEvent( { type: 'basketAdd', item: this.selectedObject.object } );
-                this.sendRemoveFromScene(this.selectedObject.object.objectId);
-            }
-
-        // }
+        if (boundingBox && boundingBox.intersectsBox(this.shoppingBasket)) {
+            console.log(this.selectedObject.object.name + ' put in basket!');
+            this.dispatchEvent( { type: 'basketAdd', item: this.selectedObject.object } );
+            this.sendRemoveFromScene(this.selectedObject.object.objectId);
+        }
 
         // finally
         this.selectedObject = null;
