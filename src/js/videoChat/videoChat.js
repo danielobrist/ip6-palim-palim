@@ -115,9 +115,9 @@ export default class VideoChat{
 
         function showExplanationScreen(room) {
             if(isInitiator) {
-                document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanation-buyer.jpg')";
+                document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-buyer.jpg')";
             } else {
-                document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanation-seller.jpg')";
+                document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-seller.jpg')";
                 document.getElementById('closeExplanationScreen').classList.add('deactivated');
             }
             document.getElementById('explanationScreen').classList.remove('deactivated');

@@ -72,7 +72,7 @@ async function startGame(gameMode) {
 
 const loadBackground = () => {
     let background = document.getElementById('sceneBackground');
-    background.style.backgroundImage = "url('./assets/supermarket_v2.jpg')";
+    background.style.backgroundImage = "url('./assets/illustrations/supermarket_v2.jpg')";
 }
 
 const showGameOver = (showRestart) => {
@@ -339,31 +339,34 @@ const visualizeTheInteractionPlaneAndItemSink = () => {
 }
 
 const placeVideos = async (videoMode, isInitiator) => {
+    console.log('-----placeVideos-----');
     switch (videoMode) {
         case "1":
             hideRemoteVideo();
             hideLocalVideo();
+            addBuyerAndSellerIllustration(isInitiator);
             break;
         case "2":
             placeRemoteVideo();
+            addBuyerAndSellerIllustration(isInitiator);
             break;
         default:
             await moveRemoteVideoToScene(isInitiator);
             hideRemoteVideo();
     }
-}
+};
 
 const hideRemoteVideo = () => {
     document.getElementById("remoteVideoContainer").classList.add('deactivatedVideo');
-}
+};
 
 const hideLocalVideo = () => {
     document.getElementById("localVideoContainer").classList.add('deactivatedVideo');
-}
+};
 
 const placeRemoteVideo = () => {
     document.getElementById('remoteVideoContainer').classList.add('gamemode--2');
-}
+};
 
 function initDevThings() {
     orbitControls = new OrbitControls( localCamera, renderer.domElement );
@@ -374,18 +377,40 @@ function initDevThings() {
     gui.domElement.parentElement.style.zIndex = "999999";
 }
 
-function moveRemoteVideoToScene(isInitiator) {
+const addBuyerAndSellerIllustration = (isSeller) => {
+    let zPosition = 2, xPosition = -0.25;
+    let texture;
+    if(isSeller) {
+        texture = loadSellerIllustrationAsTexture();
+    } else {
+        texture = loadBuyerIllustrationAsTexture();
+        zPosition = zPosition*(-1);
+        xPosition = xPosition*(-1);
+    }
 
-        console.log("------------moveRemoteVideoToScene-------------");
+    const material = new THREE.MeshBasicMaterial( { map: texture } );
+    const geometry = new THREE.BoxGeometry(4, 4.5, 0.000001); //todo change to PlaneGeometry (currentrly doesnt work in scene of buyer)
+    const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.position.set(xPosition, 2.5, zPosition);
+
+    localScene.add(mesh);
+};
+
+const loadBuyerIllustrationAsTexture = () => {
+    return new THREE.TextureLoader().load( './assets/illustrations/buyer.png' );
+};
+
+const loadSellerIllustrationAsTexture = () => {
+    return new THREE.TextureLoader().load( './assets/illustrations/seller.png' );
+};
+
+function moveRemoteVideoToScene(isInitiator) {
 
         const webcamRemoteVideo = document.getElementById("remoteVideo");
         const webcamReomoteVideoAspectRatio = webcamRemoteVideo.offsetWidth/webcamRemoteVideo.offsetHeight;
         const remoteVideoWidth = 6;
         const remoteVideoHeight = remoteVideoWidth/webcamReomoteVideoAspectRatio;
-
-        console.log(webcamRemoteVideo);
-        console.log("width: " + webcamRemoteVideo.offsetWidth);
-        console.log("height: " + webcamRemoteVideo.offsetHeight);
 
         const remoteVideoGeometry = new THREE.PlaneGeometry( remoteVideoWidth, remoteVideoHeight );
         const remoteVideoMaterial = makeVideoMaterial("remoteVideo");
@@ -409,11 +434,11 @@ function animate() {
 }
 
 function updateRemoteObjects(data) {
-    let obj = JSON.parse(data);
+    const obj = JSON.parse(data);
     // console.log('Parsed JSON uuid: ' + obj.uuid + ', positionx: ' + obj.position.x + ', rotationx: ' + obj.rotation._x);
 
     if(objectsToSync.has(obj.objectId)) {
-        let localElement = localScene.getObjectByProperty( 'objectId', obj.objectId );
+        const localElement = localScene.getObjectByProperty( 'objectId', obj.objectId );
 
         localElement.position.x = obj.position.x;
         localElement.position.y = obj.position.y;
@@ -438,16 +463,15 @@ function updateRemoteObjects(data) {
 }
 
 function makeVideoMaterial(id) {
-    let videoElement = document.getElementById(id);
-    let videoTexture = new THREE.VideoTexture(videoElement);
-  
-    let videoMaterial = new THREE.MeshBasicMaterial({
-      map: videoTexture,
-      overdraw: true,
-      side: THREE.DoubleSide,
+    const videoElement = document.getElementById(id);
+    const videoTexture = new THREE.VideoTexture(videoElement);
+
+    return new THREE.MeshBasicMaterial({
+        map: videoTexture,
+        overdraw: true,
+        side: THREE.DoubleSide,
     });
-  
-    return videoMaterial;
+
   }
 
 function render() {
