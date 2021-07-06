@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import GameState from "./gameState";
-import {strikeThroughPurchasedItemsFromShoppingList} from './shoppingList';
 
 export default class GameStateManager extends THREE.EventDispatcher {
     constructor(config){
@@ -12,7 +11,7 @@ export default class GameStateManager extends THREE.EventDispatcher {
     }
 
     generateShoppingList(possibleShoppingItems) {
-        const numberOfElementsInShoppingList = getRandomInt(2,5);
+        const numberOfElementsInShoppingList = getRandomIntInRange(3,5);
         const shoppingListItems = reduceArrayToSomeRandomItems(possibleShoppingItems, numberOfElementsInShoppingList);
         const shoppingList = new Map();
 
@@ -28,13 +27,6 @@ export default class GameStateManager extends THREE.EventDispatcher {
         console.log(shoppingList);
         return shoppingList;
 
-    }
-
-    addItemToBasket(item) {
-        this.addItemToListOfItemsInBasket(item);
-        this.addItemToVisualBasket(item);
-        console.log('ADDED ITEM TO BASKET: ' + item.name + ' WITH ID ' + item.objectId);
-        this.checkGameOver();
     }
 
     addItemToListOfItemsInBasket(item) {
@@ -62,8 +54,8 @@ export default class GameStateManager extends THREE.EventDispatcher {
     }
 
     checkGameOver() {
-        const gameOver = this.gameOverCheck(this.shoppingList, this.gameState.basketItems)
-        if (gameOver) {
+        const isGameOver = this.gameOverCheck(this.shoppingList, this.gameState.basketItems);
+        if (isGameOver) {
             // alert('GAME OVER');
             // TODO send peer gameover message and finish round for both
             this.dispatchEvent( { type: 'gameOver' } );
@@ -71,12 +63,14 @@ export default class GameStateManager extends THREE.EventDispatcher {
     }
 }
 
-const getRandomInt = (min, max) => {
+//todo move to a helper class
+const getRandomIntInRange = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
 };
 
+//todo move to a helper class
 const reduceArrayToSomeRandomItems = (array, numberOfItems) => {
     return array.sort(() => 0.5 - Math.random()).slice(0, numberOfItems);
 };

@@ -350,9 +350,13 @@ const initControls = (isSeller) => {
 
         //localScene.remove(event.item);
 
-        // TODO scenemanager.show event.item in basket somehow
         // TODO update state
-        gameStateManager.addItemToBasket(event.item);
+
+        gameStateManager.addItemToListOfItemsInBasket(event.item);
+        gameStateManager.addItemToVisualBasket(event.item);
+        console.log('ADDED ITEM TO BASKET: ' + event.item.name + ' WITH ID ' + event.item.objectId);
+        gameStateManager.checkGameOver();
+
         strikeThroughPurchasedItemsFromShoppingList(event.item.typeId);
         audioManager.playCompleteTaskSound();
     } );

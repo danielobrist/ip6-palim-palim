@@ -40,9 +40,6 @@ export default class GameState {
                 occupied: false
             },
 
-        ]
-        this.sellerItems = [];
+        ];
     }
-
-    
 }
