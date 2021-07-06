@@ -269,22 +269,55 @@ async function init3DObjects() {
 
 }
 
-function instantiateSellerObjectsFromJsonArray(jsonArray) {
-    for(let i = 0; i < jsonArray.length; i++) {
-        let newMesh = salesObjects.get(jsonArray[i].typeId).clone();
-        newMesh.name = jsonArray[i].name;
-        newMesh.startPosition = new Vector3(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z); //todo startPosition = .position
-        newMesh.position.set(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z);
-        newMesh.objectId = jsonArray[i].objectId;
-        newMesh.typeId = jsonArray[i].typeId;
-        localScene.add(newMesh);
-        objectsToSync.set(newMesh.objectId, newMesh);
-        interactionObjects.push(newMesh);
+const instantiateSellerObjectsFromJsonArray = (jsonArray) => {
+    for (let i = 0; i < jsonArray.length; i++) {
+        const newMesh = salesObjects.get(jsonArray[i].typeId).clone();
 
+        const sphereMesh = buildBoundingSphere(newMesh);
+        localScene.add(sphereMesh);
+
+        sphereMesh.add(newMesh);   // set the acutal item mesh as a child of the bounding sphere
+
+        sphereMesh.name = jsonArray[i].name;
+        sphereMesh.startPosition = new Vector3(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z); //todo startPosition = .position
+        sphereMesh.position.set(jsonArray[i].startPosition.x, jsonArray[i].startPosition.y, jsonArray[i].startPosition.z);
+        sphereMesh.objectId = jsonArray[i].objectId;
+        sphereMesh.typeId = jsonArray[i].typeId;
+
+        objectsToSync.set(sphereMesh.objectId, sphereMesh);
+        interactionObjects.push(sphereMesh);
+
+        
         // if(__ENV__ === 'dev') {
         //     gui.addFolderWithPositions(newMesh, newMesh.name, -5, 5, 0.05);
         // }
     }
+}
+
+const buildBoundingSphere = (mesh) => {
+    const boundingBox = new THREE.Box3().setFromObject(mesh);
+    const center = new THREE.Vector3();
+    boundingBox.getCenter(center);
+
+    const boundingSphere = boundingBox.getBoundingSphere(new THREE.Sphere(center));
+
+    let boundingSphereOpacity;
+    if(__ENV__ === 'dev') {
+        boundingSphereOpacity = 0.3;
+    } else {
+        boundingSphereOpacity = 0
+    }
+    const m = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            opacity: boundingSphereOpacity,
+            transparent: true
+        });
+
+    const geometry = new THREE.SphereGeometry(boundingSphere.radius, 32, 32);
+    const sphereMesh = new THREE.Mesh(geometry, m);
+    sphereMesh.position.copy(center);
+
+    return sphereMesh;
 }
 
 const initControls = (isSeller) => {

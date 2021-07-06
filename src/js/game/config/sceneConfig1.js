@@ -19,7 +19,7 @@ export default {
         {
             typeId:     100002,
             path:   './assets/models/banana.glb',
-            scale:  0.16,
+            scale:  0.1,
             type:   'gltf',
             name:   'Banane',
             pluralName: 'Bananen'
@@ -35,7 +35,7 @@ export default {
         {
             typeId:     100004,
             path:   './assets/models/pear.glb',
-            scale:  0.1,
+            scale:  0.08,
             type:   'gltf',
             name:   'Birne',
             pluralName: 'Birnen'
@@ -56,7 +56,7 @@ export default {
             typeId:       100000,
             startPosition: {
                 x:  -2.4,
-                y:  -0.6,
+                y:  -0.1,
                 z:  2.5
             }
         },
@@ -65,8 +65,8 @@ export default {
             typeId:       100001,
             startPosition: {
                 x:  -1.5,
-                y:  -0.5,
-                z:  2.3
+                y:  -0.1,
+                z:  2.5
             }
         },
         {
@@ -74,7 +74,7 @@ export default {
             typeId:       100002,
             startPosition: {
                 x:  0.5,
-                y:  -0.5,
+                y:  0,
                 z:  2.5
             }
         },
@@ -83,8 +83,8 @@ export default {
             typeId:       100003,
             startPosition: {
                 x:  -0.5,
-                y:  -0.5,
-                z:  2.3
+                y:  -0.1,
+                z:  2.5
             }
         },
         {
@@ -92,8 +92,8 @@ export default {
             typeId:       100004,
             startPosition: {
                 x:  1.5,
-                y:  -0.5,
-                z:  2.2
+                y:  -0.1,
+                z:  2.5
             }
         },
         {
@@ -101,7 +101,7 @@ export default {
             typeId:       100005,
             startPosition: {
                 x:  2.5,
-                y:  -0.5,
+                y:  -0.1,
                 z:  2.5
             }
         }
