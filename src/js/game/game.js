@@ -15,7 +15,7 @@ import {isInitiator} from "../videoChat/videoChat";
 import {strikeThroughPurchasedItemsFromShoppingList, writeShoppingList} from './components/shoppingList';
 import party from "party-js";
 
-export {prepare, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos, returnToGameModeSelection, removeFromScene, hideOverlay};
+export {prepareScene, updateRemoteObjects, moveRemoteVideoToScene, switchView, startGame, showGameOver, cleanUpScene, placeVideos, returnToGameModeSelection, removeFromScene, hideOverlay};
 
 // an array of objects to sync
 const objectsToSync = new Map();
@@ -133,7 +133,7 @@ const returnToGameModeSelection = () => {
     document.getElementById('gameModeScreen').classList.remove('deactivated');
 }
 
-const prepare = async () => {
+const prepareScene = async () => {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.autoClear = false;

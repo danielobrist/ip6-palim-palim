@@ -1,13 +1,12 @@
 import PeerConnection from "./peerConnection";
-import {updateRemoteObjects, switchView, placeVideos} from '../game/game';
-import {startGame, showGameOver, cleanUpScene, returnToGameModeSelection, removeFromScene, hideOverlay} from '../game/game.js';
-import DataChannel from "./dataChannel";
+import {updateRemoteObjects, removeFromScene, showGameOver} from '../game/game';
+import { goToGameStartScreen, gameStart, hideOverlay } from "../game/components/gameLobbyManager";
 
 export let dataChannel;
 export let dataChannel2;
 export let isInitiator;
 
-export default class VideoChat{
+export default class VideoChat {
     constructor(roomName) {
         isInitiator = false;
         let isChannelReady = false;
@@ -17,7 +16,6 @@ export default class VideoChat{
         let remoteStream;
 
         let peerConnection;
-        // let dataChannel;
 
         ///////////////////////////////////////
         /////   socket.io room handling   /////
@@ -29,7 +27,6 @@ export default class VideoChat{
         const socket = io.connect();
 
         if (roomName !== '') {
-            
             socket.emit('create or join', roomName);
             console.log('Attempted to create or join room', roomName);
         }
@@ -49,80 +46,8 @@ export default class VideoChat{
             console.log('This peer is the initiator of room ' + room + '!');
             isChannelReady = true;
 
-            document.getElementById('waitingToOtherRoomMates').classList.add('deactivated');
-            document.getElementById("startGameScreen").classList.remove('deactivated');
-
-            document.getElementById("startGameButton").addEventListener('click', () => {
-                goToGameModeScreen(room);
-                //socket.emit('gameStart', room);
-            });    
+            goToGameStartScreen(room);  
         });
-
-        function goToGameModeScreen(room) {
-            document.getElementById('startGameScreen').classList.add('deactivated');
-            document.getElementById('gameModeScreen').classList.remove('deactivated');
-
-            let gameModeButtons = document.getElementsByClassName("button--gameMode");
-            for (var i = 0; i < gameModeButtons.length; i++) {
-
-                let gameModeButton = gameModeButtons.item(i);
-                let gameMode = gameModeButton.dataset.gamemode;
-
-                gameModeButton.addEventListener('click', () => {
-                    goToVideoModeScreen(room, gameMode);
-                });
-            }
-
-        }
-        
-        function goToVideoModeScreen(room, gameMode) {
-            document.getElementById('gameModeScreen').classList.add('deactivated');
-            document.getElementById('videoModeScreen').classList.remove('deactivated');
-
-            let videoModeButtons = document.getElementsByClassName("button--videoMode");
-            for (var i = 0; i < videoModeButtons.length; i++) {
-
-                let videoModeButton = videoModeButtons.item(i);
-                let videoMode = videoModeButton.dataset.videomode;
-
-                videoModeButton.addEventListener('click', () => {
-                    socket.emit('gameStart', room, gameMode, videoMode);
-                });
-            }
-        }
-
-        socket.on('gameStart',  function(gameMode, videoMode, room) {
-            gameStart(gameMode, videoMode, room);
-        });
-
-        function gameStart(gameMode, videoMode, room) {
-            // hideOverlay();
-            hideSettingScreens();
-            showExplanationScreen(room);
-            placeVideos(videoMode, isInitiator);
-            switchView(isInitiator);
-            startGame(gameMode);
-        }
-
-
-        function hideSettingScreens() {
-            document.getElementById('videoModeScreen').classList.add('deactivated');
-            document.getElementById('settingScreens').classList.add('deactivated');
-        }
-
-        function showExplanationScreen(room) {
-            if(isInitiator) {
-                document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-buyer.jpg')";
-            } else {
-                document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-seller.jpg')";
-                document.getElementById('closeExplanationScreen').classList.add('deactivated');
-            }
-            document.getElementById('explanationScreen').classList.remove('deactivated');
-
-            document.getElementById('closeExplanationScreen').addEventListener('click', () => {
-                socket.emit('closeExplanationScreen', room);
-            });
-        }
 
         socket.on('closeExplanationScreen', () => {
             document.getElementById('explanationScreen').classList.add('deactivated');
@@ -216,11 +141,8 @@ export default class VideoChat{
                     doCall();
                 }
 
-                // gameController.startSharedSceneSync();
             }
         }
-
-
 
         window.onpagehide = function() {
             hangup();
@@ -326,7 +248,6 @@ export default class VideoChat{
             remoteVideo.removeAttribute('autoplay');
             remoteStream = null;
             remoteVideo.load();
-            //   gameController.stopSharedSceneSync();
         }
 
         /////////////////////////////////////////////
@@ -352,7 +273,6 @@ export default class VideoChat{
             dataChannel2.onclose = handleDataChannelStatusChange;
             console.log('CREATED DATACHANNEL ' + channelName);
         }
-
 
         function handleDataChannelAdded(event) {
             console.log('Received Channel Callback');
@@ -393,6 +313,13 @@ export default class VideoChat{
             console.log("RECEIVED GAME EVENT MESSAGE");
             console.log(event.data);
             let gameEvent = JSON.parse(event.data);
+            if (gameEvent.message === 'gameStart') {
+                gameStart();
+            }
+            if (gameEvent.message === 'closeExplanationScreen') {
+                document.getElementById('explanationScreen').classList.add('deactivated');
+                hideOverlay();
+            }
             if (gameEvent.message === 'gameOver') {
                 showGameOver(false);
             }

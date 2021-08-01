@@ -2,9 +2,6 @@ export {GameSync};
 
 import {dataChannel, dataChannel2} from '../../videoChat/videoChat';
 
-let localObjects = []; // JSONs of locally maintained objects - we send updates for these
-// let localObjectsMap = new Map();
-
 const GameSync = () => {
 
     function addLocalObject(obj) {
@@ -18,24 +15,6 @@ const GameSync = () => {
 
     }
 
-    let sharedSceneSync; 
-    function startSharedSceneSync() {
-        // sharedSceneSync = setInterval(sendLocalObjectsUpdate, 30);
-        // console.log("STARTED SHARED SCENE SYNC")
-    }
-
-    function stopSharedSceneSync() {
-        clearInterval(sharedSceneSync);
-    }
-
-    function sendSharedSceneUpdates() {
-    //TODO send all localObjects in the shared scene to remote
-
-    //if there are objects from this client in the shared scene
-
-    //then send their pos/rot etc to remote
-    }
-
     // sends a single object right now, used when dragging
     function sendGameobjectUpdate(obj) {
         if (dataChannel && typeof obj !== 'undefined' && dataChannel.readyState === "open") {
@@ -43,15 +22,6 @@ const GameSync = () => {
         }
     }
 
-    function sendLocalObjectsUpdate() {
-        // console.log("localObjects: " + localObjects);
-        if (dataChannel !== 'undefined' && dataChannel.readyState === "open"){
-            localObjects.forEach(element => {
-                dataChannel.send(element);
-                console.log("Sent Update of local Object " + element)
-            });
-        }
-    }
 
     function updateRemoteObjects(data) {
         let obj = JSON.parse(data);
@@ -99,8 +69,6 @@ const GameSync = () => {
 
     return {
         addLocalObject,
-        startSharedSceneSync,
-        stopSharedSceneSync,
         sendGameobjectUpdate,
         updateRemoteObjects,
         getObjJSON,
