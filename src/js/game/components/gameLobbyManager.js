@@ -71,7 +71,7 @@ const goToVideoModeScreen = (gameMode) => {
         let videoMode = videoModeButton.dataset.videomode;
 
         videoModeButton.addEventListener('click', () => {
-            console.log("STARING GAME");
+            console.log("STARTING GAME");
 
             // send game Start Event to remote
             gameSync.sendGameEventMessage('gameStart', null);
@@ -121,8 +121,9 @@ export const hideOverlay = () => {
 }
 
 // Unused, maybe with class later?
-export default class GameLobbyManager {
+export default class GameLobbyManager extends THREE.EventDispatcher{
     constructor(game) {
+        super();
         this.game = game;
         this.roomNumber;
 
@@ -200,6 +201,8 @@ export default class GameLobbyManager {
 
             videoModeButton.addEventListener('click', () => {
                 console.log("STARING GAME");
+
+                // TODO emit event to AppController()
                 // socket.emit('gameStart', room, gameMode, videoMode);
                 
             });
