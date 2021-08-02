@@ -9,6 +9,7 @@ import './../css/app.scss';
 import GameManager from "./game/components/gameManager";
 import PeerConnectionManager from "./videoChat/peerConnectionManager";
 import GameLobbyManager from "./game/components/gameLobbyManager";
+import SceneManager from "./game/components/sceneManager";
 
 // Check environment and set the Config helper
 if(__ENV__ === 'dev') {
@@ -19,20 +20,31 @@ class AppManager {
     constructor(){
         this.peerConnectionManager = new PeerConnectionManager();
         this.gameLobbyManager = new GameLobbyManager();
-        this.gameManager = new GameManager(this.gameLobbyManager);
 
         this.gameLobbyManager.addEventListener('joinRoom', (event) => {
-            this.peerConnectionManager.joinRoom(event.roomName);
+            // this.peerConnectionManager.joinRoom(event.roomName);
+
+            const isInitiator = true;
+            this.gameManager.isSeller = !isInitiator;
+            this.sceneManager.isSeller = !isInitiator;
+
+            this.gameManager.startGame(1,1);
+            document.getElementById('overlay').classList.add('deactivated');
         });
 
         this.gameLobbyManager.addEventListener('startGame', (event) => {
+            console.log("eventListener startGame");
             this.gameManager.startGame(event.gameMode, event.videoMode);
-        })
+        });
+
+        this.sceneManager = new SceneManager();
+        // const gameStateManager = new GameStateManager(this.sceneManager);
+        this.gameManager = new GameManager(this.gameLobbyManager, this.sceneManager);
     }
 
     async initApp() {
         if(this.checkWebGLCapabilities) {
-            await this.gameManager.prepareScene();
+            await this.gameManager.prepareGame();
         }
     }
 

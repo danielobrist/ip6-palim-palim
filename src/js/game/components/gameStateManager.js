@@ -2,10 +2,11 @@ import * as THREE from 'three';
 import GameState from "./gameState";
 
 export default class GameStateManager extends THREE.EventDispatcher {
-    constructor(config){
+    constructor(config, sceneManager){
         super();
 
         this.gameState = new GameState();
+        this.sceneManager = sceneManager;
         this.gameOverCheck = config.gameOverCheck;
         this.shoppingList = this.generateShoppingList(config.buyerModelsStart);
     }

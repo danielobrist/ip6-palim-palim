@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import party from "party-js";
 
 export default class GameLobbyManager extends THREE.EventDispatcher{
     constructor() {
@@ -77,6 +78,7 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
 
             videoModeButton.addEventListener('click', () => {
                 console.log("STARING GAME");
+                console.log(this);
                 this.dispatchEvent( { type: 'startGame', gameMode: gameMode, videoMode: videoMode } );                
             });
         }
@@ -107,4 +109,45 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         document.getElementById('overlay').classList.add('whileGameIsRunning');
         //audioManager.playPalimSound();
     }
+
+    showGameOver = (showRestart) => {
+        this.playConfetti();
+
+        setTimeout(function(){
+            document.getElementById('overlay').classList.remove('whileGameIsRunning');
+            document.getElementById('gameOverScreen').classList.remove('deactivated');
+            this.showVideos();
+            if (showRestart) {
+                document.getElementById('restartGameButton').addEventListener('click', () => {
+                    //todo cleanUpScene();
+                    this.gameEventManager.sendGoToGameModeSelection();
+                    this.returnToGameModeSelection();
+                });
+            } else {
+                document.getElementById('restartGameButton').classList.add('deactivated');
+            }
+        }, 2500);
+
+    };
+
+    playConfetti = () => {
+        const element = document.getElementById("appContainer")
+        party.confetti(element,{
+            count: party.variation.range(200, 400),
+            /**
+             * Whether the debugging mode should be enabled.
+             */
+            debug: false,
+            /**
+             * The amount of gravity to apply to particles in the scene, in pixels.
+             * Note that this value is positive by default, since the y-axis increases
+             * downwards in a DOM.
+             */
+            gravity: 800,
+            /**
+             * The z-index to place the DOM containers at.
+             */
+            zIndex: 99999,
+        });
+    };
 }

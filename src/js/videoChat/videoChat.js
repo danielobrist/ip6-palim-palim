@@ -1,6 +1,6 @@
 import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, removeFromScene, showGameOver} from '../game/game';
-import { goToGameStartScreen, gameStart, hideOverlay } from "../game/components/gameLobby";
+import { goToGameStartScreen, hideOverlay } from "../game/components/gameLobby";
 
 export let dataChannel;
 export let dataChannel2;
@@ -314,7 +314,7 @@ export default class VideoChat {
             console.log(event.data);
             let gameEvent = JSON.parse(event.data);
             if (gameEvent.message === 'gameStart') {
-                gameStart();
+                //gameStart();
             }
             if (gameEvent.message === 'closeExplanationScreen') {
                 document.getElementById('explanationScreen').classList.add('deactivated');

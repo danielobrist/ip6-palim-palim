@@ -83,21 +83,12 @@ const goToVideoModeScreen = (gameMode) => {
     }
 }
 
-export const gameStart = (gameMode, videoMode) => {
-    // hideOverlay();
-    hideSettingScreens();
-    showExplanationScreen();
-    placeVideos(videoMode, isInitiator);
-    switchView(isInitiator);
-    startGame(gameMode);
-}
-
-const hideSettingScreens = () => {
+export const hideSettingScreens = () => {
     videoModeScreen.classList.add('deactivated');
     settingsScreen.classList.add('deactivated');
 }
 
-const showExplanationScreen = () => {
+export const showExplanationScreen = () => {
     if(isInitiator) {
         document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-buyer.jpg')";
     } else {

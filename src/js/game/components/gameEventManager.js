@@ -8,7 +8,7 @@ export default class GameEventManager extends THREE.EventDispatcher {
 
         this.renderer = renderer;
         this.camera = camera;
-        this.domElement = renderer.domElement;
+        this.domElement = this.renderer.domElement;
         this.gameSync = GameSync();
 
         this.selectedObject;
