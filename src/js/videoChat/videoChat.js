@@ -1,6 +1,6 @@
 import PeerConnection from "./peerConnection";
 import {updateRemoteObjects, removeFromScene, showGameOver} from '../game/game';
-import { goToGameStartScreen, gameStart, hideOverlay } from "../game/components/gameLobbyManager";
+import { goToGameStartScreen, gameStart, hideOverlay } from "../game/components/gameLobby";
 
 export let dataChannel;
 export let dataChannel2;
