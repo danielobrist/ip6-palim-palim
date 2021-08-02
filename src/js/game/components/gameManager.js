@@ -25,7 +25,6 @@ export default class GameManager {
     }
 
     async startGame(gameMode, videoMode) {
-
         this.gameLobbyManager.hideSettingScreens();
         this.gameLobbyManager.showExplanationscreen(this.isSeller);
 

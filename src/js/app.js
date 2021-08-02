@@ -1,5 +1,6 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import adapter from 'webrtc-adapter';
 
 import Detector from './utils/detector';
 
@@ -19,8 +20,9 @@ if(__ENV__ === 'dev') {
 class AppManager {
     constructor(){
         this.gameSyncManager = new GameSyncManager();
-        this.peerConnectionManager = new PeerConnectionManager();
         this.gameLobbyManager = new GameLobbyManager();
+        this.peerConnectionManager = new PeerConnectionManager(this.gameLobbyManager, this.gameSyncManager);
+        this.gameManager = new GameManager(this.gameLobbyManager);
 
         this.gameLobbyManager.addEventListener('joinRoom', (event) => {
             // this.peerConnectionManager.joinRGameStateManageroom(event.roomName);
