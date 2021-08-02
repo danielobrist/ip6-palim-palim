@@ -1,4 +1,3 @@
-import {  placeVideos, switchView, prepareScene, startGame } from "../game";
 
 
 export default class GameManager {
@@ -7,14 +6,14 @@ export default class GameManager {
     }
 
     async prepareScene(){
-        prepareScene();
+        
     }
 
-    async startgame(gameMode, videoMode) {
+    async startGame(gameMode, videoMode) {
         this.gameLobbyManager.hideSettingScreens();
 
         //TODO send 'startGame' via gameSync on gameUpdate channel
-        startGame(gameMode);
+        
 
         // this.gameLobbyManager.showExplanationScreen();
         // this.gameLobbyManager.addEventListener('closeExplanationScreen', () => {

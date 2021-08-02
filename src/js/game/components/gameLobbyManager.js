@@ -12,30 +12,21 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         this.videoModeScreen = document.getElementById('videoModeScreen');
         this.settingsScreen = document.getElementById('settingScreens');
 
-        //register all lobby screens here ?
         this.roomNameButton = document.getElementById('roomNameButton');
         this.roomNameButton.addEventListener('click', () => {
             this.welcomeScreen.classList.add('deactivated');
 
             this.roomNumber = document.getElementById('roomName').value;
 
-            // if(__ENV__ !== 'dev') {
-                console.log(this.roomNumber);
-                this.dispatchEvent( { type: 'joinRoom', roomName: this.roomNumber } );
-            // }
+            this.dispatchEvent( { type: 'joinRoom', roomName: this.roomNumber } );
 
-            this.waitingScreen.classList.remove('deactivated');
-            let roomNumberElement = document.createElement("p");
-            roomNumberElement.innerHTML = this.roomNumber;
-            roomNumberElement.classList.add('roomNumber');
-            this.waitingScreen.append(roomNumberElement);
-
+            this.showWaitingScreen();
         });
                 
         
     }
 
-    goToGameStartScreen() {
+    goToGameStartScreen = () => {
         console.log("Going to Game Start Screen");
         this.waitingScreen.classList.add('deactivated');
         this.startGameScreen.classList.remove('deactivated');
@@ -45,7 +36,7 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         });    
     }
 
-    goToGameModeScreen() {
+    goToGameModeScreen = () => {
         console.log("Going to Game Mode Screen");
 
         this.startGameScreen.classList.add('deactivated');
@@ -63,7 +54,7 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         }
     }
 
-    goToVideoModeScreen(gameMode) {
+    goToVideoModeScreen = (gameMode) => {
         console.log("Going to Video Mode Screen");
 
         this.gameModeScreen.classList.add('deactivated');
@@ -82,12 +73,12 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         }
     }
 
-    hideSettingScreens() {
+    hideSettingScreens = () => {
         this.videoModeScreen.classList.add('deactivated');
         this.settingsScreen.classList.add('deactivated');
     }
 
-    showExplanationscreen(isInitiator) {
+    showExplanationscreen = (isInitiator) => {
         if(isInitiator) {
             document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-buyer.jpg')";
         } else {
@@ -105,6 +96,27 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
 
     hideOverlay = () => {
         document.getElementById('overlay').classList.add('whileGameIsRunning');
-        //audioManager.playPalimSound();
     }
+
+    showWaitingScreen = () => {
+        this.waitingScreen.classList.remove('deactivated');
+        this.addRoomnumberElement();
+    }
+
+    hideWaitingScreen = () => {
+        document.getElementById('waitingToOtherRoomMates').classList.add('deactivated');
+    }
+
+    //TODO use this for all show/hides
+    hide(screen) {
+        screen.classList.add('deactivated');
+    }
+
+    addRoomnumberElement = () => {
+        let roomNumberElement = document.createElement("p");
+        roomNumberElement.innerHTML = this.roomNumber;
+        roomNumberElement.classList.add('roomNumber');
+        this.waitingScreen.append(roomNumberElement);
+    }
+
 }
