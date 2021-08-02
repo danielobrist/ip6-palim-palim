@@ -62,12 +62,12 @@ export default class ShoppingListManager {
         return null;
     };
 
-    strikeThroughPurchasedItemsFromShoppingList = (typeId) => {
+    strikeThroughPurchasedItems = (typeId) => {
         if(this.visualShoppingListContainer.classList.contains("visible")) {
-            if(this.strikeThroughSpecificItemFromShoppingList(typeId)) {
+            if(this.strikeThroughSpecificItem(typeId)) {
                 clearTimeout(hideShoppingList);
             }
-        } else if(this.strikeThroughSpecificItemFromShoppingList(typeId)) {
+        } else if(this.strikeThroughSpecificItem(typeId)) {
             this.visualShoppingListContainer.classList.add("visible");
         }
 
@@ -76,10 +76,10 @@ export default class ShoppingListManager {
         }, 5000);
     };
 
-    strikeThroughSpecificItemFromShoppingList = (typeId) => {
+    strikeThroughSpecificItem = (typeId) => {
         const shoppingListItem = document.getElementById('shoppingListItem--' + typeId);
 
-        if(shoppingListItem && this.isShoppingListItemNotStrikeThrough(shoppingListItem)) {
+        if(shoppingListItem && !this.isItemStrikeThrough(shoppingListItem)) {
             const count = parseInt(shoppingListItem.dataset.count);
             if (count === 1) {
                 shoppingListItem.classList.add('strikeThrough');
@@ -92,7 +92,7 @@ export default class ShoppingListManager {
         return false;
     };
 
-    isShoppingListItemNotStrikeThrough = (shoppingListItem) => {
+    isItemStrikeThrough = (shoppingListItem) => {
         if(shoppingListItem.dataset.count > 1) {
             return true;
         }

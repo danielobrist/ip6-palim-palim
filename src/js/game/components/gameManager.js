@@ -111,12 +111,11 @@ export default class GameManager {
 
             // TODO update state
 
-            this.gameStateManager.addItemToListOfItemsInBasket(event.item);
-            this.gameStateManager.addItemToVisualBasket(event.item);
+            this.gameStateManager.basket.addItem(event.item);
             console.log('ADDED ITEM TO BASKET: ' + event.item.name + ' WITH ID ' + event.item.objectId);
             this.gameStateManager.checkGameOver();
 
-            this.shoppingListManager.strikeThroughPurchasedItemsFromShoppingList(event.item.typeId);
+            this.shoppingListManager.strikeThroughPurchasedItems(event.item.typeId);
             this.sceneManager.audioManager.playCompleteTaskSound();
         } );
         this.gameEventManager.addEventListener( 'itemRemove', function (event) {
