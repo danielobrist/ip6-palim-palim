@@ -30,7 +30,7 @@ class AppManager {
         })
     }
 
-    async initGame() {
+    async initApp() {
         if(this.checkWebGLCapabilities) {
             await this.gameManager.prepareScene();
         }
@@ -46,23 +46,5 @@ class AppManager {
     }
 }
 
-async function initGame() {
-    // Check for webGL capabilities
-    if(!Detector.webgl) {
-        Detector.addGetWebGLMessage();
-    } else {
-        const container = document.getElementById('appContainer');
-        container.classList.add('deactivated');
-
-        
-        //await prepareScene();
-    }
-}
-
 const appManager = new AppManager()
-appManager.initGame();
-
-
-// if(__ENV__ === 'dev') {
-//     game.startGame("1");
-// }
+appManager.initApp();
