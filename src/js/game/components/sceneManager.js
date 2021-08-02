@@ -2,7 +2,6 @@ import {initCamera, initScene} from "./mainScene";
 import AudioManager from "./audioManager";
 import * as THREE from "three";
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
-import {isInitiator} from "../../videoChat/videoChat";
 import GameEventManager from "./gameEventManager";
 import {strikeThroughPurchasedItemsFromShoppingList} from "./shoppingListManager";
 import {Vector3} from "three";
@@ -93,19 +92,19 @@ export default class SceneManager {
             case "1":
                 this.hideRemoteVideo();
                 this.hideLocalVideo();
-                this.addBuyerAndSellerIllustration(isInitiator);
+                this.addBuyerAndSellerIllustration(this.isSeller);
                 break;
             case "2":
                 this.placeRemoteVideo();
-                this.addBuyerAndSellerIllustration(isInitiator);
+                this.addBuyerAndSellerIllustration(this.isSeller);
                 break;
             default:
-                await this.moveRemoteVideoToScene(isInitiator);
+                await this.moveRemoteVideoToScene(this.isSeller);
                 this.hideRemoteVideo();
         }
     };
 
-    switchViewUsingIsSeller = () => {
+    placeVirtualCamera = () => {
         if (this.isSeller) {
             console.log('changing camera position!');
             this.localCamera.position.x = 0;

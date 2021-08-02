@@ -65,15 +65,14 @@ export default class ShoppingListManager {
     strikeThroughPurchasedItems = (typeId) => {
         if(this.visualShoppingListContainer.classList.contains("visible")) {
             if(this.strikeThroughSpecificItem(typeId)) {
-                clearTimeout(hideShoppingList);
+                clearTimeout(this.hideShoppingList);
             }
         } else if(this.strikeThroughSpecificItem(typeId)) {
             this.visualShoppingListContainer.classList.add("visible");
         }
 
-        this.hideShoppingList = window.setTimeout(() => {
-            this.visualShoppingListContainer.classList.remove("visible");
-        }, 5000);
+        this.hideShoppingList = window.setTimeout(this.removeVisualShoppingList, 5000);
+
     };
 
     strikeThroughSpecificItem = (typeId) => {
@@ -103,17 +102,19 @@ export default class ShoppingListManager {
         this.visualShoppingListContainer.addEventListener("click", () => {
 
             if(this.visualShoppingListContainer.classList.contains("visible")) {
-                clearTimeout(hideShoppingList);
+                clearTimeout(this.hideShoppingList);
                 this.visualShoppingListContainer.classList.remove("visible");
             } else {
-                this.visualShoppingListContainer.classList.toggle("visible");
+                this.visualShoppingListContainer.classList.add("visible");
 
-                this.hideShoppingList = window.setTimeout(() => {
-                    this.visualShoppingListContainer.classList.remove("visible");
-                }, 10000);
+                this.hideShoppingList = window.setTimeout(this.removeVisualShoppingList, 10000);
             }
         });
     };
+
+    removeVisualShoppingList = () => {
+        this.visualShoppingListContainer.classList.remove("visible");
+    }
 
 }
 

@@ -1,9 +1,6 @@
-import { hideSettingScreens, showExplanationScreen} from "./gameLobby"
 import GameEventManager from "./gameEventManager";
 import ShoppingListManager from "./shoppingListManager";
 import GameStateManager from "./gameStateManager";
-import {isInitiator} from "../../videoChat/videoChat";
-
 
 export default class GameManager {
 
@@ -49,8 +46,8 @@ export default class GameManager {
         }
 
 
-        this.sceneManager.placeVideos(videoMode, this.isSeller);
-        this.sceneManager.switchViewUsingIsSeller(this.isSeller);
+        await this.sceneManager.placeVideos(videoMode, this.isSeller);
+        this.sceneManager.placeVirtualCamera(this.isSeller);
         this.initControls();
 
 
@@ -92,11 +89,14 @@ export default class GameManager {
 
     initControls = () => {
 
+        console.log("---init controls---");
+
         this.gameEventManager = new GameEventManager(
             this.sceneManager.renderer,
             this.sceneManager.localCamera,
             this.sceneManager.isSeller,
-            this.sceneManager.basketMesh
+            this.sceneManager.basketMesh,
+            this.gameSyncManager
         );
 
         // TODO this should be in gameLoopManager
@@ -129,6 +129,8 @@ export default class GameManager {
         if(__ENV__ === 'dev') {
             this.sceneManager.visualizeTheInteractionPlaneAndItemSink(this.gameEventManager);
         }
+
+        console.log("---end init controls---");
 
     }
 }

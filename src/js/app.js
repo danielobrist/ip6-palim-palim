@@ -22,21 +22,32 @@ class AppManager {
         this.gameSyncManager = new GameSyncManager();
         this.gameLobbyManager = new GameLobbyManager();
         this.peerConnectionManager = new PeerConnectionManager(this.gameLobbyManager, this.gameSyncManager);
-        this.gameManager = new GameManager(this.gameLobbyManager);
+
+        // this.gameLobbyManager.addEventListener('joinRoom', (event) => {
+        //     // this.peerConnectionManager.joinRGameStateManageroom(event.roomName);
+        //
+        //     const isInitiator = true;
+        //     this.gameManager.isSeller = !isInitiator;
+        //     this.sceneManager.isSeller = !isInitiator;
+        //
+        //     this.gameManager.startGame(1,1);
+        //     document.getElementById('overlay').classList.add('deactivated');
+        // });
+        //
+        // this.gameLobbyManager.addEventListener('startGame', (event) => {
+        //     console.log("eventListener startGame");
+        //     this.gameManager.startGame(event.gameMode, event.videoMode);
+        // });
 
         this.gameLobbyManager.addEventListener('joinRoom', (event) => {
-            // this.peerConnectionManager.joinRGameStateManageroom(event.roomName);
-
-            const isInitiator = true;
-            this.gameManager.isSeller = !isInitiator;
-            this.sceneManager.isSeller = !isInitiator;
-
-            this.gameManager.startGame(1,1);
-            document.getElementById('overlay').classList.add('deactivated');
+            this.peerConnectionManager.joinRoom(event.roomName);
         });
 
         this.gameLobbyManager.addEventListener('startGame', (event) => {
             console.log("eventListener startGame");
+            const isInitiator = false;
+            this.gameManager.isSeller = isInitiator;
+            this.sceneManager.isSeller = isInitiator;
             this.gameManager.startGame(event.gameMode, event.videoMode);
         });
 
