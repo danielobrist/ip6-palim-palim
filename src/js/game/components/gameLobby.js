@@ -1,5 +1,4 @@
 import VideoChat, { initVideoChat, isInitiator } from "../../videoChat/videoChat";
-import { placeVideos, switchView, startGame } from "../game";
 import { GameSync } from "./gameSync";
 
 

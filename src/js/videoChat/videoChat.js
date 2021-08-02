@@ -1,5 +1,4 @@
 import PeerConnection from "./peerConnection";
-import {updateRemoteObjects, removeFromScene, showGameOver} from '../game/game';
 import { goToGameStartScreen, hideOverlay } from "../game/components/gameLobby";
 
 export let dataChannel;
@@ -306,7 +305,7 @@ export default class VideoChat {
         }
 
         function handleReceiveMessage(event) {
-            updateRemoteObjects(event.data);
+            //updateRemoteObjects(event.data);
         }
 
         function handleGameEventMessage(event) {
@@ -321,7 +320,7 @@ export default class VideoChat {
                 hideOverlay();
             }
             if (gameEvent.message === 'gameOver') {
-                showGameOver(false);
+                //showGameOver(false);
             }
             if (gameEvent.message === 'gameModeSelection') {
                 // todo cleanUpScene();
@@ -329,7 +328,7 @@ export default class VideoChat {
             }
             if (gameEvent.message === 'remove') {
                 console.log("Calling removeFromScene");
-                removeFromScene(gameEvent.item);
+                //removeFromScene(gameEvent.item);
                 // sceneManager.removeFromScene(event.data.item);
             }
         }

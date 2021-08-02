@@ -1,12 +1,12 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import adapter from 'webrtc-adapter';
 
 import Detector from './utils/detector';
 
 // Styles
 import './../css/app.scss';
 import GameManager from "./game/components/gameManager";
+import GameSyncManager from "./game/components/gameSyncManager";
 import PeerConnectionManager from "./videoChat/peerConnectionManager";
 import GameLobbyManager from "./game/components/gameLobbyManager";
 import SceneManager from "./game/components/sceneManager";
@@ -18,11 +18,12 @@ if(__ENV__ === 'dev') {
 
 class AppManager {
     constructor(){
+        this.gameSyncManager = new GameSyncManager();
         this.peerConnectionManager = new PeerConnectionManager();
         this.gameLobbyManager = new GameLobbyManager();
 
         this.gameLobbyManager.addEventListener('joinRoom', (event) => {
-            // this.peerConnectionManager.joinRoom(event.roomName);
+            // this.peerConnectionManager.joinRGameStateManageroom(event.roomName);
 
             const isInitiator = true;
             this.gameManager.isSeller = !isInitiator;
@@ -38,8 +39,7 @@ class AppManager {
         });
 
         this.sceneManager = new SceneManager();
-        // const gameStateManager = new GameStateManager(this.sceneManager);
-        this.gameManager = new GameManager(this.gameLobbyManager, this.sceneManager);
+        this.gameManager = new GameManager(this.gameLobbyManager, this.sceneManager, this.gameSyncManager);
     }
 
     async initApp() {

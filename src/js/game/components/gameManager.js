@@ -1,6 +1,6 @@
 import { hideSettingScreens, showExplanationScreen} from "./gameLobby"
 import GameEventManager from "./gameEventManager";
-import {strikeThroughPurchasedItemsFromShoppingList, writeShoppingList} from "./shoppingList";
+import ShoppingListManager from "./shoppingListManager";
 import GameStateManager from "./gameStateManager";
 import {isInitiator} from "../../videoChat/videoChat";
 
@@ -8,10 +8,16 @@ import {isInitiator} from "../../videoChat/videoChat";
 export default class GameManager {
 
     isSeller;
+    gameLobbyManager;
+    gameStateManager;
+    sceneManager;
+    gameSyncManager;
 
-    constructor(gameLobbyManager, sceneManager){
+    constructor(gameLobbyManager, sceneManager, gameSyncManager){
         this.gameLobbyManager = gameLobbyManager;
         this.sceneManager = sceneManager;
+        this.gameSyncManager = gameSyncManager;
+        this.shoppingListManager = new ShoppingListManager();
     }
 
     async prepareGame(){
@@ -20,17 +26,11 @@ export default class GameManager {
 
     async startGame(gameMode, videoMode) {
 
-        hideSettingScreens();
-        showExplanationScreen();
-
-        console.log("startGameInGameManager");
-
         this.gameLobbyManager.hideSettingScreens();
-        //this.sceneManager.loadBackground();
+        this.gameLobbyManager.showExplanationscreen(this.isSeller);
 
         //TODO send 'startGame' via gameSync on gameUpdate channel
 
-        // this.gameLobbyManager.showExplanationScreen();
         // this.gameLobbyManager.addEventListener('closeExplanationScreen', () => {
         //   //send 'closeExplanationScreen' to remote
         // })
@@ -38,6 +38,17 @@ export default class GameManager {
         // switchView(isInitiator);
 
         await this.loadConfig(gameMode);
+        await this.handOverConfigToSceneManager();
+
+        this.createGameStateManager();
+
+        if(this.isSeller) {
+            this.shoppingListAsMap = this.shoppingListManager.generateShoppingListAsMap(this.config.buyerModelsStart);
+            this.gameStateManager.shoppingListAsMap = this.shoppingListAsMap;
+
+            this.shoppingListManager.writeShoppingListToDom(this.gameStateManager.shoppingListAsMap, this.config.models);
+        }
+
 
         this.sceneManager.placeVideos(videoMode, this.isSeller);
         this.sceneManager.switchViewUsingIsSeller(this.isSeller);
@@ -55,7 +66,7 @@ export default class GameManager {
 
     }
 
-    async loadConfig(gameMode) {
+    loadConfig = async(gameMode) => {
         let configFile;
 
         if(gameMode === "2") {
@@ -65,18 +76,20 @@ export default class GameManager {
         }
 
         this.config = configFile.default;
+    }
+
+    handOverConfigToSceneManager = () => {
         this.sceneManager.config = this.config;
-        this.gameStateManager = new GameStateManager(this.config);
+    }
+
+    createGameStateManager = () => {
+        this.gameStateManager = new GameStateManager(this.config, this.sceneManager, this.gameSyncManager);
         this.gameStateManager.addEventListener('gameOver', (event) => {
             this.gameEventManager.sendGameOver();
             this.gameLobbyManager.showGameOver(true);  //TODO refactor this, true should be !isSeller
             this.sceneManager.audioManager.playWinSound();
         });
-
-        if(isInitiator) {
-            writeShoppingList(gameStateManager.shoppingList, config.models);
-        }
-    }
+    };
 
     initControls = () => {
 
@@ -103,7 +116,7 @@ export default class GameManager {
             console.log('ADDED ITEM TO BASKET: ' + event.item.name + ' WITH ID ' + event.item.objectId);
             this.gameStateManager.checkGameOver();
 
-            strikeThroughPurchasedItemsFromShoppingList(event.item.typeId);
+            this.shoppingListManager.strikeThroughPurchasedItemsFromShoppingList(event.item.typeId);
             this.sceneManager.audioManager.playCompleteTaskSound();
         } );
         this.gameEventManager.addEventListener( 'itemRemove', function (event) {
