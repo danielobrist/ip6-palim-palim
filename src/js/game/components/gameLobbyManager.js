@@ -2,9 +2,13 @@ import * as THREE from 'three';
 import party from "party-js";
 
 export default class GameLobbyManager extends THREE.EventDispatcher{
-    constructor() {
+
+    roomNumber;
+
+    constructor(gameSyncManager) {
         super();
-        this.roomNumber;
+
+        this.gameSyncManager = gameSyncManager;
 
         this.welcomeScreen = document.getElementById('welcomeScreen');
         this.waitingScreen = document.getElementById('waitingToOtherRoomMates');
@@ -68,76 +72,78 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
             let videoMode = videoModeButton.dataset.videomode;
 
             videoModeButton.addEventListener('click', () => {
-                console.log("STARTING GAME");
-                this.dispatchEvent( { type: 'startGame', gameMode: gameMode, videoMode: videoMode } );                
+                this.dispatchEvent( { type: 'startGame', gameMode: gameMode, videoMode: videoMode } );
+                this.gameSyncManager.sendGameEventMessage("startGame", {gameMode: gameMode, videoMode: videoMode});
             });
         }
-    }
+    };
 
     hideSettingScreens = () => {
         this.videoModeScreen.classList.add('deactivated');
         this.settingsScreen.classList.add('deactivated');
-    }
+    };
 
-    showExplanationscreen = (isInitiator) => {
-        if(isInitiator) {
-            document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-buyer.jpg')";
-        } else {
+    showExplanationScreen = (isSeller) => {
+        if(isSeller) {
             document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-seller.jpg')";
             document.getElementById('closeExplanationScreen').classList.add('deactivated');
+        } else {
+            document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-buyer.jpg')";
         }
         document.getElementById('explanationScreen').classList.remove('deactivated');
     
         document.getElementById('closeExplanationScreen').addEventListener('click', () => {
-            document.getElementById('explanationScreen').classList.add('deactivated');
             this.dispatchEvent( { type: 'closeExplanationScreen' } );
+            this.gameSyncManager.sendGameEventMessage("closeExplanationScreen");
+
         });
-    }
+    };
+
+    closeExplanationScreen = () => {
+        document.getElementById('explanationScreen').classList.add('deactivated');
+        document.getElementById('overlay').classList.add('whileGameIsRunning');
+    };
 
     hideOverlay = () => {
         document.getElementById('overlay').classList.add('whileGameIsRunning');
-    }
+    };
 
     showWaitingScreen = () => {
         this.waitingScreen.classList.remove('deactivated');
-        this.addRoomnumberElement();
-    }
+        this.addRoomNumberElement();
+    };
 
     hideWaitingScreen = () => {
         document.getElementById('waitingToOtherRoomMates').classList.add('deactivated');
-    }
+    };
 
     //TODO use this for all show/hides
     hide(screen) {
         screen.classList.add('deactivated');
     }
 
-    addRoomnumberElement = () => {
+    addRoomNumberElement = () => {
         let roomNumberElement = document.createElement("p");
         roomNumberElement.innerHTML = this.roomNumber;
         roomNumberElement.classList.add('roomNumber');
         this.waitingScreen.append(roomNumberElement);
-    }
+    };
 
 
-    showGameOver = (showRestart) => {
-        this.playConfetti();
+    showGameOverScreen = (isSeller) => {
+        document.getElementById('overlay').classList.remove('whileGameIsRunning');
+        document.getElementById('gameOverScreen').classList.remove('deactivated');
+        document.getElementById('settingScreens').classList.remove('deactivated');
 
-        setTimeout(function(){
-            document.getElementById('overlay').classList.remove('whileGameIsRunning');
-            document.getElementById('gameOverScreen').classList.remove('deactivated');
-            this.showVideos();
-            if (showRestart) {
-                document.getElementById('restartGameButton').addEventListener('click', () => {
-                    //todo cleanUpScene();
-                    this.gameEventManager.sendGoToGameModeSelection();
-                    this.returnToGameModeSelection();
-                });
-            } else {
-                document.getElementById('restartGameButton').classList.add('deactivated');
-            }
-        }, 2500);
-
+        if (isSeller) {
+            document.getElementById('restartGameButton').classList.add('deactivated');
+        } else {
+            document.getElementById('restartGameButton').addEventListener('click', () => {
+                //todo cleanUpScene();
+                this.gameSyncManager.sendGameEventMessage('restartGame');
+                this.dispatchEvent({ type: 'restartGame' });
+            });
+        }
     };
 
     playConfetti = () => {
@@ -159,5 +165,10 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
              */
             zIndex: 99999,
         });
+    };
+
+    goToGameModeSelection = () => {
+        document.getElementById('gameOverScreen').classList.add('deactivated');
+        document.getElementById('gameModeScreen').classList.remove('deactivated');
     };
 }

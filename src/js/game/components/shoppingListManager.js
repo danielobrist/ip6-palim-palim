@@ -1,3 +1,5 @@
+import Helpers from "../helpers";
+
 export default class ShoppingListManager {
 
     shoppingListAsMap;
@@ -11,8 +13,8 @@ export default class ShoppingListManager {
     }
 
     generateShoppingListAsMap = (possibleShoppingItems) => {
-        const numberOfElementsInShoppingList = getRandomIntInRange(3,5);
-        const shoppingListItems = reduceArrayToSomeRandomItems(possibleShoppingItems, numberOfElementsInShoppingList);
+        const numberOfElementsInShoppingList = Helpers.getRandomIntInRange(3,5);
+        const shoppingListItems = Helpers.reduceArrayToSomeRandomItems(possibleShoppingItems, numberOfElementsInShoppingList);
         const shoppingList = new Map();
 
         shoppingListItems.forEach((shoppingItem) => {
@@ -117,15 +119,3 @@ export default class ShoppingListManager {
     }
 
 }
-
-//todo move to a helper class
-const getRandomIntInRange = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-};
-
-//todo move to a helper class
-const reduceArrayToSomeRandomItems = (array, numberOfItems) => {
-    return array.sort(() => 0.5 - Math.random()).slice(0, numberOfItems);
-};

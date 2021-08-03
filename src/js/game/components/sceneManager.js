@@ -11,7 +11,7 @@ export default class SceneManager {
     localScene;
     localCamera;
     basketMesh;
-    isSeller;
+    isSeller = false;
     salesObjects = new Map();
     objectsToSync = new Map();
     interactionObjects = [];
@@ -100,15 +100,14 @@ export default class SceneManager {
 
     placeVirtualCamera = () => {
         if (this.isSeller) {
-            console.log('changing camera position!');
             this.localCamera.position.x = 0;
             this.localCamera.position.y = 6;
-            this.localCamera.position.z = -10;
+            this.localCamera.position.z = 10;
             this.localCamera.lookAt( 0, 2, 0 );
         } else {
             this.localCamera.position.x = 0;
             this.localCamera.position.y = 6;
-            this.localCamera.position.z = 10;
+            this.localCamera.position.z = -10;
             this.localCamera.lookAt( 0, 2, 0 );
         }
     };
@@ -196,19 +195,10 @@ export default class SceneManager {
         this.renderer.render( this.localScene, this.localCamera );
     };
 
-    hideOverlay = () => {
-        document.getElementById('overlay').classList.add('whileGameIsRunning');
-    };
-
-    showVideos = () => {
+    showVideosAfterGameOver = () => {
         document.getElementById("remoteVideoContainer").classList.remove('deactivatedVideo');
         document.getElementById("localVideoContainer").classList.remove('deactivatedVideo');
         document.getElementById('remoteVideoContainer').classList.remove('gamemode--2');
-    };
-
-    returnToGameModeSelection = () => {
-        document.getElementById('gameOverScreen').classList.add('deactivated');
-        document.getElementById('gameModeScreen').classList.remove('deactivated');
     };
 
     
@@ -273,11 +263,11 @@ export default class SceneManager {
         let zPosition = 2, xPosition = -0.25;
         let texture;
         if(isSeller) {
-            texture = this.loadIllustrationAsTexture(this.pathToBuyerIllustration);
-        } else {
             texture = this.loadIllustrationAsTexture(this.pathToSellerIllustration);
             zPosition *= (-1);
             xPosition *= (-1);
+        } else {
+            texture = this.loadIllustrationAsTexture(this.pathToBuyerIllustration);
         }
 
         const material = new THREE.MeshBasicMaterial( { map: texture } );
@@ -304,9 +294,9 @@ export default class SceneManager {
         const remoteVideoMaterial = this.createVideoMaterialFromDomVideo("remoteVideo");
         const remoteVideoMesh = new THREE.Mesh( remoteVideoGeometry, remoteVideoMaterial );
         if (this.isSeller) {
-            remoteVideoMesh.position.set(0, remoteVideoHeight / 2, 2);
-        } else {
             remoteVideoMesh.position.set(0, remoteVideoHeight/2, -2);
+        } else {
+            remoteVideoMesh.position.set(0, remoteVideoHeight / 2, 2);
         }
         this.localScene.add( remoteVideoMesh );
 
@@ -356,9 +346,8 @@ export default class SceneManager {
 
     updateRemoteObjects = (data) => {
         const obj = JSON.parse(data);
-        // console.log('Parsed JSON uuid: ' + obj.uuid + ', positionx: ' + obj.position.x + ', rotationx: ' + obj.rotation._x);
 
-        if(objectsToSync.has(obj.objectId)) {
+        if(this.objectsToSync.has(obj.objectId)) {
             const localElement = this.localScene.getObjectByProperty( 'objectId', obj.objectId );
 
             // TODO nur position = position?

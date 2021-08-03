@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { Vector3 } from 'three';
 
-export default class GameEventManager extends THREE.EventDispatcher {
+export default class InteractionManager extends THREE.EventDispatcher {
     constructor(renderer, camera, isSeller, shoppingBasketMesh, gameSyncManager) {
         super();
 
@@ -19,6 +19,8 @@ export default class GameEventManager extends THREE.EventDispatcher {
         this.selectionSpace;
         this.dispensers = [];
 
+        this.isSeller = isSeller;
+
         this.raycaster = new THREE.Raycaster();
         this.intersection = new THREE.Vector3();
 
@@ -27,63 +29,52 @@ export default class GameEventManager extends THREE.EventDispatcher {
         this.domElement.addEventListener('pointerup', this.onPointerUp);
         this.mouse = new THREE.Vector2();
 
-        this.setupInteractionPlane(isSeller);
+        this.setupInteractionPlane();
         this.setupBasketSpace();
         this.setupSelectionSpace();
 
-        this.isBuyer = isSeller; //temporary hack
     }
 
-    setupInteractionPlane(isSeller) {
+    setupInteractionPlane = () => {
         this.interactionPlane = new THREE.Plane();
-        if (isSeller){
-            this.interactionPlane.setFromCoplanarPoints(new THREE.Vector3(3,0,-3) , new THREE.Vector3(-3,0,-3), new THREE.Vector3(0,2.5,0));
-        } else {
+        if (this.isSeller){
             this.interactionPlane.setFromCoplanarPoints(new THREE.Vector3(3,0,3) , new THREE.Vector3(-3,0,3), new THREE.Vector3(0,2.5,0));
+        } else {
+            this.interactionPlane.setFromCoplanarPoints(new THREE.Vector3(3,0,-3) , new THREE.Vector3(-3,0,-3), new THREE.Vector3(0,2.5,0));
         }
-    }
+    };
 
-    setupBasketSpace() {
+    setupBasketSpace = () => {
         this.shoppingBasket = new THREE.Box3;
 
         this.shoppingBasket.setFromObject(this.shoppingBasketMesh);
         this.shoppingBasket.expandByScalar(0.1);
-        // this.shoppingBasket.setFromCenterAndSize(new THREE.Vector3(0,0,-2.5), new THREE.Vector3(1,1,1));
-    }
+    };
 
-    setupSelectionSpace() {
+    setupSelectionSpace = () => {
         this.selectionSpace = new THREE.Box3;
         this.selectionSpace.setFromCenterAndSize(new THREE.Vector3(0,0,2.5), new THREE.Vector3(7,1,1));
-    }
+    };
 
-    // deprecated
-    setupDispensers() {
-        this.draggableObjects.forEach((item) => {
-            let dispenser = new THREE.Box3();
-            dispenser.setFromObject(item);
-            this.dispensers.push(dispenser);
-        });
-    }
-
-    addDraggableObject(obj) {
+    addDraggableObject = (obj) => {
         this.draggableObjects.push(obj);
-    }
+    };
 
-    setDraggableObjects(objs) {
+    setDraggableObjects = (objs) => {
         this.draggableObjects = objs;
-    }
+    };
 
-    select(obj) {
+    select = (obj) => {
         this.selectedObject = obj;
-    }
+    };
 
-    deselect() {
+    deselect = () => {
         this.selectedObject = null;
-    }
+    };
 
-    update() {
+    update = () => {
 
-    }
+    };
 
     onPointerDown = (event) => {
         console.log('Pointer down event');
@@ -102,7 +93,7 @@ export default class GameEventManager extends THREE.EventDispatcher {
             boundingBox.applyMatrix4(this.selectedObject.object.matrixWorld);
         }
 
-        if (this.isBuyer && boundingBox && boundingBox.intersectsBox(this.selectionSpace)) {
+        if (!this.isSeller && boundingBox && boundingBox.intersectsBox(this.selectionSpace)) {
             this.selectedObject = null;
             return;
         }
@@ -121,7 +112,7 @@ export default class GameEventManager extends THREE.EventDispatcher {
             this.gameSyncManager.sendGameobjectUpdate(this.selectedObject.object);
             console.log(this.selectedObject);
         }
-    }
+    };
 
     onPointerUp = (event) => {
         console.log('Pointer up event');
@@ -149,14 +140,16 @@ export default class GameEventManager extends THREE.EventDispatcher {
 
 
         if (boundingBox && boundingBox.intersectsBox(this.shoppingBasket)) {
-            console.log(this.selectedObject.object.name + ' put in basket!');
-            this.dispatchEvent( { type: 'basketAdd', item: this.selectedObject.object } );
-            this.sendRemoveFromScene(this.selectedObject.object.objectId);
+            console.dir(this.selectedObject);
+            console.log(this.selectedObject.object.objectId + ' put in basket!');
+            console.log(this.selectedObject.object.objectId);
+            this.dispatchEvent( { type: 'basketAdd', objectId: this.selectedObject.object.objectId } );
+            this.gameSyncManager.sendGameEventMessage('basketAdd', {objectId: this.selectedObject.object.objectId });
         }
 
         // finally
         this.selectedObject = null;
-    }
+    };
 
     onPointerMove = (event) => {
         if (!this.selectedObject) { return }
@@ -172,7 +165,7 @@ export default class GameEventManager extends THREE.EventDispatcher {
         
         //TODO
         // handle offset?
-    }
+    };
 
     getMousePosition = (event) => {
         const rect = this.domElement.getBoundingClientRect();
@@ -182,18 +175,6 @@ export default class GameEventManager extends THREE.EventDispatcher {
         // old - keep in case
         // this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 	    // this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-    }
-
-    sendGameOver() {
-        this.gameSyncManager.sendGameEventMessage('gameOver', null);
-    }
-
-    sendGoToGameModeSelection() {
-        this.gameSyncManager.sendGameEventMessage('gameModeSelection', null);
-    }
-    
-    sendRemoveFromScene(objectId) {
-        this.gameSyncManager.sendGameEventMessage('remove', objectId);
     }
 
 }

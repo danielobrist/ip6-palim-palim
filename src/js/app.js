@@ -18,25 +18,15 @@ if(__ENV__ === 'dev') {
 
 class AppManager {
     constructor(){
-        this.gameSyncManager = new GameSyncManager();
-        this.gameLobbyManager = new GameLobbyManager();
+        this.sceneManager = new SceneManager();
+        this.gameSyncManager = new GameSyncManager(this.sceneManager);
+        this.gameLobbyManager = new GameLobbyManager(this.gameSyncManager);
         this.peerConnectionManager = new PeerConnectionManager(this.gameLobbyManager, this.gameSyncManager);
+        this.gameManager = new GameManager(this.gameLobbyManager, this.sceneManager, this.gameSyncManager, this.peerConnectionManager);
 
         this.gameLobbyManager.addEventListener('joinRoom', (event) => {
             this.peerConnectionManager.joinRoom(event.roomName);
         });
-
-        this.gameLobbyManager.addEventListener('startGame', (event) => {
-            console.log("eventListener startGame");
-            // const isSeller = !this.peerConnectionManager.roomManager.isInitiator;
-            const isSeller = true;
-            this.gameManager.isSeller = isSeller;
-            this.sceneManager.isSeller = isSeller;
-            this.gameManager.startGame(event.gameMode, event.videoMode);
-        });
-
-        this.sceneManager = new SceneManager();
-        this.gameManager = new GameManager(this.gameLobbyManager, this.sceneManager, this.gameSyncManager);
 
         this.handlePageClosing();
     }

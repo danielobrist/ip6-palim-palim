@@ -17,8 +17,8 @@ export default class GameStateManager extends THREE.EventDispatcher {
     checkGameOver() {
         const isGameOver = this.gameOverCheck(this.shoppingListAsMap, this.basket.items);
         if (isGameOver) {
-            alert('GAME OVER');
             this.dispatchEvent( { type: 'gameOver' } );
+            this.gameSyncManager.sendGameEventMessage('gameOver');
         }
     }
 }

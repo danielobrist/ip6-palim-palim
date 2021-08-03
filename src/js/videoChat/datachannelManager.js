@@ -36,9 +36,9 @@ export default class DatachannelManager {
         }
         this.positionUpdatesChannel = dataChannel;
         this.positionUpdatesChannel.onmessage = this.handlePositionUpdatesMessage;
-        this.positionUpdatesChannel.onerror = dataChannel.onerror;
-        this.positionUpdatesChannel.onopen = dataChannel.onopen;
-        this.positionUpdatesChannel.onclose = dataChannel.onclose;
+        this.positionUpdatesChannel.onerror = this.handleDataChannelError;
+        this.positionUpdatesChannel.onopen = this.handleDataChannelStatusChange;
+        this.positionUpdatesChannel.onclose = this.handleDataChannelStatusChange;
 
         this.gameSyncManager.positionUpdatesChannel = this.positionUpdatesChannel;
     }
