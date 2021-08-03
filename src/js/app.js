@@ -1,5 +1,6 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import adapter from 'webrtc-adapter';
 import Detector from './utils/detector';
 import GameManager from "./game/components/gameManager";
 import GameSyncManager from "./game/components/gameSyncManager";
@@ -27,8 +28,10 @@ class AppManager {
 
         this.gameLobbyManager.addEventListener('startGame', (event) => {
             console.log("eventListener startGame");
-            this.gameManager.isSeller = !this.peerConnectionManager.roomManager.isInitiator;
-            this.sceneManager.isSeller = !this.peerConnectionManager.roomManager.isInitiator;
+            // const isSeller = !this.peerConnectionManager.roomManager.isInitiator;
+            const isSeller = true;
+            this.gameManager.isSeller = isSeller;
+            this.sceneManager.isSeller = isSeller;
             this.gameManager.startGame(event.gameMode, event.videoMode);
         });
 

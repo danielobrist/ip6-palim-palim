@@ -1,11 +1,7 @@
 import {initCamera, initScene} from "./mainScene";
-import AudioManager from "./audioManager";
 import * as THREE from "three";
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
-import GameEventManager from "./gameEventManager";
-import {strikeThroughPurchasedItemsFromShoppingList} from "./shoppingListManager";
 import {Vector3} from "three";
-import party from "party-js";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {GUI} from "three/examples/jsm/libs/dat.gui.module";
 
@@ -14,7 +10,6 @@ export default class SceneManager {
     renderer;
     localScene;
     localCamera;
-    audioManager;
     basketMesh;
     isSeller;
     salesObjects = new Map();
@@ -37,7 +32,6 @@ export default class SceneManager {
     prepareScene = () => {
         this.localScene = initScene();
         this.localCamera = initCamera();
-        this.audioManager = new AudioManager(this.localCamera);
 
         this.createStoreCounterAndAddToScene();
         this.createBasketAndAddToScene();
@@ -236,7 +230,6 @@ export default class SceneManager {
 
     hideOverlay = () => {
         document.getElementById('overlay').classList.add('whileGameIsRunning');
-        this.audioManager.playPalimSound();
     };
 
     showVideos = () => {

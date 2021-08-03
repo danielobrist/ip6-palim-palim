@@ -1,6 +1,7 @@
 import GameEventManager from "./gameEventManager";
 import ShoppingListManager from "./shoppingListManager";
 import GameStateManager from "./gameStateManager";
+import AudioManager from "./audioManager";
 
 export default class GameManager {
 
@@ -15,10 +16,17 @@ export default class GameManager {
         this.sceneManager = sceneManager;
         this.gameSyncManager = gameSyncManager;
         this.shoppingListManager = new ShoppingListManager();
+
+        this.gameLobbyManager.addEventListener('closeExplanationScreen', (event) => {
+            console.log("addEventListener closeExplanationScreen");
+            this.audioManager.playPalimSound();
+            this.sceneManager.hideOverlay();
+        });
     }
 
     async prepareGame(){
-        this.sceneManager.prepareScene();
+        await this.sceneManager.prepareScene();
+        this.audioManager = new AudioManager(this.sceneManager.localCamera);
     }
 
     async startGame(gameMode, videoMode) {

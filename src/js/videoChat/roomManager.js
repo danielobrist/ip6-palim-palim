@@ -1,12 +1,14 @@
 import * as THREE from 'three';
 
 export default class RoomManager extends THREE.EventDispatcher {
+
+    isInitiator;
+    isRoomReady;
+    currentRoom;
+
     constructor() {
         super();
         this.socket = io.connect();
-        this.isInitiator;
-        this.isRoomReady;
-        this.currentRoom;
 
         this.socket.on('created', (room) => {
             console.log('Created room ' + room);

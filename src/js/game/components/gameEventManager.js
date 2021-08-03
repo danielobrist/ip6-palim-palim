@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Box3, Vector3 } from 'three';
-import { GameSyncManager } from './GameSyncManager';
+import { GameSyncManager } from './gameSyncManager';
 
 export default class GameEventManager extends THREE.EventDispatcher {
     constructor(renderer, camera, isSeller, shoppingBasketMesh, gameSyncManager) {

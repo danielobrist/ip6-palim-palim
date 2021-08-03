@@ -91,7 +91,6 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         document.getElementById('closeExplanationScreen').addEventListener('click', () => {
             document.getElementById('explanationScreen').classList.add('deactivated');
             this.dispatchEvent( { type: 'closeExplanationScreen' } );
-            this.hideOverlay();
         });
     }
 
