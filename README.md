@@ -90,38 +90,38 @@ Specifications of the server are (not mandatory):
 
 Instructions for the Palim-Palim TURN server based on Gabriel Tanner's instructions (https://gabrieltanner.org/blog/turn-server):
 
-* The TURN server of Palim-Palim has the following public IP address: `86.119.43.130`. Port `3478` was set as the entry port.
+The TURN server of Palim-Palim has the following public IP address: `86.119.43.130`. Port `3478` was set as the entry port.
 
-1.	Update the linux server
-* `sudo apt-get update -y`
-2.	Install Coturn
-* `sudo apt-get install coturn`
-3.	Define Coturn as an automatic service, so that it automatically starts up again after a server restart
-* Comment in `TURNSERVER_ENABLED=1` in the file at `/etc/default/coturn`
-4.	Start Coturn service
-* `systemctl start coturn`
-5.	The turn server configuration is located at  `/etc/turnserver.conf` and must be set as follows: 
-* See example file from this project `turnserver.config`
-6.	Restart coturn service
-* `sudo service coturn restart`
-7.	The turn server functionality can be tested with the «Trickle ICE» examples page (https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/) To do this, the following parameters must be specified: 
-* STUN or TURN URI	`URI from turnserver.config`, for example `turn:86.119.43.130:3478`
-* TURN username	`username from turnserver.config`
-* TURN password	`password from turnserver.config`
-8.  Now your TURN-Server is ready, and can be passed along as a parameter while setting up the RTCPeerConnection. See file `peerConnection.js` as a reference.
+1.	Update the linux server  
+`sudo apt-get update -y`  
+2.	Install Coturn  
+`sudo apt-get install coturn`  
+3.	Define Coturn as an automatic service, so that it automatically starts up again after a server restart  
+Comment in `TURNSERVER_ENABLED=1` in the file at `/etc/default/coturn`  
+4.	Start Coturn service  
+`systemctl start coturn`  
+5.	The turn server configuration is located at  `/etc/turnserver.conf` and must be set as follows:  
+See example file from this project `turnserver.config`  
+6.	Restart coturn service  
+`sudo service coturn restart`  
+7.	The turn server functionality can be tested with the «Trickle ICE» examples page (https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/) To do this, the following parameters must be specified:  
+STUN or TURN URI	`URI from turnserver.config`, for example `turn:86.119.43.130:3478`  
+TURN username	`username from turnserver.config`  
+TURN password	`password from turnserver.config`  
+8.  Now your TURN-Server is ready, and can be passed along as a parameter while setting up the RTCPeerConnection. See file `peerConnection.js` as a reference how to configure the RTCPeerConnection.
 
 ## :shopping_cart: Credits
 
-Project team:
-Severin Peyer
-Daniel Obrist
+Project team:  
+Severin Peyer  
+Daniel Obrist  
 
-Supervision:
-Marco Soldati
-Tabea Iseli
+Supervision:  
+Marco Soldati  
+Tabea Iseli  
 
 Fachhochschule Nordwestschweiz FHNW
 
-This project was built using boilerplate code from:
-https://github.com/paulmg/ThreeJS-Webpack-ES6-Boilerplate/
-https://github.com/AidanNelson/threejs-webrtc
+This project was built using boilerplate code from:  
+https://github.com/paulmg/ThreeJS-Webpack-ES6-Boilerplate/  
+https://github.com/AidanNelson/threejs-webrtc  
