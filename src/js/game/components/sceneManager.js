@@ -19,9 +19,11 @@ export default class SceneManager {
     gui;
     config;
 
-    constructor(){
+    pathToBuyerIllustration = './assets/illustrations/buyer.png';
+    pathToSellerIllustration = './assets/illustrations/seller.png';
 
-        this.renderer = this.createRendererAndSetInitConfiguration();
+    constructor(){
+        this.renderer = this.createAndConfigureRenderer();
         this.addRendererToDOM(this.renderer);
 
         if (__ENV__ === 'dev') {
@@ -38,13 +40,11 @@ export default class SceneManager {
     };
 
     loadBackground = () => {
-        console.log("loadBackground");
-
         let background = document.getElementById('sceneBackground');
         background.style.backgroundImage = "url('./assets/illustrations/supermarket_v2.jpg')";
     };
 
-    createRendererAndSetInitConfiguration = () => {
+    createAndConfigureRenderer = () => {
         const renderer = new THREE.WebGLRenderer({ alpha: true });
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -125,7 +125,7 @@ export default class SceneManager {
         const loader = new GLTFLoader(manager);
         // TODO Proper loading
         for (let i = 0; i < this.config.models.length; i++) {
-            let loadedData = await loader.loadAsync(this.config.models[i].path);
+            const loadedData = await loader.loadAsync(this.config.models[i].path);
             loadedData.scene.traverse((o) => {
                 if (o.isMesh) {
                     let m = new THREE.Mesh();
@@ -140,11 +140,7 @@ export default class SceneManager {
         }
 
         this.instantiateSellerObjectsFromJsonArray(this.config.buyerModelsStart);
-        console.log("INSTANTIATE OBJECTS : " + this.isSeller);
-
         this.renderer.outputEncoding = THREE.sRGBEncoding;
-
-
     };
 
     instantiateSellerObjectsFromJsonArray = (jsonArray) => {
@@ -165,18 +161,19 @@ export default class SceneManager {
             this.interactionObjects.push(sphereMesh);
 
             if(__ENV__ === 'dev') {
-                //gui.addFolderWithPositions(sphereMesh, sphereMesh.name, -5, 5, 0.05);
-                const rangeStart = -5, rangeEnd = 5, step = 0.05;
-                const folder = this.gui.addFolder(sphereMesh.objectId);
-                folder.add(sphereMesh.position, "x", rangeStart, rangeEnd, step);
-                folder.add(sphereMesh.position, "y", rangeStart, rangeEnd, step);
-                folder.add(sphereMesh.position, "z", rangeStart, rangeEnd, step);
+                this.createDatGUIForPosition(sphereMesh, -5, 5, 0.05);
             }
         }
     };
 
-    //Todo move to helper class
-    createVideoMaterialFromDomElementWithId = (id) => {
+    createDatGUIForPosition = (obj, rangeStart, rangeEnd, step) => {
+        const folder = this.gui.addFolder(obj.objectId);
+        folder.add(obj.position, "x", rangeStart, rangeEnd, step);
+        folder.add(obj.position, "y", rangeStart, rangeEnd, step);
+        folder.add(obj.position, "z", rangeStart, rangeEnd, step);
+    }
+
+    createVideoMaterialFromDomVideo = (id) => {
         const videoElement = document.getElementById(id);
         const videoTexture = new THREE.VideoTexture(videoElement);
 
@@ -189,35 +186,6 @@ export default class SceneManager {
 
     render = () => {
         this.renderer.render( this.localScene, this.localCamera );
-    }
-
-    updateRemoteObjects = (data) => {
-        const obj = JSON.parse(data);
-        // console.log('Parsed JSON uuid: ' + obj.uuid + ', positionx: ' + obj.position.x + ', rotationx: ' + obj.rotation._x);
-
-        if(objectsToSync.has(obj.objectId)) {
-            const localElement = this.localScene.getObjectByProperty( 'objectId', obj.objectId );
-
-            localElement.position.x = obj.position.x;
-            localElement.position.y = obj.position.y;
-            localElement.position.z = obj.position.z;
-            localElement.rotation.x = obj.rotation._x;
-            localElement.rotation.y = obj.rotation._y;
-            localElement.rotation.z = obj.rotation._z;
-        } else {
-            // creates and add to scene and objectsToSync
-            duckMesh.objectId = obj.objectId;
-            duckMesh.name = obj.name;
-            duckMesh.position.set(obj.position.x, obj.position.y, obj.position.z);
-            let newObj = duckMesh.clone();
-            // let newObj = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(obj.position.x, obj.position.y, obj.position.z), true, draggableObjectsSeller, personalSpace);
-            objectsToSync.set(newObj.objectId, newObj);
-            // newObj.position.set(obj.position.x, obj.position.y, obj.position.z);
-            localScene.add(newObj);
-            // addObjectToDragConrols(newObj);
-        }
-
-        //Todo maybe tween/interpolate between positions
     }
 
     animate = () => {
@@ -243,40 +211,7 @@ export default class SceneManager {
         document.getElementById('gameModeScreen').classList.remove('deactivated');
     };
 
-
-    cleanUpScene = () => {
-        cleanUp(this.localScene);
-    };
-
-    cleanUp = (obj) => {
-        while(obj.children.length > 0){
-            cleanUp(obj.children[0]);
-            obj.remove(obj.children[0]);
-        }
-        if(obj.geometry) obj.geometry.dispose();
-
-        if(obj.material){
-            //in case of map, bumpMap, normalMap, envMap ...
-            Object.keys(obj.material).forEach(prop => {
-                if(!obj.material[prop])
-                    return;
-                if(obj.material[prop] !== null && typeof obj.material[prop].dispose === 'function')
-                    obj.material[prop].dispose();
-            })
-            obj.material.dispose();
-        }
-    };
-
-    removeFromScene = (objectId) => {
-        console.log('REMOVING ITEM WITH ID ' + objectId);
-        let temp = localScene.getObjectByProperty( 'objectId', objectId );
-        console.log(temp);
-        // temp.geometry.dispose();
-        // temp.material.dispose();
-        localScene.remove( temp );
-    };
-
-
+    
     buildBoundingSphere = (mesh) => {
         const boundingBox = new THREE.Box3().setFromObject(mesh);
         const center = new THREE.Vector3();
@@ -338,39 +273,35 @@ export default class SceneManager {
         let zPosition = 2, xPosition = -0.25;
         let texture;
         if(isSeller) {
-            texture = this.loadSellerIllustrationAsTexture();
+            texture = this.loadIllustrationAsTexture(this.pathToBuyerIllustration);
         } else {
-            texture = this.loadBuyerIllustrationAsTexture();
-            zPosition = zPosition*(-1);
-            xPosition = xPosition*(-1);
+            texture = this.loadIllustrationAsTexture(this.pathToSellerIllustration);
+            zPosition *= (-1);
+            xPosition *= (-1);
         }
 
         const material = new THREE.MeshBasicMaterial( { map: texture } );
-        const geometry = new THREE.BoxGeometry(4, 4.5, 0.000001); //todo change to PlaneGeometry (currentrly doesnt work in scene of buyer)
+        const geometry = new THREE.BoxGeometry(4, 4.5, 0.000001);
         const mesh = new THREE.Mesh(geometry, material);
 
         mesh.position.set(xPosition, 2.5, zPosition);
 
-        localScene.add(mesh);
+        this.localScene.add(mesh);
     };
 
-    loadBuyerIllustrationAsTexture = () => {
-        return new THREE.TextureLoader().load( './assets/illustrations/buyer.png' );
-    };
-
-    loadSellerIllustrationAsTexture = () => {
-        return new THREE.TextureLoader().load( './assets/illustrations/seller.png' );
+    loadIllustrationAsTexture = (pathToFile) => {
+        return new THREE.TextureLoader().load(pathToFile);
     };
 
     moveRemoteVideoToScene = () => {
 
         const webcamRemoteVideo = document.getElementById("remoteVideo");
-        const webcamReomoteVideoAspectRatio = webcamRemoteVideo.offsetWidth/webcamRemoteVideo.offsetHeight;
+        const webcamRemoteVideoAspectRatio = webcamRemoteVideo.offsetWidth/webcamRemoteVideo.offsetHeight;
         const remoteVideoWidth = 6;
-        const remoteVideoHeight = remoteVideoWidth/webcamReomoteVideoAspectRatio;
+        const remoteVideoHeight = remoteVideoWidth/webcamRemoteVideoAspectRatio;
 
         const remoteVideoGeometry = new THREE.PlaneGeometry( remoteVideoWidth, remoteVideoHeight );
-        const remoteVideoMaterial = this.createVideoMaterialFromDomElementWithId("remoteVideo");
+        const remoteVideoMaterial = this.createVideoMaterialFromDomVideo("remoteVideo");
         const remoteVideoMesh = new THREE.Mesh( remoteVideoGeometry, remoteVideoMaterial );
         if (this.isSeller) {
             remoteVideoMesh.position.set(0, remoteVideoHeight / 2, 2);
@@ -379,5 +310,77 @@ export default class SceneManager {
         }
         this.localScene.add( remoteVideoMesh );
 
+    };
+
+
+
+
+
+
+
+
+    //todo refactoring
+    cleanUpScene = () => {
+        cleanUp(this.localScene);
+    };
+
+    //todo refactoring
+    cleanUp = (obj) => {
+        while(obj.children.length > 0){
+            cleanUp(obj.children[0]);
+            obj.remove(obj.children[0]);
+        }
+        if(obj.geometry) obj.geometry.dispose();
+
+        if(obj.material){
+            //in case of map, bumpMap, normalMap, envMap ...
+            Object.keys(obj.material).forEach(prop => {
+                if(!obj.material[prop])
+                    return;
+                if(obj.material[prop] !== null && typeof obj.material[prop].dispose === 'function')
+                    obj.material[prop].dispose();
+            })
+            obj.material.dispose();
+        }
+    };
+
+    //todo refactoring
+    removeFromScene = (objectId) => {
+        console.log('REMOVING ITEM WITH ID ' + objectId);
+        let temp = localScene.getObjectByProperty( 'objectId', objectId );
+        console.log(temp);
+        // temp.geometry.dispose();
+        // temp.material.dispose();
+        localScene.remove( temp );
+    };
+
+    //todo refactoring
+    updateRemoteObjects = (data) => {
+        const obj = JSON.parse(data);
+        // console.log('Parsed JSON uuid: ' + obj.uuid + ', positionx: ' + obj.position.x + ', rotationx: ' + obj.rotation._x);
+
+        if(objectsToSync.has(obj.objectId)) {
+            const localElement = this.localScene.getObjectByProperty( 'objectId', obj.objectId );
+
+            localElement.position.x = obj.position.x;
+            localElement.position.y = obj.position.y;
+            localElement.position.z = obj.position.z;
+            localElement.rotation.x = obj.rotation._x;
+            localElement.rotation.y = obj.rotation._y;
+            localElement.rotation.z = obj.rotation._z;
+        } else {
+            // creates and add to scene and objectsToSync
+            duckMesh.objectId = obj.objectId;
+            duckMesh.name = obj.name;
+            duckMesh.position.set(obj.position.x, obj.position.y, obj.position.z);
+            let newObj = duckMesh.clone();
+            // let newObj = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(obj.position.x, obj.position.y, obj.position.z), true, draggableObjectsSeller, personalSpace);
+            objectsToSync.set(newObj.objectId, newObj);
+            // newObj.position.set(obj.position.x, obj.position.y, obj.position.z);
+            localScene.add(newObj);
+            // addObjectToDragConrols(newObj);
+        }
+
+        //Todo maybe tween/interpolate between positions
     }
 }

@@ -10,6 +10,7 @@ export default class GameManager {
     gameStateManager;
     sceneManager;
     gameSyncManager;
+    audioManager;
 
     constructor(gameLobbyManager, sceneManager, gameSyncManager){
         this.gameLobbyManager = gameLobbyManager;
@@ -17,7 +18,7 @@ export default class GameManager {
         this.gameSyncManager = gameSyncManager;
         this.shoppingListManager = new ShoppingListManager();
 
-        this.gameLobbyManager.addEventListener('closeExplanationScreen', (event) => {
+        this.gameLobbyManager.addEventListener('closeExplanationScreen', () => {
             console.log("addEventListener closeExplanationScreen");
             this.audioManager.playPalimSound();
             this.sceneManager.hideOverlay();
@@ -35,40 +36,35 @@ export default class GameManager {
 
         //TODO send 'startGame' via gameSync on gameUpdate channel
 
-        // this.gameLobbyManager.addEventListener('closeExplanationScreen', () => {
-        //   //send 'closeExplanationScreen' to remote
-        // })
-        // placeVideos(videoMode, isInitiator);
-        // switchView(isInitiator);
-
         await this.loadConfig(gameMode);
         await this.handOverConfigToSceneManager();
-
         this.createGameStateManager();
 
         if(this.isSeller) {
-            this.shoppingListAsMap = this.shoppingListManager.generateShoppingListAsMap(this.config.buyerModelsStart);
-            this.gameStateManager.shoppingListAsMap = this.shoppingListAsMap;
-
-            this.shoppingListManager.writeShoppingListToDom(this.gameStateManager.shoppingListAsMap, this.config.models);
+            this.generateShoppingList();
         }
-
 
         await this.sceneManager.placeVideos(videoMode, this.isSeller);
         this.sceneManager.placeVirtualCamera(this.isSeller);
         this.initControls();
 
-
         this.sceneManager.loadBackground();
         await this.sceneManager.init3DObjects();
-        // if (__ENV__ === 'dev') {
-        //     initControls(isSeller);
-        //     initDevThings();
-        // }
+
+        if (__ENV__ === 'dev') {
+            this.sceneManager.initDevThings();
+        }
+
         document.getElementById("appContainer").classList.remove('deactivated');
         this.sceneManager.animate();
 
     }
+
+    generateShoppingList = () => {
+        this.shoppingListAsMap = this.shoppingListManager.generateShoppingListAsMap(this.config.buyerModelsStart);
+        this.gameStateManager.shoppingListAsMap = this.shoppingListAsMap;
+        this.shoppingListManager.writeShoppingListToDom(this.gameStateManager.shoppingListAsMap, this.config.models);
+    };
 
     loadConfig = async(gameMode) => {
         let configFile;
@@ -80,24 +76,22 @@ export default class GameManager {
         }
 
         this.config = configFile.default;
-    }
+    };
 
     handOverConfigToSceneManager = () => {
         this.sceneManager.config = this.config;
-    }
+    };
 
     createGameStateManager = () => {
         this.gameStateManager = new GameStateManager(this.config, this.sceneManager, this.gameSyncManager);
-        this.gameStateManager.addEventListener('gameOver', (event) => {
+        this.gameStateManager.addEventListener('gameOver', () => {
             this.gameEventManager.sendGameOver();
-            this.gameLobbyManager.showGameOver(true);  //TODO refactor this, true should be !isSeller
+            this.gameLobbyManager.showGameOver(!this.isSeller);
             this.sceneManager.audioManager.playWinSound();
         });
     };
 
     initControls = () => {
-
-        console.log("---init controls---");
 
         this.gameEventManager = new GameEventManager(
             this.sceneManager.renderer,
@@ -107,17 +101,9 @@ export default class GameManager {
             this.gameSyncManager
         );
 
-        // TODO this should be in gameLoopManager
-        // gameEventManager.setDraggableObjects(interactionObjects);
         this.gameEventManager.draggableObjects = this.sceneManager.interactionObjects;
-        console.log(this.gameEventManager.draggableObjects);
-        // console.log(JSON.stringify(gameEventManager.draggableObjects));
+
         this.gameEventManager.addEventListener( 'basketAdd', function (event) {
-
-            //localScene.remove(event.item);
-
-            // TODO update state
-
             this.gameStateManager.basket.addItem(event.item);
             console.log('ADDED ITEM TO BASKET: ' + event.item.name + ' WITH ID ' + event.item.objectId);
             this.gameStateManager.checkGameOver();
@@ -125,6 +111,7 @@ export default class GameManager {
             this.shoppingListManager.strikeThroughPurchasedItems(event.item.typeId);
             this.sceneManager.audioManager.playCompleteTaskSound();
         } );
+
         this.gameEventManager.addEventListener( 'itemRemove', function (event) {
             // let selectedObjectPlaceholder = event.item.clone();
 
@@ -137,8 +124,5 @@ export default class GameManager {
         if(__ENV__ === 'dev') {
             this.sceneManager.visualizeTheInteractionPlaneAndItemSink(this.gameEventManager);
         }
-
-        console.log("---end init controls---");
-
     }
 }
