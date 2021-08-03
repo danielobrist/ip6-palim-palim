@@ -5,22 +5,37 @@ export default class DatachannelManager {
         this.peerConnection;
         this.gameSyncManager = gameSyncManager;
 
-        //TODO maybe store channels in a Map to dynamically create more
         this.positionUpdatesChannel;
         this.gameEventChannel;
     }
 
+    handleDataChannelAdded = (event) => {
+        console.log('Received Channel Callback');
+        console.dir(event.channel);
 
-    initGameUpdatesChannel = (dataChannel) => {
+        if (event.channel.label === 'positionUpdates') {
+            this.initPositionUpdatesChannel(event.channel);
+            console.log("Created new Datachannel after channel was added")
+            console.log(this.positionUpdatesChannel);
+        }
+
+        if (event.channel.label === 'gameEvents') {
+            this.initGameEventChannel(event.channel);
+            console.log("Created new Datachannel after channel was added")
+            console.log(this.gameEventChannel);
+        }
+    }
+
+    initPositionUpdatesChannel = (dataChannel) => {
         if (!dataChannel) {
             console.log("creating new Datachannel...")
-            dataChannel = this.peerConnection.createDataChannel('gameUpdates');
+            dataChannel = this.peerConnection.createDataChannel('positionUpdates');
             dataChannel.onerror = this.handleDataChannelError;
             dataChannel.onopen = this.handleDataChannelStatusChange;
             dataChannel.onclose = this.handleDataChannelStatusChange;
         }
         this.positionUpdatesChannel = dataChannel;
-        this.positionUpdatesChannel.onmessage = this.handleGameUpdatesMessage;
+        this.positionUpdatesChannel.onmessage = this.handlePositionUpdatesMessage;
         this.positionUpdatesChannel.onerror = dataChannel.onerror;
         this.positionUpdatesChannel.onopen = dataChannel.onopen;
         this.positionUpdatesChannel.onclose = dataChannel.onclose;
@@ -45,7 +60,7 @@ export default class DatachannelManager {
         this.gameSyncManager.gameEventChannel = this.gameEventChannel;
     }
 
-    handleGameUpdatesMessage = (event) => {
+    handlePositionUpdatesMessage = (event) => {
         this.gameSyncManager.updateRemoteObjects(event.data);
     }
 

@@ -7,6 +7,8 @@ import VideoChatManager from "./videoChatManager";
 export default class PeerConnectionManager {
     constructor(gameLobbyManager, gameSyncManager) {
         this.gameLobbyManager = gameLobbyManager;
+        this.gameSyncManager = gameSyncManager;
+
         this.roomManager = new RoomManager();
         this.videoChatManager = new VideoChatManager();
         this.datachannelManager = new DatachannelManager(gameSyncManager);
@@ -18,7 +20,6 @@ export default class PeerConnectionManager {
         });
 
         this.videoChatManager.addEventListener('gotUserMedia', () => {
-            console.log('gotUserMedia event');
             this.roomManager.sendSignalingMessage('got user media');
             
             console.log(this.roomManager.isInitiator);
@@ -29,9 +30,6 @@ export default class PeerConnectionManager {
         });
 
         this.roomManager.addEventListener('serverMessage', (event) => {
-            console.log("servermessage Event");
-            console.log(event.message);
-
             if (event.message === 'got user media') {
                 this.maybeStart();
             } else if (event.message.type === 'offer') {
@@ -55,23 +53,12 @@ export default class PeerConnectionManager {
                 this.handleRemoteHangup();
             }
         })
-
-        this.handlePageClosing(); //TODO move this to AppManager and clean up game too?
-    }
-
-    handlePageClosing = () => {
-        // handle tabs closing (almost all browsers) or pagehide (needed for iPad/iPhone)
-        let isOnIOS = navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2; // probably iOS...
-        let eventName = isOnIOS ? "pagehide" : "beforeunload";
-        window.addEventListener(eventName, (event) => { 
-            this.hangUp();
-        });
     }
 
     joinRoom = (roomName) => {
         console.log("JOINING ROOM " + roomName);
         this.roomManager.joinRoom(roomName);
-        this.videoChatManager.askForUserMedia();
+        this.videoChatManager.startLocalVideo();
     }
 
     maybeStart = () => {
@@ -91,11 +78,9 @@ export default class PeerConnectionManager {
 
             console.log('isInitiator', this.roomManager.isInitiator);
             if (this.roomManager.isInitiator) {
-                this.datachannelManager.initGameUpdatesChannel();
+                this.datachannelManager.initPositionUpdatesChannel();
                 this.datachannelManager.initGameEventChannel();
-                console.log('Created RTCDataChannel');
-                console.log(this.datachannelManager.positionUpdatesChannel);
-                console.log(this.datachannelManager.gameEventChannel);
+                console.log('Created RTCDataChannels');
                 this.doCall();
             }
         }
@@ -105,7 +90,7 @@ export default class PeerConnectionManager {
         this.peerConnection = new PeerConnection();
         this.peerConnection.onicecandidate = this.handleIceCandidate;
         this.peerConnection.ontrack = this.handleTrackAdded;
-        this.peerConnection.ondatachannel = this.handleDataChannelAdded;
+        this.peerConnection.ondatachannel = this.datachannelManager.handleDataChannelAdded;
         this.datachannelManager.peerConnection = this.peerConnection;
     }
 
@@ -124,40 +109,7 @@ export default class PeerConnectionManager {
     }
 
     handleTrackAdded = (event) => {
-        console.log("handleTrackAdded");
-        
-        if (event.streams && event.streams[0]) {
-            console.log("event streams detected")
-            this.videoChatManager.remoteVideo.srcObject = event.streams[0];
-        } else {
-            //TODO maybe move this part to a method in VideoChatManager?
-            if (!this.videoChatManager.remoteStream) {
-                console.log("Creating new MediaStream")
-                this.videoChatManager.remoteStream = new MediaStream();
-            }
-            console.log("adding track to remote stream")
-            this.videoChatManager.remoteStream.addTrack(event.track);
-            this.videoChatManager.remoteVideo.setAttribute('src', this.videoChatManager.remoteStream);
-            this.videoChatManager.remoteVideo.srcObject = this.videoChatManager.remoteStream;
-        }
-        this.videoChatManager.remoteVideo.autoplay = true;
-    }
-
-    handleDataChannelAdded = (event) => {
-        console.log('Received Channel Callback');
-        console.log(event.channel);
-
-        if (event.channel.label === 'gameUpdates') {
-            this.datachannelManager.initGameUpdatesChannel(event.channel);
-            console.log("Created new Datachannel after channel was added")
-            console.log(this.datachannelManager.positionUpdatesChannel);
-        }
-
-        if (event.channel.label === 'gameEvents') {
-            this.datachannelManager.initGameEventChannel(event.channel);
-            console.log("Created new Datachannel after channel was added")
-            console.log(this.datachannelManager.gameEventChannel);
-        }
+        this.videoChatManager.startRemoteVideo(event);
     }
 
     doCall = () => {
@@ -187,13 +139,13 @@ export default class PeerConnectionManager {
     }
 
     hangUp = () => {
-        console.log('Hanging up.');
+        console.log('Leaving the call.');
         this.stop();
         this.roomManager.sendSignalingMessage('bye');
     }
 
     handleRemoteHangup = () => {
-        console.log('Session terminated.');
+        console.log('Peer left the call.');
         this.stop();
         this.roomManager.isInitiator = true;
     }

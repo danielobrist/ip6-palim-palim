@@ -37,6 +37,8 @@ class AppManager {
 
         this.sceneManager = new SceneManager();
         this.gameManager = new GameManager(this.gameLobbyManager, this.sceneManager, this.gameSyncManager);
+
+        this.handlePageClosing();
     }
 
     async initApp() {
@@ -52,6 +54,15 @@ class AppManager {
         } else {
             return true;
         }
+    }
+
+    handlePageClosing = () => {
+        // handle tabs closing (almost all browsers) or pagehide (needed for iPad/iPhone)
+        let isOnIOS = navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2; // probably iOS...
+        let eventName = isOnIOS ? "pagehide" : "beforeunload";
+        window.addEventListener(eventName, () => { 
+            this.peerConnectionManager.hangUp();
+        });
     }
 }
 

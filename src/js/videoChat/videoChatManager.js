@@ -12,8 +12,7 @@ export default class VideoChatManager extends THREE.EventDispatcher {
 
     }
 
-    async askForUserMedia() {
-        console.log("askForUserMedia");
+    startLocalVideo = async () => {
         navigator.mediaDevices.getUserMedia({
             video: true,
             audio: true
@@ -34,5 +33,21 @@ export default class VideoChatManager extends THREE.EventDispatcher {
         this.localVideo.srcObject = stream;
 
         this.dispatchEvent({ type: 'gotUserMedia' });
+    }
+
+    startRemoteVideo = (event) => {
+        if (event.streams && event.streams[0]) {
+            console.log("event streams detected")
+            this.remoteVideo.srcObject = event.streams[0];
+        } else {
+            if (!this.remoteStream) {
+                this.remoteStream = new MediaStream();
+            }
+            console.log("adding track to remote stream")
+            this.remoteStream.addTrack(event.track);
+            this.remoteVideo.setAttribute('src', this.remoteStream);
+            this.remoteVideo.srcObject = this.remoteStream;
+        }
+        this.remoteVideo.autoplay = true;
     }
 }
