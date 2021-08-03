@@ -103,7 +103,7 @@ export default class GameManager {
 
         this.gameEventManager.draggableObjects = this.sceneManager.interactionObjects;
 
-        this.gameEventManager.addEventListener( 'basketAdd', function (event) {
+        this.gameEventManager.addEventListener( 'basketAdd', (event) => {
             this.gameStateManager.basket.addItem(event.item);
             console.log('ADDED ITEM TO BASKET: ' + event.item.name + ' WITH ID ' + event.item.objectId);
             this.gameStateManager.checkGameOver();
