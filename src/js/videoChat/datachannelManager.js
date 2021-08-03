@@ -61,7 +61,7 @@ export default class DatachannelManager {
     }
 
     handlePositionUpdatesMessage = (event) => {
-        this.gameSyncManager.updateRemoteObjects(event.data);
+        this.gameSyncManager.handlePositionUpdates(event.data);
     }
 
     handleGameEvents = (event) => {

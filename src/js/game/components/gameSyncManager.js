@@ -6,7 +6,7 @@ export default class GameSyncManager {
     }
 
     //TODO rename to 'handlePositionUpdates'
-    updateRemoteObjects = (data) => {
+    handlePositionUpdates = (data) => {
         //TODO von game.js updateRemoteObjects übernehmen
     }
 
@@ -35,10 +35,10 @@ export default class GameSyncManager {
         this.gameEventChannel.send(json);
     }
 
-    // TODO call methods or raise events in proper GameEventManager?
     handleGameEvent = (gameEvent) => {
         if (gameEvent.message === 'gameStart') {
             // gameStart();
+            // GameManager.startGame();
         }
         if (gameEvent.message === 'closeExplanationScreen') {
             // document.getElementById('explanationScreen').classList.add('deactivated');

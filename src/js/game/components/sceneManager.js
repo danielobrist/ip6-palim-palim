@@ -354,7 +354,6 @@ export default class SceneManager {
         localScene.remove( temp );
     };
 
-    //todo refactoring
     updateRemoteObjects = (data) => {
         const obj = JSON.parse(data);
         // console.log('Parsed JSON uuid: ' + obj.uuid + ', positionx: ' + obj.position.x + ', rotationx: ' + obj.rotation._x);
@@ -362,25 +361,13 @@ export default class SceneManager {
         if(objectsToSync.has(obj.objectId)) {
             const localElement = this.localScene.getObjectByProperty( 'objectId', obj.objectId );
 
+            // TODO nur position = position?
             localElement.position.x = obj.position.x;
             localElement.position.y = obj.position.y;
             localElement.position.z = obj.position.z;
             localElement.rotation.x = obj.rotation._x;
             localElement.rotation.y = obj.rotation._y;
             localElement.rotation.z = obj.rotation._z;
-        } else {
-            // creates and add to scene and objectsToSync
-            duckMesh.objectId = obj.objectId;
-            duckMesh.name = obj.name;
-            duckMesh.position.set(obj.position.x, obj.position.y, obj.position.z);
-            let newObj = duckMesh.clone();
-            // let newObj = initCube(DEFAULT_VALUES.geometryCube, DEFAULT_VALUES.colorRed, new THREE.Vector3(obj.position.x, obj.position.y, obj.position.z), true, draggableObjectsSeller, personalSpace);
-            objectsToSync.set(newObj.objectId, newObj);
-            // newObj.position.set(obj.position.x, obj.position.y, obj.position.z);
-            localScene.add(newObj);
-            // addObjectToDragConrols(newObj);
-        }
-
-        //Todo maybe tween/interpolate between positions
+        } 
     }
 }

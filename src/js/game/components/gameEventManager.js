@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { Box3, Vector3 } from 'three';
-import { GameSyncManager } from './gameSyncManager';
+import { Vector3 } from 'three';
 
 export default class GameEventManager extends THREE.EventDispatcher {
     constructor(renderer, camera, isSeller, shoppingBasketMesh, gameSyncManager) {
@@ -119,7 +118,7 @@ export default class GameEventManager extends THREE.EventDispatcher {
         this.raycaster.ray.intersectPlane(this.interactionPlane, this.intersection); //saves intersection point into this.intersection
         if (this.selectedObject) {
             this.selectedObject.object.position.copy(this.intersection);
-            this.GameSyncManager.sendGameobjectUpdate(this.selectedObject.object);
+            this.gameSyncManager.sendGameobjectUpdate(this.selectedObject.object);
             console.log(this.selectedObject);
         }
     }
@@ -139,7 +138,7 @@ export default class GameEventManager extends THREE.EventDispatcher {
         if (boundingBox && boundingBox.intersectsBox(this.selectionSpace)) {
             // TODO remove the placeholder from the scene
             this.selectedObject.object.position.copy(this.selectedObject.object.startPosition);
-            this.GameSyncManager.sendGameobjectUpdate(this.selectedObject.object);
+            this.gameSyncManager.sendGameobjectUpdate(this.selectedObject.object);
         }
 
 
@@ -169,7 +168,7 @@ export default class GameEventManager extends THREE.EventDispatcher {
         this.selectedObject.object.position.copy(this.intersection); //moves selectedObject to the position where the ray intersected the interactionPlane
 
         // console.log(this.selectedObject.object.position.z);
-        this.GameSyncManager.sendGameobjectUpdate(this.selectedObject.object);
+        this.gameSyncManager.sendGameobjectUpdate(this.selectedObject.object);
         
         //TODO
         // handle offset?
@@ -186,15 +185,15 @@ export default class GameEventManager extends THREE.EventDispatcher {
     }
 
     sendGameOver() {
-        this.GameSyncManager.sendGameEventMessage('gameOver', null);
+        this.gameSyncManager.sendGameEventMessage('gameOver', null);
     }
 
     sendGoToGameModeSelection() {
-        this.GameSyncManager.sendGameEventMessage('gameModeSelection', null);
+        this.gameSyncManager.sendGameEventMessage('gameModeSelection', null);
     }
     
     sendRemoveFromScene(objectId) {
-        this.GameSyncManager.sendGameEventMessage('remove', objectId);
+        this.gameSyncManager.sendGameEventMessage('remove', objectId);
     }
 
 }
