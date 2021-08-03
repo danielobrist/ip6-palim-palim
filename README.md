@@ -1,7 +1,7 @@
 :bell: Palim Palim
 ========
 
-Palim-Palim is a peer-to-peer video game for children and the elderly. It allows two players to play pretend store in a virtual environment. The client side is built using Three.js to provide an interactive 3D environment. It features a WebRTC video chat to promote communication between players. The project uses a node server running socket.io to provide WebRTC signaling. The multiplayer functionality is implemented using WebRTC peer-to-peer datachannels instead of an authorative server.
+Palim-Palim is a peer-to-peer video game for children and the elderly. It allows two players to play pretend store in a virtual environment. The client side is built using Three.js to provide an interactive 3D environment. It features a WebRTC video chat to promote communication between players. The project uses a node server running socket.io to provide WebRTC signaling. The multiplayer functionality is implemented using WebRTC peer-to-peer datachannels instead of an authorative server.  
 
 
 ## :apple: Project Structure
@@ -17,7 +17,7 @@ src - Directory for all dev files
 |   └── videoChat - WebRTC peer connection for video chat and other data channels
 └── public - Used by webpack-dev-server to serve content. Webpack builds local dev files here. 
     └── assets - Is copied over to build folder with build command. Place external asset files here.
-```
+```  
 
 ## :orange: Getting started
 
@@ -39,7 +39,7 @@ This cleans existing build folder while linting js folder and copies over the pu
 npm start
 ```
 
-Spins up the node.js server at localhost:8080 and uses the current prod build from the build folder. Open a second tab to chat and play the game with yourself.
+Spins up the node.js server at localhost:8080 and uses the current prod build from the build folder. Open a second tab to chat and play the game with yourself.  
 
 
 ## :pear: Running App in dev mode (wihout Server/VideoChat)
@@ -49,8 +49,7 @@ After installing the dependencies, run:
 npm run dev
 ```
 
-This will spin up a webpack dev server at localhost:8080 and keeps track of all js and sass changes to files. Useful for developing the Three.js-scene but does not start the node.js server, so the video chat can not be tested (for this you have to build it and then start the node.js server locally - as described above). Press <kbd>H</kbd> to show or hide the dat.GUI menu.
-
+This will spin up a webpack dev server at localhost:8080 and keeps track of all js and sass changes to files. Useful for developing the Three.js-scene but does not start the node.js server, so the video chat can not be tested (for this you have to build it and then start the node.js server locally - as described above). Press <kbd>H</kbd> to show or hide the dat.GUI menu.  
 
 
 ## :cherries: All NPM Scripts
@@ -65,20 +64,20 @@ You can run any of these individually if you'd like with the `npm run` command:
 * `webpack-watch` - Runs webpack in dev environment with watch
 * `dev:js` - Runs webpack in dev environment without watch
 * `build:dir` - Copies files and folders from `src/public` to `build`
-* `build:js` - Runs webpack in production environment
+* `build:js` - Runs webpack in production environment  
 
 
-## :grapes: Heroku Deployment
-Normally, Heroku will recognise the app as a node.js application and use the proper buildpack for the deployment. If you encounter any problems, try folliwing steps:
-* Set up Heroku CLI [More infos](https://devcenter.heroku.com/articles/heroku-cli)
+## :grapes: Deployment
+The project can be built with webpack and deployed in any node.js environment. For convenience, [Heroku](https://www.heroku.com
+) was used as a deployment service during development. Deployment on Heroku is pretty well documented, and normally Heroku will recognise the app as a node.js application and use the proper buildpack for the deployment. If you encounter any problems, try following steps:
+* Set up [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
 * Ensure the Heroku application is using the `heroku/nodejs` buildpack by running the `heroku buildpacks -a <your-heroku-app-name>` command. [More infos](https://devcenter.heroku.com/articles/nodejs-support#specifying-a-node-js-version)
 * If it is not set to `heroku/nodejs`, set the buildpack with the command `heroku buildpacks:set heroku/nodejs -a <your-heroku-app-name>`. [More infos](https://devcenter.heroku.com/articles/buildpacks#setting-a-buildpack-on-an-application)
-* With the proper buildpack set up, Heroku will automatically install all dependencies and will start the server using `npm start`, when deploying the app.
-
+* With the proper buildpack set up, Heroku will automatically install all dependencies and will start the server using `npm start` when deploying the app.  
 
 
 ## :banana: Setting up a TURN server
-While running and deploying the project locally works just fine, it will need a dedicated TURN server as fallback, if you want to use WebRTC over the internet. This means to deploy the project for production a TURN server must be setup and provided. To host your own TURN server, a Linux server with a public IP address is needed. The TURN server used in Palim-Palim uses Coturn, which is an open source implementation of the TURN protocol (https://www.hostsharing.net/features/coturn/). 
+While running and deploying the project locally works just fine, it will need a dedicated TURN server as fallback, if you want to use WebRTC over the internet. This means to deploy the project for production a TURN server must be setup and provided. To host your own TURN server, a Linux server with a public IP address is needed. The TURN server used in Palim-Palim uses [Coturn](https://www.hostsharing.net/features/coturn/), which is an open source implementation of the TURN protocol. 
 Specifications of the server are (not mandatory):
 * 8 GB RAM
 * 8 VCPU
@@ -88,9 +87,7 @@ Specifications of the server are (not mandatory):
 * TCP and UDP, in and out: 10000 to 20000
 * TCP, in: 3478
 
-Instructions for the Palim-Palim TURN server based on Gabriel Tanner's instructions (https://gabrieltanner.org/blog/turn-server):
-
-The TURN server of Palim-Palim has the following public IP address: `86.119.43.130`. Port `3478` was set as the entry port.
+Instructions for the Palim-Palim TURN server based on [Gabriel Tanner's instructions](https://gabrieltanner.org/blog/turn-server):
 
 1.	Update the linux server  
 `sudo apt-get update -y`  
@@ -104,23 +101,23 @@ Comment in `TURNSERVER_ENABLED=1` in the file at `/etc/default/coturn`
 See example file from this project `turnserver.config`  
 6.	Restart coturn service  
 `sudo service coturn restart`  
-7.	The turn server functionality can be tested with the «Trickle ICE» examples page (https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/) To do this, the following parameters must be specified:  
+7.	The turn server functionality can be tested with the [Trickle ICE](https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/) examples page. To do this, the following parameters must be specified:  
 STUN or TURN URI	`URI from turnserver.config`, for example `turn:86.119.43.130:3478`  
 TURN username	`username from turnserver.config`  
 TURN password	`password from turnserver.config`  
-8.  Now your TURN-Server is ready, and can be passed along as a parameter while setting up the RTCPeerConnection. See file `peerConnection.js` as a reference how to configure the RTCPeerConnection.
+8.  Now your TURN-Server is ready, and can be passed along as a parameter while setting up the RTCPeerConnection. See file `peerConnection.js` as a reference how to configure the RTCPeerConnection.  
 
 ## :shopping_cart: Credits
 
-Project team:  
+**Project team:**  
 Severin Peyer  
 Daniel Obrist  
 
-Supervision:  
+**Supervision:**  
 Marco Soldati  
 Tabea Iseli  
 
-Fachhochschule Nordwestschweiz FHNW
+[Fachhochschule Nordwestschweiz FHNW](https://www.fhnw.ch/)
 
 This project was built using boilerplate code from:  
 https://github.com/paulmg/ThreeJS-Webpack-ES6-Boilerplate/  
