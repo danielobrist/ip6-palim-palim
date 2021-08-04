@@ -15,7 +15,7 @@
     <div id="loading">Loading...</div>
   </section>
 
-  <div id="shoppingListContainer" style="display: none;">
+  <div id="shoppingListContainer" class="hidden">
     <svg class="hand" width="358" height="432" viewBox="0 0 358 432" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M117.322 6.34607L187.349 61.7177C194.127 67.077 199.042 74.4373 201.394 82.7522L220.285 213.717L129.456 250.992L124.843 82.6567L118.87 63.5832L117.322 6.34607Z"
@@ -57,7 +57,6 @@
       <video id="localVideo" autoplay muted playsinline></video>
     </div>
 
-    <% if (htmlWebpackPlugin.options.env !=='dev' ) { %>
       <div id="settingScreens">
 
         <section id="waitingToOtherRoomMates" class="deactivated">
@@ -97,7 +96,6 @@
         </section>
       </div>
 
-  <% } %>
 
     <section id="welcomeScreen">
       <div>
@@ -117,7 +115,6 @@
     </section>
   </div>
 
-  <script src="adapter.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <% if (htmlWebpackPlugin.options.env==='dev' ) { %>
     <script src="js/rStats.js"></script>

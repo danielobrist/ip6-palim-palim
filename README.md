@@ -1,10 +1,8 @@
 :bell: Palim Palim
 ========
 
-A fun video chat application with integrated 3D multiplayer capabilities. //TODO project description
+Palim-Palim is a peer-to-peer video game for children and the elderly. It allows two players to play pretend store in a virtual environment. The client side is built using Three.js to provide an interactive 3D environment. It features a WebRTC video chat to promote communication between players. The project uses a node server running socket.io to provide WebRTC signaling. The multiplayer functionality is implemented using WebRTC peer-to-peer datachannels instead of an authorative server.  
 
-Based on a basic boilerplate for a Three.js project including the use of Webpack and ES6 syntax via Babel.
-https://github.com/paulmg/ThreeJS-Webpack-ES6-Boilerplate/
 
 ## :apple: Project Structure
 ```
@@ -19,10 +17,11 @@ src - Directory for all dev files
 |   └── videoChat - WebRTC peer connection for video chat and other data channels
 └── public - Used by webpack-dev-server to serve content. Webpack builds local dev files here. 
     └── assets - Is copied over to build folder with build command. Place external asset files here.
-```
+```  
 
 ## :orange: Getting started
-Install dependencies:
+
+Install node.js (version 14 LTS) and install the dependencies with npm:
 
 ```
 npm install
@@ -40,7 +39,7 @@ This cleans existing build folder while linting js folder and copies over the pu
 npm start
 ```
 
-Spins up the node.js server at localhost:8080 and uses the current prod build from the build folder. Open a second tab to chat and play the game with yourself.
+Spins up the node.js server at localhost:8080 and uses the current prod build from the build folder. Open a second tab to chat and play the game with yourself.  
 
 
 ## :pear: Running App in dev mode (wihout Server/VideoChat)
@@ -50,8 +49,7 @@ After installing the dependencies, run:
 npm run dev
 ```
 
-This will spin up a webpack dev server at localhost:8080 and keeps track of all js and sass changes to files. Useful for developing the Three.js-scene but does not start the node.js server, so the video chat can not be tested (for this you have to build it and then start the node.js server locally - as described above). Press <kbd>H</kbd> to show or hide the dat.GUI menu.
-
+This will spin up a webpack dev server at localhost:8080 and keeps track of all js and sass changes to files. Useful for developing the Three.js-scene but does not start the node.js server, so the video chat can not be tested (for this you have to build it and then start the node.js server locally - as described above). Press <kbd>H</kbd> to show or hide the dat.GUI menu.  
 
 
 ## :cherries: All NPM Scripts
@@ -66,47 +64,61 @@ You can run any of these individually if you'd like with the `npm run` command:
 * `webpack-watch` - Runs webpack in dev environment with watch
 * `dev:js` - Runs webpack in dev environment without watch
 * `build:dir` - Copies files and folders from `src/public` to `build`
-* `build:js` - Runs webpack in production environment
+* `build:js` - Runs webpack in production environment  
 
 
-## :grapes: Heroku Deployment
-Normally, Heroku will recognise the app as a node.js application and use the proper buildpack for the deployment. If you encounter any problems, try folliwing steps:
-* Set up Heroku CLI [More infos](https://devcenter.heroku.com/articles/heroku-cli)
+## :grapes: Deployment
+The project can be built with webpack and deployed in any node.js environment. For convenience, [Heroku](https://www.heroku.com
+) was used as a deployment service during development. Deployment on Heroku is pretty well documented, and normally Heroku will recognise the app as a node.js application and use the proper buildpack for the deployment. If you encounter any problems, try following steps:
+* Set up [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
 * Ensure the Heroku application is using the `heroku/nodejs` buildpack by running the `heroku buildpacks -a <your-heroku-app-name>` command. [More infos](https://devcenter.heroku.com/articles/nodejs-support#specifying-a-node-js-version)
 * If it is not set to `heroku/nodejs`, set the buildpack with the command `heroku buildpacks:set heroku/nodejs -a <your-heroku-app-name>`. [More infos](https://devcenter.heroku.com/articles/buildpacks#setting-a-buildpack-on-an-application)
-* With the proper buildpack set up, Heroku will automatically install all dependencies and will start the server using `npm start`, when deploying the app.
+* With the proper buildpack set up, Heroku will automatically install all dependencies and will start the server using `npm start` when deploying the app.  
 
 
+## :banana: Setting up a TURN server
+While running and deploying the project locally works just fine, it will need a dedicated TURN server as fallback, if you want to use WebRTC over the internet. This means to deploy the project for production a TURN server must be setup and provided. To host your own TURN server, a Linux server with a public IP address is needed. The TURN server used in Palim-Palim uses [Coturn](https://www.hostsharing.net/features/coturn/), which is an open source implementation of the TURN protocol. 
+Specifications of the server are (not mandatory):
+* 8 GB RAM
+* 8 VCPU
+* Memory: 20 GB
+* Operating system: Linux Ubuntu
+* Depending on the environment on which the server is set up, the ports of the TURN server must be opened. With the TURN configuration below, we had to open the following ports on our SwitchEngines Server:
+* TCP and UDP, in and out: 10000 to 20000
+* TCP, in: 3478
 
-## :banana: TURN-Server aufsetzen
-Um selbst einen TURN-Server (Traversal Using Relays around NAT (Network Address Translation)) zu erstellen, wird ein Linux-Server mit einer öffentlichen IP-Adresse (Internet Protocol Adresse) benötigt. Der in Palim-Palim verwendete TURN-Server benutzt Coturn, dies ist eine Open-Source Implementierung des TURN-Protokolls (https://www.hostsharing.net/features/coturn/).
-Spezifikationen Linux-Server (nicht zwingend):
-* 8 GB (Gigabyte) RAM (Random-Access Memory)
-* 8 VCPU (virtual central processing unit)
-* Speicher: 20 GB
-* Betriebssystem: Linux Ubuntu
-* Je nach Umgebung, auf welcher der Server aufgesetzt wird, müssen die Ports, welche der TURN-Server benötigt, freigegeben werden. Mit der untenstehenden TURN-Konfiguration müssen folgende Ports freigegeben werden (TODO: noch verifizieren):
-* TCP und UDP, Eintritt und Austritt: 10000 bis 20000
-* TCP, Eintritt: 3478
+Instructions for the Palim-Palim TURN server based on [Gabriel Tanner's instructions](https://gabrieltanner.org/blog/turn-server):
 
-Anleitung für den Palim-Palim-TURN-Server basierend auf der Anleitung von Gabriel Tanner (https://gabrieltanner.org/blog/turn-server):
-Der TURN-Server hat die folgende IP-Adresse: 86.119.43.130
-Als Eintrittsport wurde der Port 3478 festgelegt.
-1.	Linux-Server auf den aktuellen Stand bringen
-sudo apt-get update -y
-2.	Coturn installieren
-sudo apt-get install coturn
-3.	Coturn als automatischen Service definieren, damit dieser nach einem Server-Neustart automatisch wieder hochfährt
-TURNSERVER_ENABLED=1 in der Datei /etc/default/coturn einkommentieren
-4.	Coturn-Service starten
-systemctl start coturn
-5.	Die Konfiguration des Turn-Servers liegt unter /etc/turnserver.conf und muss folgendermassen gesetzt werden:
-Siehe Datei xyzBlaBla
-6.	Coturn-Service neu starten
-sudo service coturn restart
-7.	Der Turn-Server kann unter «Trickle ICE» (https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/) getestet werden. Dazu müssen folgende Angaben gemacht werden:
-STUN or TURN URI	turn:86.119.43.130:3478
-TURN username	palimpalim
-TURN password	password aus der Config-Datei
+1.	Update the linux server  
+`sudo apt-get update -y`  
+2.	Install Coturn  
+`sudo apt-get install coturn`  
+3.	Define Coturn as an automatic service, so that it automatically starts up again after a server restart  
+Comment in `TURNSERVER_ENABLED=1` in the file at `/etc/default/coturn`  
+4.	Start Coturn service  
+`systemctl start coturn`  
+5.	The turn server configuration is located at  `/etc/turnserver.conf` and must be set as follows:  
+See example file from this project `turnserver.config`  
+6.	Restart coturn service  
+`sudo service coturn restart`  
+7.	The turn server functionality can be tested with the [Trickle ICE](https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/) examples page. To do this, the following parameters must be specified:  
+STUN or TURN URI	`URI from turnserver.config`, for example `turn:86.119.43.130:3478`  
+TURN username	`username from turnserver.config`  
+TURN password	`password from turnserver.config`  
+8.  Now your TURN-Server is ready, and can be passed along as a parameter while setting up the RTCPeerConnection. See file `peerConnection.js` as a reference how to configure the RTCPeerConnection.  
 
+## :shopping_cart: Credits
 
+**Project team:**  
+Severin Peyer  
+Daniel Obrist  
+
+**Supervision:**  
+Marco Soldati  
+Tabea Iseli  
+
+[Fachhochschule Nordwestschweiz FHNW](https://www.fhnw.ch/)
+
+This project was built using boilerplate code from:  
+https://github.com/paulmg/ThreeJS-Webpack-ES6-Boilerplate/  
+https://github.com/AidanNelson/threejs-webrtc  

@@ -19,7 +19,7 @@ export default class PeerConnection {
         return this.rtcPeerConnection;
     }
 
-    create() {
+    create = () => {
         try {
             if (location.hostname !== 'localhost') {
                 this.rtcPeerConnection = new RTCPeerConnection();
@@ -35,11 +35,12 @@ export default class PeerConnection {
 
           } catch (e) {
             console.log('Failed to create PeerConnection, exception: ' + e.message);
-            alert('Cannot create RTCPeerConnection object.');
+            alert('Failed to create RTCPeerConnection object.');
             return;
         }
     }
 
+    //TODO unused
     createDataChannel(channelName) {
         if (this.rtcPeerConnection) {
             let dataChannel = this.rtcPeerConnection.createDataChannel(channelName, {

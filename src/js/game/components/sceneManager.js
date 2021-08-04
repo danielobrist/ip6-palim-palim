@@ -1,14 +1,13 @@
+import {initCamera, initScene} from "./mainScene";
 import * as THREE from "three";
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 import {Vector3} from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {GUI} from "three/examples/jsm/libs/dat.gui.module";
-import Scene3DManager from "./scene3DManager";
 
 export default class SceneManager {
 
     renderer;
-    scene3DManager;
     localScene;
     localCamera;
     basketMesh;
@@ -33,9 +32,8 @@ export default class SceneManager {
     }
 
     prepareScene = () => {
-        this.scene3DManager = new Scene3DManager(this.isSeller);
-        this.localScene = this.scene3DManager.get3DScene();
-        this.localCamera = this.scene3DManager.get3DCamera();
+        this.localScene = initScene();
+        this.localCamera = initCamera();
 
         this.createStoreCounterAndAddToScene();
         this.createBasketAndAddToScene();

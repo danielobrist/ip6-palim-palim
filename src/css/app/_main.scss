@@ -111,6 +111,10 @@ video {
   cursor: pointer;
 }
 
+#shoppingListContainer.hidden {
+  display: none;
+}
+
 #shoppingListContainer.visible {
   right: -115px;
   bottom: -130px;
