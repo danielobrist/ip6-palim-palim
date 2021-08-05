@@ -15,6 +15,10 @@ export default class PeerConnectionManager {
 
         this.peerConnection;
 
+        this.gameLobbyManager.addEventListener('joinRoom', (event) => {
+            this.joinRoom(event.roomName);
+        });
+
         this.roomManager.addEventListener('peerJoined', () => {
             this.gameLobbyManager.goToGameStartScreen();
         });

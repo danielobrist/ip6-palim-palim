@@ -24,10 +24,6 @@ class AppManager {
         this.peerConnectionManager = new PeerConnectionManager(this.gameLobbyManager, this.gameSyncManager);
         this.gameManager = new GameManager(this.gameLobbyManager, this.sceneManager, this.gameSyncManager, this.peerConnectionManager);
 
-        this.gameLobbyManager.addEventListener('joinRoom', (event) => {
-            this.peerConnectionManager.joinRoom(event.roomName);
-        });
-
         this.handlePageClosing();
     }
 
