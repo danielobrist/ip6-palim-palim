@@ -93,7 +93,7 @@ export default class PeerConnectionManager {
     initPeerConnection = () => {
         this.peerConnection = new PeerConnection();
         this.peerConnection.onicecandidate = this.handleIceCandidate;
-        this.peerConnection.ontrack = this.handleTrackAdded;
+        this.peerConnection.ontrack = this.videoChatManager.handleTrackAdded;
         this.peerConnection.ondatachannel = this.datachannelManager.handleDataChannelAdded;
         this.datachannelManager.peerConnection = this.peerConnection;
     }
@@ -110,10 +110,6 @@ export default class PeerConnectionManager {
         } else {
             console.log('End of candidates.');
         }
-    }
-
-    handleTrackAdded = (event) => {
-        this.videoChatManager.startRemoteVideo(event);
     }
 
     doCall = () => {

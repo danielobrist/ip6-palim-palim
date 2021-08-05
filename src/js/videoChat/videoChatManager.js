@@ -34,8 +34,8 @@ export default class VideoChatManager extends THREE.EventDispatcher {
 
         this.dispatchEvent({ type: 'gotUserMedia' });
     }
-
-    startRemoteVideo = (event) => {
+    
+    handleTrackAdded = (event) => {
         if (event.streams && event.streams[0]) {
             console.log("event streams detected")
             this.remoteVideo.srcObject = event.streams[0];
