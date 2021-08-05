@@ -5,6 +5,9 @@ import VideoChatManager from "./videoChatManager";
 
 
 export default class PeerConnectionManager {
+
+    peerConnection;
+
     constructor(gameLobbyManager, gameSyncManager) {
         this.gameLobbyManager = gameLobbyManager;
         this.gameSyncManager = gameSyncManager;
@@ -12,8 +15,6 @@ export default class PeerConnectionManager {
         this.roomManager = new RoomManager();
         this.videoChatManager = new VideoChatManager();
         this.datachannelManager = new DatachannelManager(gameSyncManager);
-
-        this.peerConnection;
 
         this.gameLobbyManager.addEventListener('joinRoom', (event) => {
             this.joinRoom(event.roomName);
@@ -26,8 +27,6 @@ export default class PeerConnectionManager {
         this.videoChatManager.addEventListener('gotUserMedia', () => {
             this.roomManager.sendSignalingMessage('got user media');
             
-            console.log(this.roomManager.isInitiator);
-
             if (this.roomManager.isInitiator) {
                 this.maybeStart();
             }

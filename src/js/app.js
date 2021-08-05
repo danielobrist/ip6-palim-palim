@@ -8,10 +8,8 @@ import PeerConnectionManager from "./videoChat/peerConnectionManager";
 import GameLobbyManager from "./game/components/gameLobbyManager";
 import SceneManager from "./game/components/sceneManager";
 
-// Style
 import './../css/app.scss';
 
-// Check environment and set the Config helper
 if(__ENV__ === 'dev') {
     console.log('----- RUNNING IN DEV ENVIRONMENT! -----');
 }
