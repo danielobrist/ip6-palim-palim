@@ -40,7 +40,7 @@ export default class GameManager {
             this.gameLobbyManager.goToGameModeSelection();
         }
 
-        //this.sceneManager.cleanUpScene();
+        //todo this.sceneManager.cleanUpScene();
     };
 
     handleCloseExplanationScreenEvent = () => {
@@ -86,6 +86,7 @@ export default class GameManager {
         this.sceneManager.loadBackground();
         await this.sceneManager.init3DObjects();
 
+        // eslint-disable-next-line no-undef
         if (__ENV__ === 'dev') {
             this.sceneManager.initDevThings();
         }
@@ -148,10 +149,11 @@ export default class GameManager {
 
         this.gameEventManager.addEventListener( 'basketAdd', (itemObjectId) => this.handleBasketAddEvent(itemObjectId));
 
+        // eslint-disable-next-line no-undef
         if(__ENV__ === 'dev') {
             this.sceneManager.visualizeTheInteractionPlaneAndItemSink(this.gameEventManager);
         }
-    }
+    };
 
     handleBasketAddEvent = (event) => {
 

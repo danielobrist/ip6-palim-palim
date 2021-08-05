@@ -53,7 +53,7 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         console.log("Going to Game Start Screen");
         this.waitingScreen.classList.add('deactivated');
         this.startGameScreen.classList.remove('deactivated');
-    }
+    };
 
     goToGameModeScreen = () => {
         console.log("Going to Game Mode Screen");
@@ -61,17 +61,17 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         this.startGameScreen.classList.add('deactivated');
         this.gameModeScreen.classList.remove('deactivated');
 
-        let gameModeButtons = document.getElementsByClassName("button--gameMode");
-        for (var i = 0; i < gameModeButtons.length; i++) {
+        const gameModeButtons = document.getElementsByClassName("button--gameMode");
+        for (let i = 0; i < gameModeButtons.length; i++) {
 
-            let gameModeButton = gameModeButtons.item(i);
-            let gameMode = gameModeButton.dataset.gamemode;
+            const gameModeButton = gameModeButtons.item(i);
+            const gameMode = gameModeButton.dataset.gamemode;
 
             gameModeButton.addEventListener('click', () => {
                 this.goToVideoModeScreen(gameMode);
             });
         }
-    }
+    };
 
     goToVideoModeScreen = (gameMode) => {
         console.log("Going to Video Mode Screen");
@@ -79,11 +79,11 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         this.gameModeScreen.classList.add('deactivated');
         this.videoModeScreen.classList.remove('deactivated');
 
-        let videoModeButtons = document.getElementsByClassName("button--videoMode");
-        for (var i = 0; i < videoModeButtons.length; i++) {
+        const videoModeButtons = document.getElementsByClassName("button--videoMode");
+        for (let i = 0; i < videoModeButtons.length; i++) {
 
-            let videoModeButton = videoModeButtons.item(i);
-            let videoMode = videoModeButton.dataset.videomode;
+            const videoModeButton = videoModeButtons.item(i);
+            const videoMode = videoModeButton.dataset.videomode;
 
             videoModeButton.addEventListener('click', () => {
                 this.dispatchEvent( { type: 'startGame', gameMode: gameMode, videoMode: videoMode } );
@@ -126,7 +126,7 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
     };
 
     addRoomNumberElement = () => {
-        let roomNumberElement = document.createElement("p");
+        const roomNumberElement = document.createElement("p");
         roomNumberElement.innerHTML = this.roomNumber;
         roomNumberElement.classList.add('roomNumber');
         this.waitingScreen.append(roomNumberElement);
@@ -143,7 +143,7 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
     };
 
     playConfetti = () => {
-        const element = document.getElementById("appContainer")
+        const element = document.getElementById("appContainer");
         party.confetti(element,{
             count: party.variation.range(200, 400),
             debug: false,

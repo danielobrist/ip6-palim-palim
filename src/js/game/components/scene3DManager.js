@@ -21,41 +21,32 @@ export default class Scene3DManager {
 
     initCamera = () => {
         this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
+        this.camera.position.set(0, 6, 10);
+        this.camera.lookAt( 0, 2, 0 );
+
         if (this.isSeller) {
-            console.log('changing camera position!');
-            this.camera.position.x = 0;
-            // this.camera.position.set(0, 6, -10);
-            this.camera.position.y = 6;
             this.camera.position.z = -10;
-            this.camera.lookAt( 0, 2, 0 );
-        } else {
-            this.camera.position.x = 0;
-            this.camera.position.y = 6;
-            this.camera.position.z = 10;
-            this.camera.lookAt( 0, 2, 0 );
         }
     };
 
     initLight = () => {
-        const directionalLight1 = new THREE.DirectionalLight( 0xffffff, 0.7 );
-        directionalLight1.position.set(2, 2, 0);
-        this.scene.add(directionalLight1);
+        const directionalLightBuyerSide = new THREE.DirectionalLight( 0xffffff, 0.7 );
+        directionalLightBuyerSide.position.set(2, 2, 0);
+        this.scene.add(directionalLightBuyerSide);
 
-        const directionalLight4 = new THREE.DirectionalLight( 0xffffff, 0.7 );
-        directionalLight1.position.set(-2, 2, 0);
-        this.scene.add(directionalLight4);
+        const directionalLightSellerSide = new THREE.DirectionalLight( 0xffffff, 0.7 );
+        directionalLightSellerSide.position.set(-2, 2, 0);
+        this.scene.add(directionalLightSellerSide);
 
         const ambientLight = new THREE.AmbientLight( 0x404040 );
         this.scene.add( ambientLight );
 
-        //todo isDev() in Helpers
+        // eslint-disable-next-line no-undef
         if(__ENV__ === 'dev') {
-            const helper = new THREE.DirectionalLightHelper( directionalLight1, 5 );
-            scene.add( helper );
-            const helper1 = new THREE.DirectionalLightHelper( directionalLight2, 5 );
-            scene.add( helper1 );
-            const helper2 = new THREE.DirectionalLightHelper( directionalLight3, 5 );
-            scene.add( helper2 );
+            const helperDirectionalLightBuyerSide = new THREE.DirectionalLightHelper( directionalLightBuyerSide, 5 );
+            this.scene.add( helperDirectionalLightBuyerSide );
+            const helperDirectionalLightSellerSide = new THREE.DirectionalLightHelper( directionalLightSellerSide, 5 );
+            this.scene.add( helperDirectionalLightSellerSide );
         }
 
     };

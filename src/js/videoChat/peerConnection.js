@@ -30,25 +30,24 @@ export default class PeerConnection {
             }
         
             console.log('Created RTCPeerConnnection: ' + this.rtcPeerConnection);
-            console.log('With config: ' + this.rtcPeerConnection.getConfiguration())
+            console.log('With config: ' + this.rtcPeerConnection.getConfiguration());
             return this.rtcPeerConnection;
 
           } catch (e) {
             console.log('Failed to create PeerConnection, exception: ' + e.message);
+            // eslint-disable-next-line no-alert
             alert('Failed to create RTCPeerConnection object.');
-            return;
         }
-    }
+    };
 
     //TODO unused
     createDataChannel(channelName) {
         if (this.rtcPeerConnection) {
-            let dataChannel = this.rtcPeerConnection.createDataChannel(channelName, {
+            const dataChannel = this.rtcPeerConnection.createDataChannel(channelName, {
                 ordered: false,
-                id: room
+                // id: room
             });
 
-            
             this.dataChannels.push(dataChannel);
         }
     }

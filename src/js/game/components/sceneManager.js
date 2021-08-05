@@ -27,6 +27,7 @@ export default class SceneManager {
         this.renderer = this.createAndConfigureRenderer();
         this.addRendererToDOM(this.renderer);
 
+        // eslint-disable-next-line no-undef
         if (__ENV__ === 'dev') {
             this.gui = new GUI();
         }
@@ -42,7 +43,7 @@ export default class SceneManager {
     };
 
     loadBackground = () => {
-        let background = document.getElementById('sceneBackground');
+        const background = document.getElementById('sceneBackground');
         background.style.backgroundImage = "url('./assets/illustrations/supermarket_v2.jpg')";
     };
 
@@ -68,22 +69,22 @@ export default class SceneManager {
 
     createBasketAndAddToScene = async() => {
         const gltfLoader = new GLTFLoader();
-        let basket = await gltfLoader.loadAsync('./assets/models/basket.glb');
+        const basket = await gltfLoader.loadAsync('./assets/models/basket.glb');
         basket.scene.traverse((o) => {
             if (o.isMesh) {
                 this.basketMesh = new THREE.Mesh();
                 o.scale.set(2, 2, 2);
-                let basketMaterial = new THREE.MeshStandardMaterial({color: '#F00'});
+                const basketMaterial = new THREE.MeshStandardMaterial({color: '#F00'});
                 this.basketMesh = o;
                 this.basketMesh.material = basketMaterial;
                 this.basketMesh.position.set(0,-0.5,-2.6);
-            };
+            }
         });
         this.localScene.add(this.basketMesh);
     };
 
     placeVideos = async(videoMode) => {
-        console.log('-----placeVideos-----');
+        console.log("-----placeVideos-----");
         switch (videoMode) {
             case "1":
                 this.hideRemoteVideo();
@@ -119,24 +120,19 @@ export default class SceneManager {
         // TODO Loading bar/screen https://stackoverflow.com/questions/35575065/how-to-make-a-loading-screen-in-three-js/35584276
         manager.onProgress = (url, itemsLoaded, itemsTotal) => {
             console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-        }
+        };
         manager.onLoad = () => {
             document.getElementById("appContainer").querySelector('#loading').style.display = 'none';
-        }
+        };
         const loader = new GLTFLoader(manager);
         // TODO Proper loading
         for (let i = 0; i < this.config.models.length; i++) {
             const loadedData = await loader.loadAsync(this.config.models[i].path);
             loadedData.scene.traverse((o) => {
                 if (o.isMesh) {
-                    let m = new THREE.Mesh();
                     o.scale.set(this.config.models[i].scale, this.config.models[i].scale, this.config.models[i].scale);
-
-                    m = o;
-
-                    this.salesObjects.set(this.config.models[i].typeId, m);
-
-                };
+                    this.salesObjects.set(this.config.models[i].typeId, o);
+                }
             });
         }
 
@@ -161,6 +157,7 @@ export default class SceneManager {
             this.objectsToSync.set(sphereMesh.objectId, sphereMesh);
             this.interactionObjects.push(sphereMesh);
 
+            // eslint-disable-next-line no-undef
             if(__ENV__ === 'dev') {
                 this.createDatGUIForPosition(sphereMesh, -5, 5, 0.05);
             }
@@ -172,7 +169,7 @@ export default class SceneManager {
         folder.add(obj.position, "x", rangeStart, rangeEnd, step);
         folder.add(obj.position, "y", rangeStart, rangeEnd, step);
         folder.add(obj.position, "z", rangeStart, rangeEnd, step);
-    }
+    };
 
     createVideoMaterialFromDomVideo = (id) => {
         const videoElement = document.getElementById(id);
@@ -187,7 +184,7 @@ export default class SceneManager {
 
     render = () => {
         this.renderer.render( this.localScene, this.localCamera );
-    }
+    };
 
     animate = () => {
         requestAnimationFrame( this.animate );
@@ -212,6 +209,7 @@ export default class SceneManager {
         const boundingSphere = boundingBox.getBoundingSphere(new THREE.Sphere(center));
 
         let boundingSphereOpacity;
+        // eslint-disable-next-line no-undef
         if(__ENV__ === 'dev') {
             boundingSphereOpacity = 0.3;
         } else {
@@ -254,10 +252,10 @@ export default class SceneManager {
     };
 
     initDevThings = () => {
-        this.orbitControls = new OrbitControls( localCamera, renderer.domElement );
+        this.orbitControls = new OrbitControls( this.localCamera, this.renderer.domElement );
         this.orbitControls.enabled = false;
         const orbitControlsFolder = this.gui.addFolder("OrbitControls");
-        orbitControlsFolder.add(orbitControls, 'enabled');
+        orbitControlsFolder.add(this.orbitControls, 'enabled');
         this.gui.domElement.parentElement.style.zIndex = "999999";
     };
 
@@ -305,21 +303,15 @@ export default class SceneManager {
     };
 
 
-
-
-
-
-
-
     //todo refactoring
     cleanUpScene = () => {
-        cleanUp(this.localScene);
+        this.cleanUp(this.localScene);
     };
 
     //todo refactoring
     cleanUp = (obj) => {
         while(obj.children.length > 0){
-            cleanUp(obj.children[0]);
+            this.cleanUp(obj.children[0]);
             obj.remove(obj.children[0]);
         }
         if(obj.geometry) obj.geometry.dispose();
@@ -331,7 +323,7 @@ export default class SceneManager {
                     return;
                 if(obj.material[prop] !== null && typeof obj.material[prop].dispose === 'function')
                     obj.material[prop].dispose();
-            })
+            });
             obj.material.dispose();
         }
     };
@@ -339,11 +331,11 @@ export default class SceneManager {
     //todo refactoring
     removeFromScene = (objectId) => {
         console.log('REMOVING ITEM WITH ID ' + objectId);
-        let temp = localScene.getObjectByProperty( 'objectId', objectId );
+        const temp = this.localScene.getObjectByProperty( 'objectId', objectId );
         console.log(temp);
         // temp.geometry.dispose();
         // temp.material.dispose();
-        localScene.remove( temp );
+        this.localScene.remove( temp );
     };
 
     updateRemoteObjects = (data) => {

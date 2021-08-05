@@ -2,6 +2,11 @@ import * as THREE from 'three';
 import { Vector3 } from 'three';
 
 export default class InteractionManager extends THREE.EventDispatcher {
+
+    selectedObject;
+    shoppingBasket;
+    selectionSpace;
+
     constructor(renderer, camera, isSeller, shoppingBasketMesh, gameSyncManager) {
         super();
 
@@ -10,14 +15,9 @@ export default class InteractionManager extends THREE.EventDispatcher {
         this.domElement = this.renderer.domElement;
         this.gameSyncManager = gameSyncManager;
 
-        this.selectedObject;
-        this.selectedObjectPlaceholder;
         this.dragStartPoint = new Vector3();
         this.draggableObjects = [];
-        this.shoppingBasket;
         this.shoppingBasketMesh = shoppingBasketMesh;
-        this.selectionSpace;
-        this.dispensers = [];
 
         this.isSeller = isSeller;
 
@@ -109,7 +109,7 @@ export default class InteractionManager extends THREE.EventDispatcher {
         this.raycaster.ray.intersectPlane(this.interactionPlane, this.intersection); //saves intersection point into this.intersection
         if (this.selectedObject) {
             this.selectedObject.object.position.copy(this.intersection);
-            this.gameSyncManager.sendGameobjectUpdate(this.selectedObject.object);
+            this.gameSyncManager.sendGameObjectUpdate(this.selectedObject.object);
             console.log(this.selectedObject);
         }
     };
@@ -129,7 +129,7 @@ export default class InteractionManager extends THREE.EventDispatcher {
         if (boundingBox && boundingBox.intersectsBox(this.selectionSpace)) {
             // TODO remove the placeholder from the scene
             this.selectedObject.object.position.copy(this.selectedObject.object.startPosition);
-            this.gameSyncManager.sendGameobjectUpdate(this.selectedObject.object);
+            this.gameSyncManager.sendGameObjectUpdate(this.selectedObject.object);
         }
 
 
@@ -161,20 +161,15 @@ export default class InteractionManager extends THREE.EventDispatcher {
         this.selectedObject.object.position.copy(this.intersection); //moves selectedObject to the position where the ray intersected the interactionPlane
 
         // console.log(this.selectedObject.object.position.z);
-        this.gameSyncManager.sendGameobjectUpdate(this.selectedObject.object);
+        this.gameSyncManager.sendGameObjectUpdate(this.selectedObject.object);
         
-        //TODO
-        // handle offset?
+        //TODO handle offset?
     };
 
     getMousePosition = (event) => {
         const rect = this.domElement.getBoundingClientRect();
         this.mouse.x = ( ( event.clientX - rect.left ) / rect.width ) * 2 - 1;
 		this.mouse.y = - ( ( event.clientY - rect.top ) / rect.height ) * 2 + 1;
-
-        // old - keep in case
-        // this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-	    // this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     }
 
 }

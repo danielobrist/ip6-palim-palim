@@ -2,46 +2,44 @@ import * as THREE from 'three';
 
 export default class GameSyncManager extends THREE.EventDispatcher {
 
+    positionUpdatesChannel;
+    gameEventChannel;
+
     constructor(sceneManager) {
         super();
 
         this.sceneManager = sceneManager;
-        this.positionUpdatesChannel;
-        this.gameEventChannel;
-
     }
 
-    //TODO rename to 'handlePositionUpdates'
     handlePositionUpdates = (data) => {
         this.sceneManager.updateRemoteObjects(data);
-    }
+    };
 
-    sendGameobjectUpdate = (obj) => {
+    sendGameObjectUpdate = (obj) => {
         if (this.positionUpdatesChannel && typeof obj !== 'undefined' && this.positionUpdatesChannel.readyState === "open") {
             this.positionUpdatesChannel.send(this.getObjJSON(obj));
         }
-    }
+    };
 
     getObjJSON = (object) => {
-        let obj = {name: object.name, position: object.position, rotation: object.rotation, typeId: object.typeId, objectId: object.objectId};
-        let json = JSON.stringify(obj);
-        return json;
-    }
+        const obj = {name: object.name, position: object.position, rotation: object.rotation, typeId: object.typeId, objectId: object.objectId};
+        return JSON.stringify(obj);
+    };
 
     sendGameEventMessage = (message, item) => {
         console.log("SENDING GAME EVENT MESSAGE:");
 
         //todo rename message to eventType and item to eventData
 
-        let msg = {
+        const msg = {
             message: message,
             item: item
         };
-        let json = JSON.stringify(msg);
+        const json = JSON.stringify(msg);
         console.log(json);
 
         this.gameEventChannel.send(json);
-    }
+    };
 
     handleGameEvent = (gameEvent) => {
         if (gameEvent.message === 'startGame') {

@@ -29,7 +29,7 @@ export default class ShoppingListManager {
         console.log(shoppingList);
         return shoppingList;
 
-    }
+    };
 
     writeShoppingListToDom = (shoppingList, allModelsInCurrentGameMode) => {
 

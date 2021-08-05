@@ -7,7 +7,7 @@ export default class DataChannel {
 
     handleDataChannelError(error) {
         console.log("Data Channel Error:", error);
-    };
+    }
 
     //TODO other general handlers and then make new class XDataChannel YDataChannel extends DataChannel super() plus special handlemessage received handlers;
 }

@@ -50,7 +50,7 @@ export default class RoomManager extends THREE.EventDispatcher {
         console.log('Client sending message: ', message);
         console.log('Current room: ' + this.currentRoom);
         this.socket.emit('message', this.currentRoom, message); 
-    }
+    };
 
     joinRoom = (roomName) => {
         if (roomName !== '') {

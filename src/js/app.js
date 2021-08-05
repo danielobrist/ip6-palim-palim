@@ -1,6 +1,5 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import adapter from 'webrtc-adapter';
 import Detector from './utils/detector';
 import GameManager from "./game/components/gameManager";
 import GameSyncManager from "./game/components/gameSyncManager";
@@ -10,6 +9,7 @@ import SceneManager from "./game/components/sceneManager";
 
 import './../css/app.scss';
 
+// eslint-disable-next-line no-undef
 if(__ENV__ === 'dev') {
     console.log('----- RUNNING IN DEV ENVIRONMENT! -----');
 }
@@ -35,20 +35,21 @@ class AppManager {
         if(!Detector.webgl) {
             Detector.addGetWebGLMessage();
             return false;
-        } else {
-            return true;
         }
+
+        return true;
+        
     }
 
     handlePageClosing = () => {
         // handle tabs closing (almost all browsers) or pagehide (needed for iPad/iPhone)
-        let isOnIOS = navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2; // probably iOS...
-        let eventName = isOnIOS ? "pagehide" : "beforeunload";
+        const isOnIOS = navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2; // probably iOS...
+        const eventName = isOnIOS ? "pagehide" : "beforeunload";
         window.addEventListener(eventName, () => { 
             this.peerConnectionManager.hangUp();
         });
     }
 }
 
-const appManager = new AppManager()
+const appManager = new AppManager();
 appManager.initApp();

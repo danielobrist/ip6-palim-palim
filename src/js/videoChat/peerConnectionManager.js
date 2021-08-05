@@ -46,7 +46,7 @@ export default class PeerConnectionManager {
             } else if (event.message.type === 'answer' && this.videoChatManager.isStreamStarted) {
                 this.peerConnection.setRemoteDescription(new RTCSessionDescription(event.message));
             } else if (event.message.type === 'candidate' && this.videoChatManager.isStreamStarted) {
-                let candidate = new RTCIceCandidate({
+                const candidate = new RTCIceCandidate({
                         sdpMLineIndex: event.message.label,
                         candidate: event.message.candidate
                     }
@@ -62,7 +62,7 @@ export default class PeerConnectionManager {
         console.log("JOINING ROOM " + roomName);
         this.roomManager.joinRoom(roomName);
         this.videoChatManager.startLocalVideo();
-    }
+    };
 
     maybeStart = () => {
         console.log('>>>>>>> maybeStart() ', 
@@ -87,7 +87,7 @@ export default class PeerConnectionManager {
                 this.doCall();
             }
         }
-    }
+    };
 
     initPeerConnection = () => {
         this.peerConnection = new PeerConnection();
@@ -95,7 +95,7 @@ export default class PeerConnectionManager {
         this.peerConnection.ontrack = this.videoChatManager.handleTrackAdded;
         this.peerConnection.ondatachannel = this.datachannelManager.handleDataChannelAdded;
         this.datachannelManager.peerConnection = this.peerConnection;
-    }
+    };
 
     handleIceCandidate = (event) => {
         console.log('icecandidate event: ', event);
@@ -109,12 +109,12 @@ export default class PeerConnectionManager {
         } else {
             console.log('End of candidates.');
         }
-    }
+    };
 
     doCall = () => {
         console.log('Sending offer to peer');
         this.peerConnection.createOffer().then(this.setLocalAndSendMessage).catch(this.handleCreateOfferError);
-    }
+    };
 
     doAnswer = () =>  {
         console.log('Sending answer to peer.');
@@ -122,11 +122,11 @@ export default class PeerConnectionManager {
             this.setLocalAndSendMessage,
             this.onCreateSessionDescriptionError
         );
-    }
+    };
 
     handleCreateOfferError = (event) => {
         console.log('createOffer() error: ', event);
-    }
+    };
 
     setLocalAndSendMessage = (sessionDescription) => {
         this.peerConnection.setLocalDescription(sessionDescription);
@@ -135,19 +135,19 @@ export default class PeerConnectionManager {
 
     onCreateSessionDescriptionError = (error) => {
         console.log('Failed to create session description: ' + error.toString());
-    }
+    };
 
     hangUp = () => {
         console.log('Leaving the call.');
         this.stop();
         this.roomManager.sendSignalingMessage('bye');
-    }
+    };
 
     handleRemoteHangup = () => {
         console.log('Peer left the call.');
         this.stop();
         this.roomManager.isInitiator = true;
-    }
+    };
 
     stop = () => {
         this.videoChatManager.isStreamStarted = false;

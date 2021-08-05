@@ -1,12 +1,13 @@
 
 
 export default class DatachannelManager {
-    constructor(gameSyncManager) {
-        this.peerConnection;
-        this.gameSyncManager = gameSyncManager;
 
-        this.positionUpdatesChannel;
-        this.gameEventChannel;
+    peerConnection;
+    positionUpdatesChannel;
+    gameEventChannel;
+
+    constructor(gameSyncManager) {
+        this.gameSyncManager = gameSyncManager;
     }
 
     handleDataChannelAdded = (event) => {
@@ -15,20 +16,20 @@ export default class DatachannelManager {
 
         if (event.channel.label === 'positionUpdates') {
             this.initPositionUpdatesChannel(event.channel);
-            console.log("Created new Datachannel after channel was added")
+            console.log("Created new Datachannel after channel was added");
             console.log(this.positionUpdatesChannel);
         }
 
         if (event.channel.label === 'gameEvents') {
             this.initGameEventChannel(event.channel);
-            console.log("Created new Datachannel after channel was added")
+            console.log("Created new Datachannel after channel was added");
             console.log(this.gameEventChannel);
         }
-    }
+    };
 
     initPositionUpdatesChannel = (dataChannel) => {
         if (!dataChannel) {
-            console.log("creating new Datachannel...")
+            console.log("creating new Datachannel...");
             dataChannel = this.peerConnection.createDataChannel('positionUpdates');
             dataChannel.onerror = this.handleDataChannelError;
             dataChannel.onopen = this.handleDataChannelStatusChange;
@@ -41,11 +42,11 @@ export default class DatachannelManager {
         this.positionUpdatesChannel.onclose = this.handleDataChannelStatusChange;
 
         this.gameSyncManager.positionUpdatesChannel = this.positionUpdatesChannel;
-    }
+    };
 
     initGameEventChannel = (dataChannel) => {
         if (!dataChannel) {
-            console.log("creating new Datachannel...")
+            console.log("creating new Datachannel...");
             dataChannel = this.peerConnection.createDataChannel('gameEvents');
             dataChannel.onerror = this.handleDataChannelError;
             dataChannel.onopen = this.handleDataChannelStatusChange;
@@ -58,26 +59,26 @@ export default class DatachannelManager {
         this.gameEventChannel.onclose = dataChannel.onclose; 
     
         this.gameSyncManager.gameEventChannel = this.gameEventChannel;
-    }
+    };
 
     handlePositionUpdatesMessage = (event) => {
         this.gameSyncManager.handlePositionUpdates(event.data);
-    }
+    };
 
     handleGameEvents = (event) => {
         console.log("RECEIVED GAME EVENT MESSAGE");
         console.log(event.data);
-        let gameEvent = JSON.parse(event.data);
+        const gameEvent = JSON.parse(event.data);
         this.gameSyncManager.handleGameEvent(gameEvent);
-    }
+    };
 
     handleDataChannelError = (error) => {
         console.log("Data Channel Error:", error);
-    }
+    };
 
     handleDataChannelStatusChange = () => {
         if (this.positionUpdatesChannel) {
-            let state = this.positionUpdatesChannel.readyState; 
+            const state = this.positionUpdatesChannel.readyState; 
 
             if (state === "open") {
                 console.log("DATA CHANNEL STATE: open")
@@ -87,7 +88,7 @@ export default class DatachannelManager {
         }
 
         if (this.gameEventChannel) {
-            let state2 = this.gameEventChannel.readyState; 
+            const state2 = this.gameEventChannel.readyState; 
 
             if (state2 === "open") {
                 console.log("DATA CHANNEL2 STATE: open")
@@ -95,7 +96,7 @@ export default class DatachannelManager {
                 console.log("DATA CHANNEL2 STATE: closed")
             }
         }
-    }
+    };
 
     closeChannels = () => {
         this.gameEventChannel.close();
