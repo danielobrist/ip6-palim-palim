@@ -16,29 +16,43 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         this.gameModeScreen = document.getElementById('gameModeScreen');
         this.videoModeScreen = document.getElementById('videoModeScreen');
         this.settingsScreen = document.getElementById('settingScreens');
+        this.explanationScreen = document.getElementById('explanationScreen');
+        this.overlay = document.getElementById('overlay');
+        this.gameOverScreen = document.getElementById('gameOverScreen');
 
         this.roomNameButton = document.getElementById('roomNameButton');
         this.roomNameButton.addEventListener('click', () => {
-            this.welcomeScreen.classList.add('deactivated');
-
             this.roomNumber = document.getElementById('roomName').value;
 
-            this.dispatchEvent( { type: 'joinRoom', roomName: this.roomNumber } );
-
-            this.showWaitingScreen();
+            if (this.roomNumber && this.roomNumber !== '') {
+                this.welcomeScreen.classList.add('deactivated');
+                this.dispatchEvent( { type: 'joinRoom', roomName: this.roomNumber } );
+                this.showWaitingScreen();
+            }
         });
-                
-        
+
+        this.startGameButton = document.getElementById("startGameButton");
+        this.startGameButton.addEventListener('click', () => {
+            this.goToGameModeScreen();
+        });
+
+        this.closExplanationButton = document.getElementById('closeExplanationScreen');
+        this.closExplanationButton.addEventListener('click', () => {
+            this.dispatchEvent( { type: 'closeExplanationScreen' } );
+            this.gameSyncManager.sendGameEventMessage("closeExplanationScreen");
+        });
+
+        this.restartGameButton = document.getElementById('restartGameButton');
+        this.restartGameButton.addEventListener('click', () => {
+            this.gameSyncManager.sendGameEventMessage('restartGame');
+            this.dispatchEvent({ type: 'restartGame' });
+        });
     }
 
     goToGameStartScreen = () => {
         console.log("Going to Game Start Screen");
         this.waitingScreen.classList.add('deactivated');
         this.startGameScreen.classList.remove('deactivated');
-
-        document.getElementById("startGameButton").addEventListener('click', () => {
-            this.goToGameModeScreen();
-        });    
     }
 
     goToGameModeScreen = () => {
@@ -85,27 +99,21 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
 
     showExplanationScreen = (isSeller) => {
         if(isSeller) {
-            document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-seller.jpg')";
-            document.getElementById('closeExplanationScreen').classList.add('deactivated');
+            this.explanationScreen.style.backgroundImage = "url('./assets/explanations/explanation-seller.jpg')";
+            this.closExplanationButton.classList.add('deactivated');
         } else {
-            document.getElementById('explanationScreen').style.backgroundImage = "url('./assets/explanations/explanation-buyer.jpg')";
+            this.explanationScreen.style.backgroundImage = "url('./assets/explanations/explanation-buyer.jpg')";
         }
-        document.getElementById('explanationScreen').classList.remove('deactivated');
-    
-        document.getElementById('closeExplanationScreen').addEventListener('click', () => {
-            this.dispatchEvent( { type: 'closeExplanationScreen' } );
-            this.gameSyncManager.sendGameEventMessage("closeExplanationScreen");
-
-        });
+        this.explanationScreen.classList.remove('deactivated');
     };
 
     closeExplanationScreen = () => {
-        document.getElementById('explanationScreen').classList.add('deactivated');
-        document.getElementById('overlay').classList.add('whileGameIsRunning');
+        this.explanationScreen.classList.add('deactivated');
+        this.overlay.classList.add('whileGameIsRunning');
     };
 
     hideOverlay = () => {
-        document.getElementById('overlay').classList.add('whileGameIsRunning');
+        this.overlay.classList.add('whileGameIsRunning');
     };
 
     showWaitingScreen = () => {
@@ -114,13 +122,8 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
     };
 
     hideWaitingScreen = () => {
-        document.getElementById('waitingToOtherRoomMates').classList.add('deactivated');
+        this.waitingScreen.classList.add('deactivated');
     };
-
-    //TODO use this for all show/hides
-    hide(screen) {
-        screen.classList.add('deactivated');
-    }
 
     addRoomNumberElement = () => {
         let roomNumberElement = document.createElement("p");
@@ -129,20 +132,13 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         this.waitingScreen.append(roomNumberElement);
     };
 
-
     showGameOverScreen = (isSeller) => {
-        document.getElementById('overlay').classList.remove('whileGameIsRunning');
-        document.getElementById('gameOverScreen').classList.remove('deactivated');
-        document.getElementById('settingScreens').classList.remove('deactivated');
+        this.overlay.classList.remove('whileGameIsRunning');
+        this.gameOverScreen.classList.remove('deactivated');
+        this.settingsScreen.classList.remove('deactivated');
 
         if (isSeller) {
-            document.getElementById('restartGameButton').classList.add('deactivated');
-        } else {
-            document.getElementById('restartGameButton').addEventListener('click', () => {
-                //todo cleanUpScene();
-                this.gameSyncManager.sendGameEventMessage('restartGame');
-                this.dispatchEvent({ type: 'restartGame' });
-            });
+            this.restartGameButton.classList.add('deactivated');
         }
     };
 
@@ -150,25 +146,14 @@ export default class GameLobbyManager extends THREE.EventDispatcher{
         const element = document.getElementById("appContainer")
         party.confetti(element,{
             count: party.variation.range(200, 400),
-            /**
-             * Whether the debugging mode should be enabled.
-             */
             debug: false,
-            /**
-             * The amount of gravity to apply to particles in the scene, in pixels.
-             * Note that this value is positive by default, since the y-axis increases
-             * downwards in a DOM.
-             */
             gravity: 800,
-            /**
-             * The z-index to place the DOM containers at.
-             */
             zIndex: 99999,
         });
     };
 
     goToGameModeSelection = () => {
-        document.getElementById('gameOverScreen').classList.add('deactivated');
-        document.getElementById('gameModeScreen').classList.remove('deactivated');
+        this.gameOverScreen.classList.add('deactivated');
+        this.gameModeScreen.classList.remove('deactivated');
     };
 }

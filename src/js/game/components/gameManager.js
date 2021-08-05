@@ -36,7 +36,9 @@ export default class GameManager {
     }
 
     handleRestartGame = () => {
-        this.gameLobbyManager.goToGameModeSelection();
+        if (!this.isSeller) {
+            this.gameLobbyManager.goToGameModeSelection();
+        }
 
         //this.sceneManager.cleanUpScene();
     };
