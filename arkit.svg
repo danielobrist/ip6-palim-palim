@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="789px" preserveAspectRatio="none" style="width:1102px;height:789px;" version="1.1" viewBox="0 0 1102 789" width="1102px" zoomAndPan="magnify"><defs/><g><ellipse cx="111.534" cy="42.8542" fill="#F8F8F8" rx="54.771" ry="13.3542" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="74" x="74.534" y="46.5964">379.bundle</text><ellipse cx="111.5178" cy="90.242" fill="#F8F8F8" rx="48.2548" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="64" x="79.5178" y="93.9842">44.bundle</text><ellipse cx="111.6183" cy="136.242" fill="#F8F8F8" rx="38.3553" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="50" x="86.6183" y="139.9842">adapter</text><ellipse cx="111.7336" cy="518.242" fill="#F8F8F8" rx="19.9706" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="24" x="99.7336" y="521.9842">app</text><!--MD5=[f2fbe873d5ea8649994b4b82454e0c7c]
+entity _audioManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="100" x="524.763" y="312"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="80" x="534.763" y="334.0059">audioManager</text><!--MD5=[79f8d961ccad7a67daed4e79fbde79c7]
+entity _basket--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="58" x="903.763" y="366"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="38" x="913.763" y="388.0059">basket</text><ellipse cx="111.6778" cy="182.783" fill="#F8F8F8" rx="54.4148" ry="13.283" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="73" x="75.1778" y="186.5251">dat.gui.min</text><!--MD5=[97dd3e48675917a448517e8f0b3719a7]
+entity _dataChannel--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="102" x="60.7625" y="217"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="82" x="70.7625" y="239.0059">dataChannel</text><!--MD5=[eafd0a520dbd96e60b0066a2802f3680]
+entity _datachannelManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="138" x="234.263" y="582"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="118" x="244.263" y="604.0059">datachannelManager</text><ellipse cx="111.7041" cy="676.242" fill="#F8F8F8" rx="36.9411" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="48" x="87.7041" y="679.9842">detector</text><!--MD5=[d55f3d1ccc3a7270f626a55711b76443]
+entity _gameLobbyManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="134" x="236.263" y="366"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="114" x="246.263" y="388.0059">gameLobbyManager</text><!--MD5=[75ab9fa76471734b47736b3561d36798]
+entity _gameManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="100" x="253.263" y="420"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="80" x="263.263" y="442.0059">gameManager</text><!--MD5=[6fa7b287507148474ff74030f7b0ae57]
+entity _gameStateManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="130" x="509.763" y="366"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="110" x="519.763" y="388.0059">gameStateManager</text><!--MD5=[f93c73558d3a6627bfbae89eaf263a86]
+entity _gameSyncManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="128" x="239.263" y="474"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="108" x="249.263" y="496.0059">gameSyncManager</text><!--MD5=[b0cb468b2f1a1cbbac713e33166648dd]
+entity _helpers--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="62" x="901.763" y="474"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="42" x="911.763" y="496.0059">helpers</text><!--MD5=[90bbc732617d79f03b1015299af739ab]
+entity _interactionManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="129" x="510.263" y="420"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="109" x="520.263" y="442.0059">interactionManager</text><ellipse cx="303.0939" cy="42.7662" fill="#F8F8F8" rx="64.3309" ry="15.2662" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="99" x="253.5939" y="46.5084">js/main.bundle</text><ellipse cx="303.0633" cy="95.7601" fill="#F8F8F8" rx="71.8003" ry="16.7601" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="117" x="244.5633" y="99.5022">js/runtime.bundle</text><ellipse cx="303.3432" cy="150.016" fill="#F8F8F8" rx="73.0802" ry="17.016" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="120" x="243.3432" y="153.7582">js/vendors.bundle</text><!--MD5=[4d0002b54d3fc29be85477bfffe3bbbe]
+entity _peerConnection--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="111" x="247.763" y="636"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="91" x="257.763" y="658.0059">peerConnection</text><!--MD5=[0305c1d075eecc019178e788555be1ec]
+entity _peerConnectionManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="159" x="32.2625" y="609"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="139" x="42.2625" y="631.0059">peerConnectionManager</text><ellipse cx="303.4982" cy="202.847" fill="#F8F8F8" rx="64.7352" ry="15.347" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="100" x="253.4982" y="206.5892">postcss.config</text><!--MD5=[e0cddc7acd5912d631675f0e8dd379d5]
+entity _roomManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="99" x="253.763" y="690"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="79" x="263.763" y="712.0059">roomManager</text><ellipse cx="303.0473" cy="252.242" fill="#F8F8F8" rx="31.2843" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="40" x="283.0473" y="255.9842">rStats</text><ellipse cx="574.5974" cy="43.1669" fill="#F8F8F8" rx="58.8344" ry="14.1669" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="85" x="532.0974" y="46.9091">rStats.extras</text><!--MD5=[89b26a7bd3e481f7d0db4a5b72cad879]
+entity _scene3DManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="119" x="515.263" y="528"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="99" x="525.263" y="550.0059">scene3DManager</text><ellipse cx="574.9135" cy="92.1301" fill="#F8F8F8" rx="61.1505" ry="14.6301" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="91" x="529.4135" y="95.8723">sceneConfig1</text><ellipse cx="574.9135" cy="141.1301" fill="#F8F8F8" rx="61.1505" ry="14.6301" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="91" x="529.4135" y="144.8723">sceneConfig2</text><!--MD5=[d1988f25b8f6e88114c4bc2187cf1426]
+entity _sceneManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="103" x="251.763" y="528"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="83" x="261.763" y="550.0059">sceneManager</text><ellipse cx="574.7544" cy="189.242" fill="#F8F8F8" rx="31.9914" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="41" x="554.2544" y="192.9842">server</text><!--MD5=[e89c548faf7e12704573eb377b648d30]
+entity _shoppingListManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="141" x="504.263" y="474"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="121" x="514.263" y="496.0059">shoppingListManager</text><ellipse cx="574.5167" cy="256.7507" fill="#F8F8F8" rx="159.2537" ry="34.2507" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="304" x="422.5167" y="260.4929">src_js_game_config_sceneConfig1_js.bundle</text><ellipse cx="932.5167" cy="42.7507" fill="#F8F8F8" rx="159.2537" ry="34.2507" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="304" x="780.5167" y="46.4929">src_js_game_config_sceneConfig2_js.bundle</text><!--MD5=[07d8fcff142ffcb1764b16493fcdbaca]
+entity _videoChatManager--><rect fill="#F8F8F8" height="34.4844" rx="3" ry="3" style="stroke: #000000; stroke-width: 0.5;" width="125" x="240.763" y="744"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="105" x="250.763" y="766.0059">videoChatManager</text><ellipse cx="932.7192" cy="113.0912" fill="#F8F8F8" rx="65.9562" ry="15.5912" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="103" x="881.2192" y="116.8334">webpack.config</text><!--MD5=[bd962e0f8681c794ecfa0c0d1b3a7314]
+link <b>app</b> to detector--><path d="M95.9999,526.255 C61.3272,545.539 -16.249,595.518 12.7626,643 C24.5682,662.322 48.4428,670.643 69.7883,674.099 " fill="none" id="&lt;b&gt;app&lt;/b&gt;-&gt;detector" style="stroke: #000000; stroke-width: 1.0;"/><polygon fill="#000000" points="74.8657,674.84,66.5375,669.5824,69.9181,674.1181,65.3825,677.4986,74.8657,674.84" style="stroke: #000000; stroke-width: 1.0;"/><!--MD5=[b3b9e45c0fed8a1b12f9f56bdeab4e73]
+link <b>app</b> to _gameLobbyManager--><path d="M122.331,506.684 C141.055,485.165 184.703,437.998 230.263,410 C234.878,407.164 239.839,404.548 244.921,402.155 " fill="none" id="&lt;b&gt;app&lt;/b&gt;-&gt;_gameLobbyManager" style="stroke: #000000; stroke-width: 1.0;"/><polygon fill="#000000" points="249.615,400.019,239.7665,400.1039,245.0636,402.089,243.0785,407.3861,249.615,400.019" style="stroke: #000000; stroke-width: 1.0;"/><!--MD5=[1bd7e42f72738f672ca80bb769f35607]
+link <b>app</b> to _gameManager--><path d="M128.19,510.478 C150.501,499.699 193.167,479.456 230.263,464 C236.771,461.288 243.658,458.546 250.491,455.902 " fill="none" id="&lt;b&gt;app&lt;/b&gt;-&gt;_gameManager" style="stroke: #000000; stroke-width: 1.0;"/><polygon fill="#000000" points="255.207,454.089,245.371,453.585,250.54,455.8832,248.2418,461.0522,255.207,454.089" style="stroke: #000000; stroke-width: 1.0;"/><!--MD5=[ea36f9c56c769fa6281e295b62054697]
+link <b>app</b> to _gameSyncManager--><path d="M131.625,515.312 C155.36,511.931 197.43,505.937 233.856,500.747 " fill="none" id="&lt;b&gt;app&lt;/b&gt;-&gt;_gameSyncManager" style="stroke: #000000; stroke-width: 1.0;"/><polygon fill="#000000" points="239.186,499.987,229.7123,497.2946,234.2359,500.6913,230.8392,505.2149,239.186,499.987" style="stroke: #000000; stroke-width: 1.0;"/><!--MD5=[aa5c52d1716fb008cb5bac9f0ac99baf]
+link <b>app</b> to _peerConnectionManager--><path d="M111.763,531.109 C111.763,555.256 111.763,579.403 111.763,603.55 " fill="none" id="&lt;b&gt;app&lt;/b&gt;-&gt;_peerConnectionManager" style="stroke: #000000; stroke-width: 1.0;"/><polygon fill="#000000" points="111.763,608.703,115.763,599.703,111.763,603.703,107.763,599.703,111.763,608.703" style="stroke: #000000; stroke-width: 1.0;"/><!--MD5=[0dd46b2444b3304da619f1b98b62a97e]
+link <b>app</b> to _sceneManager--><path d="M131.625,520.688 C158.145,524.466 207.555,531.506 246.407,537.042 " fill="none" id="&lt;b&gt;app&lt;/b&gt;-&gt;_sceneManager" style="stroke: #000000; stroke-width: 1.0;"/><polygon fill="#000000" points="251.573,537.778,243.2262,532.5501,246.6229,537.0737,242.0993,540.4704,251.573,537.778" style="stroke: #000000; stroke-width: 1.0;"/><!--MD5=[d2c2e75256bcfa9d7b16fbe5e13990f8]
+link _gameManager to _audioManager--><path d="M353.552,422.968 C361.576,419.464 369.471,415.185 376.263,410 C399.794,392.036 390.133,371.651 415.263,356 C446.3,336.67 487.074,330.052 519.493,328.199 " fill="none" id="_gameManager-&gt;_audioManager" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="524.622,327.941,515.4333,324.396,519.6283,328.191,515.8332,332.3859,524.622,327.941" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[2d222fa673c394ba4ef3a8cca21f99c6]
+link _gameManager to _gameStateManager--><path d="M353.274,424.297 C372.531,419.511 394.869,414.212 415.263,410 C444.343,403.994 476.624,398.317 504.425,393.733 " fill="none" id="_gameManager-&gt;_gameStateManager" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="509.562,392.89,500.0329,390.4007,504.628,393.6999,501.3288,398.2951,509.562,392.89" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[fbfafb63ce427f76faef186796efd2aa]
+link _gameManager to _interactionManager--><path d="M353.38,437 C395.86,437 457.729,437 505.107,437 " fill="none" id="_gameManager-&gt;_interactionManager" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="510.227,437,501.227,433,505.227,437,501.227,441,510.227,437" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[3e745e5da9791f755274513f92dd9590]
+link _gameManager to _shoppingListManager--><path d="M353.274,449.703 C372.531,454.489 394.869,459.788 415.263,464 C442.429,469.611 472.388,474.934 498.878,479.347 " fill="none" id="_gameManager-&gt;_shoppingListManager" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="504.128,480.218,495.903,474.8006,499.1953,479.4006,494.5952,482.6929,504.128,480.218" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[be8a5e4d522f5de22ccf652229b37fd2]
+link _gameStateManager to _basket--><path d="M639.819,383 C715.799,383 839.561,383 898.511,383 " fill="none" id="_gameStateManager-&gt;_basket" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="903.668,383,894.668,379,898.668,383,894.668,387,903.668,383" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[ecc02c218c5673e50398f9851188a330]
+link _peerConnectionManager to _datachannelManager--><path d="M191.481,614.784 C203.849,613.022 216.593,611.206 228.835,609.462 " fill="none" id="_peerConnectionManager-&gt;_datachannelManager" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="234.048,608.719,224.5743,606.0266,229.0979,609.4233,225.7012,613.9469,234.048,608.719" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[40f1d1fcfe56335b6ef4bba4b0bb5bac]
+link _peerConnectionManager to _peerConnection--><path d="M191.481,637.216 C208.622,639.658 226.484,642.203 242.735,644.518 " fill="none" id="_peerConnectionManager-&gt;_peerConnection" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="247.723,645.229,239.3762,640.0011,242.7729,644.5247,238.2493,647.9214,247.723,645.229" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[43f0ff7e37524511adac31e2c008b8bf]
+link _peerConnectionManager to _roomManager--><path d="M168.451,643.017 C176.254,646.015 184.061,649.356 191.263,653 C210.074,662.518 211.584,670.225 230.263,680 C236.106,683.0584 242.376,685.9419 248.69,688.6042 " fill="none" id="_peerConnectionManager-&gt;_roomManager" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="253.521,690.5962,246.725,683.4678,248.8984,688.6904,243.6758,690.8639,253.521,690.5962" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[a73d37a2f0404b108a652f7335f99cc2]
+link _peerConnectionManager to _videoChatManager--><path d="M176.91,643.048 C182.075,645.878 186.954,649.17 191.263,653 C221.125,679.5459 200.768,707.046 230.263,734 C233.108,736.6005 236.228,738.9578 239.523,741.0938 " fill="none" id="_peerConnectionManager-&gt;_videoChatManager" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="244.118,743.8713,238.486,735.7917,239.8393,741.2843,234.3467,742.6376,244.118,743.8713" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[4815c5a3674c3ae77816af81d6b1156b]
+link _sceneManager to _scene3DManager--><path d="M354.953,545 C398.794,545 462.399,545 509.745,545 " fill="none" id="_sceneManager-&gt;_scene3DManager" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="514.854,545,505.854,541,509.854,545,505.854,549,514.854,545" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[7da25bb3a77d13b9694ee6fe0140a8b6]
+link _shoppingListManager to _helpers--><path d="M645.672,491 C721.151,491 838.363,491 896.537,491 " fill="none" id="_shoppingListManager-&gt;_helpers" style="stroke: #000000; stroke-width: 0.5;"/><polygon fill="#000000" points="901.64,491,892.64,487,896.64,491,892.64,495,901.64,491" style="stroke: #000000; stroke-width: 0.5;"/><!--MD5=[c672b745aa3a22e31fdb8b41091f52c5]
+link <b>379.bundle</b> to <b>44.bundle</b>--><!--MD5=[25b32059bde1c8a873684958b52e6e6c]
+link <b>44.bundle</b> to <b>adapter</b>--><!--MD5=[3379a4ff2b176a1a5cb8a105b8d695e6]
+link <b>adapter</b> to <b>dat.gui.min</b>--><!--MD5=[1184a76ee3a1e5a2ea44a165748a5733]
+link <b>dat.gui.min</b> to _dataChannel--><!--MD5=[09ae17510be5b3f92c2e96374e3ab522]
+link <b>379.bundle</b> to <b>js/main.bundle</b>--><!--MD5=[f042e3769e4552d2e30a6bf26e126909]
+link <b>js/main.bundle</b> to <b>js/runtime.bundle</b>--><!--MD5=[b91732f4dbd5a54353ccefaa2990cfe7]
+link <b>js/runtime.bundle</b> to <b>js/vendors.bundle</b>--><!--MD5=[0c3cb88de412b6597de58033ddaae1d3]
+link <b>js/vendors.bundle</b> to <b>postcss.config</b>--><!--MD5=[e8aa84574407fa14e23996a4af63e03c]
+link <b>postcss.config</b> to <b>rStats</b>--><!--MD5=[dcc39dd15e7233093ad366ac004bb9a1]
+link <b>js/main.bundle</b> to <b>rStats.extras</b>--><!--MD5=[496d6e336d6a0e0caeeb10359dc44587]
+link <b>rStats.extras</b> to <b>sceneConfig1</b>--><!--MD5=[1a23c9e53b179313a803652af4989db6]
+link <b>sceneConfig1</b> to <b>sceneConfig2</b>--><!--MD5=[ea877933a059754e6e0875120d581d4d]
+link <b>sceneConfig2</b> to <b>server</b>--><!--MD5=[10db0a5c9da0378539d0a8d33ee78faa]
+link <b>server</b> to <b>src_js_game_config_sceneConfig1_js.bundle</b>--><!--MD5=[ac83908bf1e8b7d298d9d1c69a863bc9]
+link <b>rStats.extras</b> to <b>src_js_game_config_sceneConfig2_js.bundle</b>--><!--MD5=[1133ff1f860ed2806474a8e1a6f281e2]
+link <b>src_js_game_config_sceneConfig2_js.bundle</b> to <b>webpack.config</b>--><script type="text/plantuml"><![CDATA[MD5=[7510fb961544126a501f70590cf69153]
+@startuml
+
+scale max 1920 width
+left to right direction
+
+skinparam nodesep 20
+skinparam ranksep 39
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Tahoma
+skinparam defaultFontSize 12
+skinparam roundCorner 6
+skinparam dpi 150
+skinparam arrowColor black
+skinparam arrowThickness 0.5
+skinparam packageTitleAlignment left
+
+skinparam usecase {
+  borderThickness 0.5
+}
+
+skinparam rectangle {
+  borderThickness 0.5
+}
+
+skinparam component {
+  borderThickness 1
+}
+
+
+(<b>379.bundle</b>)
+(<b>44.bundle</b>)
+(<b>adapter</b>)
+(<b>app</b>)
+rectangle "audioManager" as _audioManager
+rectangle "basket" as _basket
+(<b>dat.gui.min</b>)
+rectangle "<b>dataChannel</b>" as _dataChannel
+rectangle "datachannelManager" as _datachannelManager
+(detector)
+rectangle "gameLobbyManager" as _gameLobbyManager
+rectangle "gameManager" as _gameManager
+rectangle "gameStateManager" as _gameStateManager
+rectangle "gameSyncManager" as _gameSyncManager
+rectangle "helpers" as _helpers
+rectangle "interactionManager" as _interactionManager
+(<b>js/main.bundle</b>)
+(<b>js/main.bundle</b>)
+(<b>js/runtime.bundle</b>)
+(<b>js/runtime.bundle</b>)
+(<b>js/vendors.bundle</b>)
+(<b>js/vendors.bundle</b>)
+rectangle "peerConnection" as _peerConnection
+rectangle "peerConnectionManager" as _peerConnectionManager
+(<b>postcss.config</b>)
+rectangle "roomManager" as _roomManager
+(<b>rStats</b>)
+(<b>rStats.extras</b>)
+rectangle "scene3DManager" as _scene3DManager
+(<b>sceneConfig1</b>)
+(<b>sceneConfig2</b>)
+rectangle "sceneManager" as _sceneManager
+(<b>server</b>)
+rectangle "shoppingListManager" as _shoppingListManager
+(<b>src_js_game_config_sceneConfig1_js.bundle</b>)
+(<b>src_js_game_config_sceneConfig2_js.bundle</b>)
+rectangle "videoChatManager" as _videoChatManager
+(<b>webpack.config</b>)
+
+
+(<b>app</b>) -[thickness=1]> (detector)
+(<b>app</b>) --[thickness=1]> _gameLobbyManager
+(<b>app</b>) --[thickness=1]> _gameManager
+(<b>app</b>) --[thickness=1]> _gameSyncManager
+(<b>app</b>) -[thickness=1]> _peerConnectionManager
+(<b>app</b>) --[thickness=1]> _sceneManager
+_gameManager --> _audioManager
+_gameManager --> _gameStateManager
+_gameManager --> _interactionManager
+_gameManager --> _shoppingListManager
+_gameStateManager --> _basket
+_peerConnectionManager --> _datachannelManager
+_peerConnectionManager --> _peerConnection
+_peerConnectionManager --> _roomManager
+_peerConnectionManager --> _videoChatManager
+_sceneManager --> _scene3DManager
+_shoppingListManager --> _helpers
+
+@enduml
+
+
+' View and edit on https://arkit.pro
+]]></script></g></svg>
