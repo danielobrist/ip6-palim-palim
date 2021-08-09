@@ -21,11 +21,11 @@ export default class RoomManager extends THREE.EventDispatcher {
             console.log('Room ' + room + ' is full');
         });
 
-        this.socket.on('join', (room) => {
+        this.socket.on('joinRequest', (room) => {
             console.log('Another peer made a request to join room ' + room);
             console.log('This peer is the initiator of room ' + room + '!');
+            //TODO possibility to accept or refuse call
             this.isRoomReady = true;
-
             this.dispatchEvent( { type: 'peerJoined', room: room } );
         });
 
