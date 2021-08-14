@@ -4,7 +4,7 @@ import {Vector3} from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {GUI} from "three/examples/jsm/libs/dat.gui.module";
 import Scene3DManager from "./scene3DManager";
-import Helpers from "../helpers";
+import Helpers from "../../utils/helpers";
 
 export default class SceneManager {
 

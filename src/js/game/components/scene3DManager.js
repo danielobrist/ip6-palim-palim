@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Helpers from "../helpers";
+import Helpers from "../../utils/helpers";
 
 export default class Scene3DManager {
 

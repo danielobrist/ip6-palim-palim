@@ -2,7 +2,7 @@ import InteractionManager from "./interactionManager";
 import ShoppingListManager from "./shoppingListManager";
 import GameStateManager from "./gameStateManager";
 import AudioManager from "./audioManager";
-import Helpers from "../helpers";
+import Helpers from "../../utils/helpers";
 
 export default class GameManager {
 
