@@ -2,10 +2,9 @@
 
 var os = require('os');
 var express = require('express'); 
-// const path = require('path');
+
 var app = express();
 app.use(express.static('build'));
-// app.use("/node_modules", express.static(path.join(__dirname, '/node_modules')));
 
 var port = process.env.PORT || 8080;
 const server = app.listen(port);
@@ -18,14 +17,13 @@ io.sockets.on('connection', function(socket) {
 
   // convenience function to log server messages on the client
   function log() {
-    var array = ['Message from server:'];
-    array.push.apply(array, arguments);
-    socket.emit('log', array);
+    var message = ['Message from server:'];
+    message.push.apply(message, arguments);
+    socket.emit('log', message);
   }
 
   socket.on('message', function(room, message) {
     log('Client said: ', message);
-    // for a real app, would be room-only (not broadcast)
     socket.to(room).emit('message', message);
   });
 
@@ -43,7 +41,7 @@ io.sockets.on('connection', function(socket) {
 
     } else if (numClients === 1) {
       log('Client ID ' + socket.id + ' joined room ' + room);
-      io.sockets.in(room).emit('join', room);
+      io.sockets.in(room).emit('joinRequest', room);
       socket.join(room);
       socket.emit('joined', room, socket.id);
       io.sockets.in(room).emit('ready');

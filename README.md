@@ -3,6 +3,7 @@
 
 Palim-Palim is a peer-to-peer video game for children and the elderly. It allows two players to play pretend store in a virtual environment. The client side is built using Three.js to provide an interactive 3D environment. It features a WebRTC video chat to promote communication between players. The project uses a node server running socket.io to provide WebRTC signaling. The multiplayer functionality is implemented using WebRTC peer-to-peer datachannels instead of an authorative server.  
 
+![Palim-Palim Screenshots](https://github.com/danielobrist/ip6-palim-palim/blob/main/PalimPalim_screens.png?raw=true)
 
 ## :apple: Project Structure
 ```
@@ -12,7 +13,7 @@ src - Directory for all dev files
 ├── js - All the Three.js app files, with `app.js` as entry point. Compiled to `src/public/js` with webpack
 │   ├── game
 │   │   ├── components - Various compontents used by the game
-│   │   └── config - Different scene configurations to be loaded in `game.js`
+│   │   └── config - Different scene configurations to be loaded
 │   ├── utils - Helpers and vendor classes
 |   └── videoChat - WebRTC peer connection for video chat and other data channels
 └── public - Used by webpack-dev-server to serve content. Webpack builds local dev files here. 
@@ -33,7 +34,7 @@ Then build the production files with:
 npm run build
 ```
 
-This cleans existing build folder while linting js folder and copies over the public assets folder from src. Then sets environment to production and compiles js and css into build.
+This cleans the build folder while linting the js folder and copies over the public assets folder from src. Then sets environment to production and compiles js and css into build.
 
 ```
 npm start
@@ -42,7 +43,7 @@ npm start
 Spins up the node.js server at localhost:8080 and uses the current prod build from the build folder. Open a second tab to chat and play the game with yourself.  
 
 
-## :pear: Running App in dev mode (wihout Server/VideoChat)
+## :pear: Running App in dev mode (without Server/VideoChat)
 After installing the dependencies, run:
 
 ```
@@ -81,7 +82,6 @@ While running and deploying the project locally works just fine, it will need a 
 Specifications of the server are (not mandatory):
 * 8 GB RAM
 * 8 VCPU
-* Memory: 20 GB
 * Operating system: Linux Ubuntu
 * Depending on the environment on which the server is set up, the ports of the TURN server must be opened. With the TURN configuration below, we had to open the following ports on our SwitchEngines Server:
 * TCP and UDP, in and out: 10000 to 20000
