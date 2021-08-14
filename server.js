@@ -5,8 +5,6 @@ var express = require('express');
 
 var app = express();
 app.use(express.static('build'));
-const favicon = require('serve-favicon');
-app.use(favicon(__dirname + '/build/assets/favicon.ico'));
 
 var port = process.env.PORT || 8080;
 const server = app.listen(port);
