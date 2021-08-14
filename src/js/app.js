@@ -10,7 +10,7 @@ import SceneManager from "./game/components/sceneManager";
 import './../css/app.scss';
 
 // eslint-disable-next-line no-undef
-if(__ENV__ === 'dev') {
+if(Helpers.isDev()) {
     console.log('----- RUNNING IN DEV ENVIRONMENT! -----');
 }
 

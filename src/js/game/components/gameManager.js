@@ -2,6 +2,7 @@ import InteractionManager from "./interactionManager";
 import ShoppingListManager from "./shoppingListManager";
 import GameStateManager from "./gameStateManager";
 import AudioManager from "./audioManager";
+import Helpers from "../helpers";
 
 export default class GameManager {
 
@@ -86,7 +87,7 @@ export default class GameManager {
         this.sceneManager.loadBackground();
         await this.sceneManager.init3DObjects();
 
-        if (__ENV__ === 'dev') {
+        if (Helpers.isDev()) {
             this.sceneManager.initDevThings();
         }
 
@@ -96,8 +97,7 @@ export default class GameManager {
     }
 
     generateShoppingList = () => {
-        this.shoppingListAsMap = this.shoppingListManager.generateShoppingListAsMap(this.config.buyerModelsStart);
-        this.gameStateManager.shoppingListAsMap = this.shoppingListAsMap;
+        this.gameStateManager.shoppingListAsMap = this.shoppingListManager.generateShoppingListAsMap(this.config.buyerModelsStart);
         this.shoppingListManager.writeShoppingListToDom(this.gameStateManager.shoppingListAsMap, this.config.models);
     };
 
@@ -136,7 +136,7 @@ export default class GameManager {
 
     initControls = () => {
 
-        this.gameEventManager = new InteractionManager(
+        this.interactionManager = new InteractionManager(
             this.sceneManager.renderer,
             this.sceneManager.localCamera,
             this.sceneManager.isSeller,
@@ -144,12 +144,12 @@ export default class GameManager {
             this.gameSyncManager
         );
 
-        this.gameEventManager.draggableObjects = this.sceneManager.interactionObjects;
+        this.interactionManager.draggableObjects = this.sceneManager.interactionObjects;
 
-        this.gameEventManager.addEventListener( 'basketAdd', (itemObjectId) => this.handleBasketAddEvent(itemObjectId));
+        this.interactionManager.addEventListener( 'basketAdd', (itemObjectId) => this.handleBasketAddEvent(itemObjectId));
 
-        if(__ENV__ === 'dev') {
-            this.sceneManager.visualizeTheInteractionPlaneAndItemSink(this.gameEventManager);
+        if(Helpers.isDev()) {
+            this.sceneManager.visualizeTheInteractionPlaneAndItemSink(this.interactionManager);
         }
     };
 

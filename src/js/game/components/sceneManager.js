@@ -4,6 +4,7 @@ import {Vector3} from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {GUI} from "three/examples/jsm/libs/dat.gui.module";
 import Scene3DManager from "./scene3DManager";
+import Helpers from "../helpers";
 
 export default class SceneManager {
 
@@ -27,8 +28,7 @@ export default class SceneManager {
         this.renderer = this.createAndConfigureRenderer();
         this.addRendererToDOM(this.renderer);
 
-        // eslint-disable-next-line no-undef
-        if (__ENV__ === 'dev') {
+        if (Helpers.isDev()) {
             this.gui = new GUI();
         }
     }
@@ -118,8 +118,8 @@ export default class SceneManager {
     init3DObjects = async() => {
         const manager = new THREE.LoadingManager();
         // TODO Loading bar/screen https://stackoverflow.com/questions/35575065/how-to-make-a-loading-screen-in-three-js/35584276
-        manager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        manager.onProgress = (url, itemsLoaded) => {
+            console.log( 'Loading file: ' + url + '.\n'+itemsLoaded+' files loaded.' );
         };
         manager.onLoad = () => {
             document.getElementById("appContainer").querySelector('#loading').style.display = 'none';
@@ -157,8 +157,7 @@ export default class SceneManager {
             this.objectsToSync.set(sphereMesh.objectId, sphereMesh);
             this.interactionObjects.push(sphereMesh);
 
-            // eslint-disable-next-line no-undef
-            if(__ENV__ === 'dev') {
+            if(Helpers.isDev()) {
                 this.createDatGUIForPosition(sphereMesh, -5, 5, 0.05);
             }
         }
@@ -209,11 +208,10 @@ export default class SceneManager {
         const boundingSphere = boundingBox.getBoundingSphere(new THREE.Sphere(center));
 
         let boundingSphereOpacity;
-        // eslint-disable-next-line no-undef
-        if(__ENV__ === 'dev') {
+        if(Helpers.isDev()) {
             boundingSphereOpacity = 0.3;
         } else {
-            boundingSphereOpacity = 0
+            boundingSphereOpacity = 0;
         }
         const m = new THREE.MeshStandardMaterial({
             color: 0xffffff,

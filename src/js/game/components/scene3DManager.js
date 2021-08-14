@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import Helpers from "../helpers";
 
 export default class Scene3DManager {
 
@@ -41,8 +42,7 @@ export default class Scene3DManager {
         const ambientLight = new THREE.AmbientLight( 0x404040 );
         this.scene.add( ambientLight );
 
-        // eslint-disable-next-line no-undef
-        if(__ENV__ === 'dev') {
+        if(Helpers.isDev()) {
             const helperDirectionalLightBuyerSide = new THREE.DirectionalLightHelper( directionalLightBuyerSide, 5 );
             this.scene.add( helperDirectionalLightBuyerSide );
             const helperDirectionalLightSellerSide = new THREE.DirectionalLightHelper( directionalLightSellerSide, 5 );
