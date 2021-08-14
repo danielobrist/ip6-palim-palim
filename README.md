@@ -12,7 +12,7 @@ src - Directory for all dev files
 ├── js - All the Three.js app files, with `app.js` as entry point. Compiled to `src/public/js` with webpack
 │   ├── game
 │   │   ├── components - Various compontents used by the game
-│   │   └── config - Different scene configurations to be loaded in `game.js`
+│   │   └── config - Different scene configurations to be loaded
 │   ├── utils - Helpers and vendor classes
 |   └── videoChat - WebRTC peer connection for video chat and other data channels
 └── public - Used by webpack-dev-server to serve content. Webpack builds local dev files here. 

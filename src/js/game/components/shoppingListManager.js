@@ -1,4 +1,4 @@
-import Helpers from "../helpers";
+import Helpers from "../../utils/helpers";
 
 export default class ShoppingListManager {
 
