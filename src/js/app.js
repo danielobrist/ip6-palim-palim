@@ -6,6 +6,7 @@ import GameSyncManager from "./game/components/gameSyncManager";
 import PeerConnectionManager from "./videoChat/peerConnectionManager";
 import GameLobbyManager from "./game/components/gameLobbyManager";
 import SceneManager from "./game/components/sceneManager";
+import Helpers from "./utils/helpers";
 
 import './../css/app.scss';
 
