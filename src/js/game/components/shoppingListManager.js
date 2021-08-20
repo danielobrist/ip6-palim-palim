@@ -79,8 +79,7 @@ export default class ShoppingListManager {
 
     strikeThroughSpecificItem = (typeId) => {
         const shoppingListItem = document.getElementById('shoppingListItem--' + typeId);
-
-        if(shoppingListItem && !this.isItemStrikeThrough(shoppingListItem)) {
+        if(shoppingListItem && !shoppingListItem.classList.contains('strikeThrough')) {
             const count = parseInt(shoppingListItem.dataset.count);
             if (count === 1) {
                 shoppingListItem.classList.add('strikeThrough');
@@ -89,15 +88,7 @@ export default class ShoppingListManager {
             }
             return true;
         }
-
         return false;
-    };
-
-    isItemStrikeThrough = (shoppingListItem) => {
-        if(shoppingListItem.dataset.count > 1) {
-            return true;
-        }
-        return shoppingListItem.dataset.count === "1" && !shoppingListItem.classList.contains('strikeThrough');
     };
 
     addClickEventListenerToVisualShoppingListContainer = () => {
